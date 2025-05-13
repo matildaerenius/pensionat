@@ -13,6 +13,8 @@ import java.util.List;
 public class CustomerController {
 
     private final CustomerService customerService;
+    private long id;
+    private Customer customer;
 
     @Autowired
     public CustomerController(CustomerService customerService) {
