@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/customer")
 public class CustomerController {
 
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
     @Autowired
     public CustomerController(CustomerService customerService) {
@@ -25,7 +25,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
+    public ResponseEntity<Customer> getCustomerById(@PathVariable long id) {
         Customer customer = customerService.getCustomerById(id);
         if (customer != null) {
             return ResponseEntity.ok(customer);
@@ -42,7 +42,7 @@ public class CustomerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateCustomer(@PathVariable int id, @RequestBody Customer customer) {
+    public ResponseEntity<String> updateCustomer(@PathVariable long id, @RequestBody Customer customer) {
         Customer existing = customerService.getCustomerById(id);
         if (existing == null) {
             return ResponseEntity.notFound().build();
@@ -53,7 +53,7 @@ public class CustomerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable int id) {
+    public ResponseEntity<String> deleteCustomer(@PathVariable long id) {
         Customer customer = customerService.getCustomerById(id);
         if (customer == null) {
             return ResponseEntity.notFound().build();

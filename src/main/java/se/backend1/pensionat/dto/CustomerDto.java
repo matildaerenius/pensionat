@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerDto {
 
-    private Integer id;
+    private long id;
 
     @NotBlank(message = "Namn får inte vara tomt")
     @Size(max = 100, message = "Namn får vara högst 100 tecken långt")
