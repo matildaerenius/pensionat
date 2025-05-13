@@ -1,4 +1,0 @@
-package se.backend1.pensionat.exception;
-
-public class ErrorDetails {
-}
