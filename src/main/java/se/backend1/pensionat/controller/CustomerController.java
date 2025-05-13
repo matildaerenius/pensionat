@@ -13,6 +13,7 @@ import java.util.List;
 public class CustomerController {
 
     private CustomerService customerService;
+
     @Autowired
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
@@ -20,8 +21,7 @@ public class CustomerController {
 
     @GetMapping
     public List<Customer> getAllCustomers() {
-    return
-    customerService.getAllCustomers();
+    return customerService.getAllCustomers();
     }
 
     @GetMapping("/{id}")
@@ -33,7 +33,6 @@ public class CustomerController {
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @PostMapping
@@ -48,11 +47,18 @@ public class CustomerController {
         if (existing == null) {
             return ResponseEntity.notFound().build();
         }
-//        updateCustomer(id, customer).se// TODO
+        customer.setId(existing.getId());
         customerService.updateCustomer(customer);
-        return ResponseEntity.ok("existing");
-
-
+        return ResponseEntity.ok("Custumer Updated");
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable int id) {
+        Customer customer = customerService.getCustomerById(id);
+        if (customer == null) {
+            return ResponseEntity.notFound().build();
+        }
+        customerService.deleteCustomer(id);
+     return ResponseEntity.ok("Custumer Deleted");
+    }
 }
