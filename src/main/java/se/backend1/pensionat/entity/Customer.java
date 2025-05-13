@@ -1,30 +1,42 @@
 package se.backend1.pensionat.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+import java.util.List;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customers")
-@Getter
-@Setter
-@NoArgsConstructor
 public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false, length = 100)
+    @NotBlank(message = "Namn krävs")
+    @Size(max = 100, message = "Namn får max vara 100 tecken")
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @NotBlank(message = "E-post krävs")
+    @Email(message = "Ogiltig e-postadress")
+    @Size(max = 100)
     private String email;
 
-    @Column(length = 255)
+    @NotBlank(message = "Telefonnummer krävs")
+    @Size(max = 20)
+    private String phoneNumber;
+
+    @Size(max = 200)
     private String address;
 
-    @Column(length = 20)
-    private String phone;
+    @OneToMany(mappedBy = "customer")
+    private List<Booking> bookings;
 }
