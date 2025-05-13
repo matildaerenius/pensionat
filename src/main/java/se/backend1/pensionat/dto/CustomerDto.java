@@ -29,6 +29,6 @@ public class CustomerDto {
     private String phone;
 
     @NotBlank(message = "Adress får inte vara tom")
-    @Size(max = 200, message = "Adress får vara högst 200 tecken lång")
+    @Size(max = 100, message = "Adress får vara högst 200 tecken lång")
     private String address;
 }
