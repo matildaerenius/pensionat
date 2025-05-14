@@ -2,30 +2,41 @@ package se.backend1.pensionat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.service.BookingService;
 import se.backend1.pensionat.service.CustomerService;
 import se.backend1.pensionat.service.RoomService;
 
-@RestController
+import java.util.List;
+
+@Controller
 @RequestMapping("/api/booking")
 public class BookingController {
 
-    private BookingRepository repo;
-
-    public BookingController(BookingRepository repository) {
-        this.repo = repository;
+    private BookingService bookingService;
+    private CustomerService customerService;
+    private RoomService roomService;
+    @Autowired
+    public BookingController(BookingService bookingService, CustomerService customerService, RoomService roomService) {
+        this.bookingService = bookingService;
+        this.customerService = customerService;
+        this.roomService = roomService;
     }
 
+    @GetMapping("/bookings")
+    public List<Booking> getBookings(){
+        return null;
+    }
 
-    private  BookingService bookingService;
-
-   // private RoomService roomService;
-
-    @Autowired
-    public BookingController(BookingService ser) {this.bookingService = ser; }
+    @GetMapping("/bookings/create")
+    public String createBooking(){
+        return null;
+        //meddelande att det är klart kanske?
+    }
 
 
 }
