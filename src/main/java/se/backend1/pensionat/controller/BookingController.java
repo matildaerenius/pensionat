@@ -13,7 +13,7 @@ import se.backend1.pensionat.service.RoomService;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/booking")
+@RequestMapping("/bookings")
 public class BookingController {
 
     private BookingService bookingService;
