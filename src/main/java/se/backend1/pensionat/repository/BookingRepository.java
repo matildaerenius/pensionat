@@ -10,4 +10,9 @@ import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     List<Booking> findBookingsByDate(@Param("date") LocalDate date);
+    List<Booking> findConflictingBookings(
+            @Param("roomId") Long roomId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
 }
