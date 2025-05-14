@@ -24,7 +24,7 @@ public class Room {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private RoomType type;
+    private RoomType RoomType;
 
     private String roomNumber;
 
