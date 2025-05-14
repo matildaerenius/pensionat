@@ -23,38 +23,34 @@ public class CustomerController {
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
-
     @GetMapping
     public String getAllCustomers() {
-    return null;
+        return null;
     }
 
 
     @PostMapping("/create")
     public String createCustomer() {
-    return null;
+        return null;
     }
 
-    @PutMapping("/edit/{id}")
+    @PostMapping("/edit/{id}")
     public String updateCustomer(@PathVariable Long id) {
         return null;
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable Long id) {
-     return null;
+        return null;
     }
 
     // Här måste tror jag getCustomerById() vara
-    //Ska vara getmapping då vi vill ta ut en kund för att edita
-    //Man kanske kan ropa på updateCustomer inuti metoden. Gåt ej att ha 2 putmapping på en URL
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id) {
         return null;
     }
 
-    @PostMapping("/create")
+    @GetMapping("/create")
     public String showCreateForm() {
-        return null;
-    }
+        return null;}
 }
