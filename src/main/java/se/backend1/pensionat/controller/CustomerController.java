@@ -1,15 +1,20 @@
 package se.backend1.pensionat.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import se.backend1.pensionat.entity.Customer;
 import se.backend1.pensionat.service.CustomerService;
 
-import java.util.List;
 
-@RestController
-@RequestMapping("/api/customer")
+/**
+ * Gjorde om denna, den va skriven som om vi har REST api, men vi kör ju på Thymeleaf
+ * vi behöver inte ResponseEntity eller RequestBody, det behövs när vi skickar Json vilket vi inte gör
+ * vi ska returnera html sidor, hur man gör vet jag ännu inte :(
+ */
+
+
+@Controller
+@RequestMapping("/customers")
 public class CustomerController {
 
     private CustomerService customerService;
@@ -20,45 +25,34 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<Customer> getAllCustomers() {
-    return customerService.getAllCustomers();
+    public String getAllCustomers() {
+    return null;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
-        Customer customer = customerService.getCustomerById(id);
-        if (customer != null) {
-            return ResponseEntity.ok(customer);
 
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping("/create")
+    public String createCustomer() {
+    return null;
     }
 
-    @PostMapping
-    public ResponseEntity<String> createCustomer(@RequestBody Customer customer) {
-        customerService.saveCustomer(customer);
-    return ResponseEntity.ok("kund skapad");
+    @PostMapping("/edit/{id}")
+    public String updateCustomer(@PathVariable Long id) {
+        return null;
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateCustomer(@PathVariable int id, @RequestBody Customer customer) {
-        Customer existing = customerService.getCustomerById(id);
-        if (existing == null) {
-            return ResponseEntity.notFound().build();
-        }
-        customer.setId(existing.getId());
-        customerService.updateCustomer(customer);
-        return ResponseEntity.ok("Custumer Updated");
+    @PostMapping("/delete/{id}")
+    public String deleteCustomer(@PathVariable Long id) {
+     return null;
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCustomer(@PathVariable int id) {
-        Customer customer = customerService.getCustomerById(id);
-        if (customer == null) {
-            return ResponseEntity.notFound().build();
-        }
-        customerService.deleteCustomer(id);
-     return ResponseEntity.ok("Custumer Deleted");
+    // Här måste tror jag getCustomerById() vara
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id) {
+        return null;
+    }
+
+    @GetMapping("/create")
+    public String showCreateForm() {
+        return null;
     }
 }
