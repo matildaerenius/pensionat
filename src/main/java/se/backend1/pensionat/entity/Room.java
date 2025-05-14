@@ -1,15 +1,42 @@
 package se.backend1.pensionat.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "room")
+
 public class Room {
-    //Annotera klassen med @entity och @table(name = "rooms")
 
-   // Lägg till primärnyckel: @id, @generatedvalue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-   // Lägg till fält, id, roomnr, enum?rumtyp? maxextrabeds
+    @Enumerated(EnumType.STRING)
+    private RoomType type;
 
-    //Lägg till @onetomany(mappedBy = "room") till List<Booking>
+    private String roomNumber;
 
-   // Setter och getter och kons
+    @Min(value = 1, message = "Minst en gäst krävs")
+    @Max(value = 4, message = "Max 4 gäst")
+    private int capacity = 4;
 
-    //Add an item
+    private boolean allowExtraBeds; //VG
+//VG
+    @Min(value = 0, message = "Minst 0 extrasängar")
+    @Max(value = 3, message = "Max 2 extrasängar tillåtna")
+    private int maxExtraBeds;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<Booking> bookings = new ArrayList<>();
 }
