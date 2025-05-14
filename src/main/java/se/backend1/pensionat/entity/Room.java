@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import se.backend1.pensionat.model.RoomType;
 
 import java.util.ArrayList;
 import java.util.List;
