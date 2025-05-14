@@ -11,7 +11,7 @@ public class RoomMapper {
         room.setId(dto.getId());
         room.setRoomNumber(dto.getRoomNumber());
         room.setRoomType(dto.getRoomType());
-        room.setCapacity(dto.setBaseCapacity());
+        room.setCapacity(dto.getCapacity());
         room.setMaxExtraBeds(dto.getMaxExtraBeds());
         return room;
     }
@@ -22,7 +22,7 @@ public class RoomMapper {
         dto.setId(room.getId());
         dto.setRoomNumber(room.getRoomNumber());
         dto.setRoomType(room.getRoomType());
-        dto.setBaseCapacity(room.getBaseCapacity());
+        dto.setCapacity(room.getCapacity());
         dto.setMaxExtraBeds(room.getMaxExtraBeds());
         return dto;
     }
