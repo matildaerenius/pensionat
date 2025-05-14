@@ -19,6 +19,7 @@ public class BookingController {
     private BookingService bookingService;
     private CustomerService customerService;
     private RoomService roomService;
+
     @Autowired
     public BookingController(BookingService bookingService, CustomerService customerService, RoomService roomService) {
         this.bookingService = bookingService;
@@ -26,28 +27,24 @@ public class BookingController {
         this.roomService = roomService;
     }
 
-    @GetMapping("/bookings")
+    @GetMapping()
     public List<Booking> getAllBookings(){
         return null;
     }
 
-    @PostMapping("/bookings/create")
+    @GetMapping("/create")
     public String createBooking(){
         return null;
         //meddelande att det är klart kanske?
     }
 
-    @PutMapping("/bookings/edit/{id}")
+    @PostMapping("/edit/{id}")
     public String editBooking(@PathVariable Long id){
         return null;
     }
 
-    @DeleteMapping("/bookings/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteBooking(@PathVariable Long id){
-        return null;
-    }
-    @PostMapping("/booking")
-    public String addBooking(Booking booking){
         return null;
     }
 
@@ -57,6 +54,12 @@ public class BookingController {
     public String updateBooking(@PathVariable Long id){
         return null;
     }
+
+    @GetMapping("/search")
+    public String showSearchForm() {
+        return "bookings/search";
+    }
+
     //tar ut rum med bokning? Eller ska vi ta ut kund?
     // Står på trello att vi ska ta ut sökformulär
     @GetMapping("/bookings/search")
