@@ -30,3 +30,4 @@ public class RoomDto {
     private int maxExtraBeds;
 
 }
+//
