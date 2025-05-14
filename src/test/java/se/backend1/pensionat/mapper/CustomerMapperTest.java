@@ -12,10 +12,10 @@ public class CustomerMapperTest {
     void shouldMapDtoToEntityCorrectly() {
         CustomerDto dto = new CustomerDto();
         dto.setId(1L);
-        dto.setName("Anna Andersson");
-        dto.setEmail("anna@example.com");
+        dto.setName("Jane Doe");
+        dto.setEmail("janedoe@example.com");
         dto.setPhoneNumber("0701234567");
-        dto.setAddress("Storgatan 1");
+        dto.setAddress("Testgatan 1");
 
         Customer entity = CustomerMapper.toEntity(dto);
 
@@ -31,10 +31,10 @@ public class CustomerMapperTest {
     void shouldMapEntityToDtoCorrectly() {
         Customer customer = new Customer();
         customer.setId(2L);
-        customer.setName("Bertil Bengtsson");
-        customer.setEmail("bertil@example.com");
+        customer.setName("John Doe");
+        customer.setEmail("jane@example.com");
         customer.setPhoneNumber("0737654321");
-        customer.setAddress("Lillgatan 2");
+        customer.setAddress("Exempelgatan 2");
 
         CustomerDto dto = CustomerMapper.toDto(customer);
 
