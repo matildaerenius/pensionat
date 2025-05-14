@@ -1,4 +1,4 @@
 package se.backend1.pensionat.service;
 
-public interface BookingService {
+public interface BookingService  {
 }
