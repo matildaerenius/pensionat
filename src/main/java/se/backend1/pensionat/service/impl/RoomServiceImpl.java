@@ -9,7 +9,7 @@ import se.backend1.pensionat.service.RoomService;
 
 @Service
 public class RoomServiceImpl implements RoomService {
-   @Autowired
+    @Autowired
     private RoomRepository roomRepository;
 
     public RoomServiceImpl(RoomRepository roomRepository) {
