@@ -1,13 +1,18 @@
 package se.backend1.pensionat.service;
 
+import se.backend1.pensionat.dto.CustomerDto;
 import se.backend1.pensionat.entity.Customer;
 
 import java.util.List;
 
 public interface CustomerService {
-    List<Customer> getAllCustomers();
-    Customer getCustomerById(int id);
-    void saveCustomer(Customer customer);
-    void updateCustomer(Customer customer);
-    void deleteCustomer(int id);
+    List<CustomerDto> getAllCustomers();
+
+    CustomerDto getCustomerById(Long id);
+
+    CustomerDto createCustomer(CustomerDto customerDto);
+
+    CustomerDto updateCustomer(Long id, CustomerDto customerDto);
+
+    void deleteCustomer(Long id);
 }
