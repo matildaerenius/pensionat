@@ -70,7 +70,6 @@ public class BookingController {
     @GetMapping("/bookings/search-results")
     public List<Room> getRoomsAvailable(){return null;}
 
-
 }
 
 

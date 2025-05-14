@@ -18,9 +18,6 @@ public class RoomController {
     private BookingController bookingController;
 
 
-
-
-
     @Autowired
     public RoomController(RoomService roomService, BookingController bookingController) {
         this.roomService = roomService;
