@@ -1,5 +1,7 @@
 package se.backend1.pensionat.service;
 
-public interface RoomService {
+import se.backend1.pensionat.entity.Room;
 
-}
+public interface RoomService {
+        Room saveRoom(Room room);
+    }
