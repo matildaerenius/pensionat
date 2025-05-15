@@ -1,8 +1,14 @@
 package se.backend1.pensionat.mapper;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.Test;
 import se.backend1.pensionat.dto.CustomerDto;
 import se.backend1.pensionat.entity.Customer;
+
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,12 +35,18 @@ public class CustomerMapperTest {
 
     @Test
     void shouldMapEntityToDtoCorrectly() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
         Customer customer = new Customer();
         customer.setId(2L);
         customer.setName("John Doe");
         customer.setEmail("jane@example.com");
         customer.setPhoneNumber("0737654321");
         customer.setAddress("Exempelgatan 2");
+
+        Set<ConstraintViolation<CustomerDto>> violations = validator.validate(CustomerMapper.toDto(customer));
+        assertTrue(violations.isEmpty(), "Validering misslyckades: " + violations);
 
         CustomerDto dto = CustomerMapper.toDto(customer);
 
