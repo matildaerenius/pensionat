@@ -50,7 +50,15 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto updateRoom(Long id, RoomDto dto) {
-        return null;
+        roomRepository.findById(id.intValue())
+                .orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
+        Room updatedRoom = RoomMapper.toEntity(dto);
+        updatedRoom.setId(id);
+        validateExtraBeds(updatedRoom);
+        Room saved = roomRepository.save(updatedRoom);
+        return roomMapper.toDto(saved);
+
+
     }
 
     @Override
