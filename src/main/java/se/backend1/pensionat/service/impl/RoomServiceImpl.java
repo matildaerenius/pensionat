@@ -63,7 +63,12 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void deleteRoom(Long id) {
+        Room room = roomRepository.findById(id.intValue()).orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
 
+        if(!room.getBookings().isEmpty()) {
+            throw new IllegalStateException("Rummet har bokningar och kan inte tas bort");
+        }
+            roomRepository.delete(room);
     }
 
     @Override
