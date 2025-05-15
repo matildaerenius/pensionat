@@ -44,6 +44,8 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public RoomDto createRoom(RoomDto dto) {
         Room room = RoomMapper.toEntity(dto);
+        validateExtraBeds(room); //  VG: validate extra bed rules
+
         Room saved = roomRepository.save(room);
         return roomMapper.toDto(saved);
     }
