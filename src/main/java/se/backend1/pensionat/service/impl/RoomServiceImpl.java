@@ -10,6 +10,8 @@ import se.backend1.pensionat.repository.RoomRepository;
 import se.backend1.pensionat.service.RoomService;
 
 import java.util.List;
+
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +19,7 @@ public class RoomServiceImpl implements RoomService {
 
     private RoomRepository roomRepository;
     private RoomMapper roomMapper;
+
 
     @Autowired
     public RoomServiceImpl(RoomRepository roomRepository, RoomMapper roomMapper) {
@@ -41,36 +44,16 @@ public class RoomServiceImpl implements RoomService {
                 .collect(Collectors.toList());
     }
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import se.backend1.pensionat.dto.RoomDto;
-import se.backend1.pensionat.entity.Room;
-import se.backend1.pensionat.mapper.RoomMapper;
-import se.backend1.pensionat.repository.RoomRepository;
-import se.backend1.pensionat.service.RoomService;
-
-import java.util.List;
-
-@Service
-public class RoomServiceImpl implements RoomService {
-
-    private RoomRepository roomRepository;
-
-    @Autowired
-    public RoomServiceImpl(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
-    }
-
     @Override
     public RoomDto createRoom(RoomDto dto) {
         Room room = RoomMapper.toEntity(dto);
         Room saved = roomRepository.save(room);
-        return RoomMapper.toDto(saved);
+        return roomMapper.toDto(saved);
     }
 
     @Override
     public RoomDto updateRoom(Long id, RoomDto dto) {
-        return RoomMapper.toDto(updated);
+        return roomMapper.toDto(updated);
     }
 
     @Override
@@ -80,11 +63,20 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto getRoomById(Long id) {
-        return RoomMapper.toDto(room);
+        return roomMapper.toDto(room);
     }
-
+/*
     @Override
     public List<RoomDto> getAllRooms() {
         return List.of();
     }
+
+    private RoomRepository roomRepository;
+
+    @Autowired
+    public RoomServiceImpl(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
+    }
+
+ */
 }
