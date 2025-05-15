@@ -11,40 +11,40 @@ import se.backend1.pensionat.service.RoomService;
 @RequestMapping("/rooms")
 public class RoomController {
 
-    private RoomService roomService;
-
-    @Autowired
-    public RoomController(RoomService roomService) {
-        this.roomService = roomService;
-    }
-
-    @GetMapping
-    public String listRooms() {
-        return null;
-    }
-
-    @GetMapping("/create")
-    public String showCreateForm() {
-        return null;
-    }
-
-    @PostMapping("/create")
-    public String createRoom() {
-        return null;
-     }
-
-     @GetMapping("/edit/{id}")
-    public String showEditFrom() {
-        return null;
-     }
-
-     @PostMapping("/edit/{id}")
-    public String updateRoom() {
-        return null;
-     }
-
-     @PostMapping("/delete/{id}")
-    public String deleteRoom() {
-        return null;
-     }
+//    private RoomService roomService;
+//
+//    @Autowired
+//    public RoomController(RoomService roomService) {
+//        this.roomService = roomService;
+//    }
+//
+//    @GetMapping
+//    public String listRooms() {
+//        return null;
+//    }
+//
+//    @GetMapping("/create")
+//    public String showCreateForm() {
+//        return null;
+//    }
+//
+//    @PostMapping("/create")
+//    public String createRoom() {
+//        return null;
+//     }
+//
+//     @GetMapping("/edit/{id}")
+//    public String showEditFrom() {
+//        return null;
+//     }
+//
+//     @PostMapping("/edit/{id}")
+//    public String updateRoom() {
+//        return null;
+//     }
+//
+//     @PostMapping("/delete/{id}")
+//    public String deleteRoom() {
+//        return null;
+//     }
 }

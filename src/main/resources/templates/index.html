@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layout :: layout">
 
-</body>
+<div th:fragment="content" class="centered">
+    <h2>Välkommen till bokningssystemet!</h2>
+    <p>Välj en funktion i menyn!</p>
+</div>
+
 </html>
