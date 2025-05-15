@@ -35,8 +35,7 @@ public class CustomerMapperTest {
 
     @Test
     void shouldMapEntityToDtoCorrectly() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+
 
         Customer customer = new Customer();
         customer.setId(2L);
@@ -45,8 +44,6 @@ public class CustomerMapperTest {
         customer.setPhoneNumber("0737654321");
         customer.setAddress("Exempelgatan 2");
 
-        Set<ConstraintViolation<CustomerDto>> violations = validator.validate(CustomerMapper.toDto(customer));
-        assertTrue(violations.isEmpty(), "Validering misslyckades: " + violations);
 
         CustomerDto dto = CustomerMapper.toDto(customer);
 

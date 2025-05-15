@@ -22,6 +22,7 @@ public class BookingMapper {
         dto.setId(booking.getId());
         dto.setCheckIn(booking.getCheckIn());
         dto.setCheckOut(booking.getCheckOut());
+        dto.setNumberOfGuests(booking.getNumberOfGuests());
         dto.setCustomerId(booking.getCustomer().getId());
         dto.setRoomId(booking.getRoom().getId());
         return dto;
