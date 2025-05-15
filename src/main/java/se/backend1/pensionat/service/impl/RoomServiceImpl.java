@@ -27,14 +27,11 @@ public class RoomServiceImpl implements RoomService {
         this.roomMapper=roomMapper;
 
     }
-
     @Override
     public Room saveRoom(Room room){
-        //If the room is not a DOUBLE room but still has extra beds set (maxExtraBeds > 0), then that’s not allowed.
-        if(room.getRoomType()!=RoomType.DOUBLE&& room.getMaxExtraBeds()>0){
-            throw new IllegalArgumentException("Extrasängar är endast tillåtna för dubbelrum");
-        }
+        validateExtraBeds(room);
         return roomRepository.save(room);
+
     }
     @Override
     public List<RoomDto> getAllRooms() {
@@ -63,7 +60,22 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto getRoomById(Long id) {
-        return null;
+        Room room = roomRepository.findById(id.intValue())
+                .orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
+
+        return roomMapper.toDto(room);
+    }
+
+
+    // Valideringsmetod som kontrollerar att bara dubbelrum får ha extrasängar
+    private void validateExtraBeds(Room room) {
+        if (room.getRoomType() != RoomType.DOUBLE && room.getMaxExtraBeds() > 0) {
+            throw new IllegalArgumentException("Extrasängar är endast tillåtna för dubbelrum");
+        }
+
+        if (room.getRoomType() == RoomType.SINGLE && room.getMaxExtraBeds() != 0) {
+            throw new IllegalArgumentException("Enkelrum får inte ha extrasängar");
+        }
     }
 /*
     @Override
