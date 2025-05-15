@@ -23,6 +23,7 @@ public class CustomerMapper {
         dto.setName(customer.getName());
         dto.setEmail(customer.getEmail());
         dto.setPhoneNumber(customer.getPhoneNumber());
+        dto.setAddress(customer.getAddress());
         return dto;
     }
 }

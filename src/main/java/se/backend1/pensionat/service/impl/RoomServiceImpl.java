@@ -53,7 +53,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto updateRoom(Long id, RoomDto dto) {
-        return roomMapper.toDto(updated);
+        return null;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto getRoomById(Long id) {
-        return roomMapper.toDto(room);
+        return null;
     }
 /*
     @Override
