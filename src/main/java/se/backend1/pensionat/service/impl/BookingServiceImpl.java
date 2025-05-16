@@ -8,6 +8,7 @@ import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Customer;
 import se.backend1.pensionat.repository.BookingRepository;
+import se.backend1.pensionat.repository.CustomerRepository;
 import se.backend1.pensionat.service.BookingService;
 
 import java.time.LocalDate;
@@ -17,32 +18,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-    private BookingRepository bookingRepository;
-
-
-    //Bygger från Booking TILL DTO
-    @Override
-    public BookingDto bookingToBookingDto (Booking b){
-        return BookingDto.builder()
-                .id(b.getId())
-                .checkIn(b.getCheckIn())
-                .checkOut(b.getCheckOut())
-                .numberOfGuests(b.getNumberOfGuests())
-                .customerId(b.getCustomer().getId())
-                .roomId(b.getRoom().getId())
-                .build();
-    }
-
-    @Override
-    public DetailedBookingDto getDetailedBooking(Booking b) {
-        return DetailedBookingDto.builder()
-                .bookingDto(bookingToBookingDto(b))// bygger på ovanstående
-                .customerDto(customerToCustomerDto(b.getCustomer()))
-                .roomDto(roomToRoomDto(b.getRoom()))
-                .build();
-    }
-
-
+    private final BookingRepository bookingRepository;
+    private final CustomerRepository customerRepository;
 
 
 

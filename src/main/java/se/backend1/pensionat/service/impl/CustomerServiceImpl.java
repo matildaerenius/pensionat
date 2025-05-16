@@ -25,6 +25,9 @@ public class CustomerServiceImpl implements CustomerService {
 //        return List.of();
 //    }
 
+    //Bygger om customer -> DTO
+
+
     @Override
     public List<CustomerDto> getAllCustomers() {
         return List.of();

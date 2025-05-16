@@ -10,9 +10,9 @@ import java.util.List;
 
 public interface BookingService  {
 
-    DetailedBookingDto getDetailedBooking(Booking booking);
+  //  DetailedBookingDto getDetailedBooking(Booking booking);
 
-    BookingDto bookingToBookingDto(Booking booking);
+    //BookingDto bookingToBookingDto(Booking booking);
 
 
     List<Booking> getBookingsForDate(LocalDate date);
