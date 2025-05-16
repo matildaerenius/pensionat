@@ -1,6 +1,7 @@
 package se.backend1.pensionat.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,15 +14,12 @@ import se.backend1.pensionat.exception.CustomerNotFoundException;
 import se.backend1.pensionat.service.CustomerService;
 
 @Controller
+@RequiredArgsConstructor //detta gör att vi kan ta bort Autowired o slipper göra konstruktorer
 @RequestMapping("/customers")
 public class CustomerController {
 
     private CustomerService customerService;
 
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
 
     /**
      * Visar en lista med alla kunder på sidan customers/list.html, OBS: ändra till rätt om vi inte kör just den html
