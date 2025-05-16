@@ -8,7 +8,7 @@ import se.backend1.pensionat.entity.Room;
 @Component
 public class RoomMapper {
 
-    public static Room toEntity(RoomDto dto) {
+    public Room toEntity(RoomDto dto) {
         if (dto == null) return null;
         Room room = new Room();
         room.setId(dto.getId());
@@ -19,7 +19,7 @@ public class RoomMapper {
         return room;
     }
 
-    public static RoomDto toDto(Room room) {
+    public RoomDto toDto(Room room) {
         if (room == null) return null;
         RoomDto dto = new RoomDto();
         dto.setId(room.getId());

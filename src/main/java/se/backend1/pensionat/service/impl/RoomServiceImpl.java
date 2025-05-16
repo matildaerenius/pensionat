@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @Service
 public class RoomServiceImpl implements RoomService {
 
-    private RoomRepository roomRepository;
-    private RoomMapper roomMapper;
+    private final RoomRepository roomRepository;
+    private final RoomMapper roomMapper;
 
 
     @Autowired
@@ -46,7 +46,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto createRoom(RoomDto dto) {
-        Room room = RoomMapper.toEntity(dto);
+        Room room = roomMapper.toEntity(dto);
         Room saved = roomRepository.save(room);
         return roomMapper.toDto(saved);
     }
