@@ -22,15 +22,25 @@ public class RoomServiceImpl implements RoomService {
     private RoomRepository roomRepository;
     private RoomMapper roomMapper;
 
-
     @Override
     public Room saveRoom(Room room){
         validateExtraBeds(room);
         return roomRepository.save(room);
 
     }
+
+    //Ny metod där det läggs till
+    //Från frontend!
+    @Override
+    public Room saveRoomFromFrontEnd(RoomDto roomDto) {
+        validateExtraBedsDto(roomDto);
+        return roomMapper.roomDtoToRoom(roomDto);
+    }
+
     @Override
     public List<RoomDto> getAllRooms() {
+      // return roomRepository.findAll(); Är detta inte vad som är korrekt?
+
         List<Room> rooms = roomRepository.findAll();
         return rooms.stream()
                 .map(roomMapper::toDto)
@@ -38,12 +48,19 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomDto createRoom(RoomDto dto) {
+    public Room createRoom(RoomDto roomDto) {
+     Room room= roomMapper.roomDtoToRoom(roomDto);
+     validateExtraBeds(room);
+     return roomRepository.save(room);
+    }
+
+    @Override
+    public RoomDto createRoomDto(RoomDto dto) {
         Room room = RoomMapper.toEntity(dto);
         validateExtraBeds(room); //  VG: validate extra bed rules
-
         Room saved = roomRepository.save(room);
         return roomMapper.toDto(saved);
+
     }
 
     @Override
@@ -85,6 +102,17 @@ public class RoomServiceImpl implements RoomService {
         }
 
         if (room.getRoomType() == RoomType.SINGLE && room.getMaxExtraBeds() != 0) {
+            throw new IllegalArgumentException("Enkelrum får inte ha extrasängar");
+        }
+    }
+
+    // Valideringsmetod som kontrollerar att bara dubbelrum får ha extrasängar
+    private void validateExtraBedsDto(RoomDto roomDto) {
+        if (roomDto.getRoomType() != RoomType.DOUBLE && roomDto.getMaxExtraBeds() > 0) {
+            throw new IllegalArgumentException("Extrasängar är endast tillåtna för dubbelrum");
+        }
+
+        if (roomDto.getRoomType() == RoomType.SINGLE && roomDto.getMaxExtraBeds() != 0) {
             throw new IllegalArgumentException("Enkelrum får inte ha extrasängar");
         }
     }

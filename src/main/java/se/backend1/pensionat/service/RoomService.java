@@ -11,8 +11,11 @@ import java.util.List;
 
 public interface RoomService {
         Room saveRoom(Room room);
+        //Tittar rad 15 och rad 35 i impl
+        Room saveRoomFromFrontEnd(RoomDto roomDto);
         List<RoomDto> getAllRooms();
-        RoomDto createRoom(RoomDto dto);
+        Room createRoom(RoomDto dto);
+        RoomDto createRoomDto(RoomDto dto);
         RoomDto updateRoom(Long id, RoomDto dto);
         void deleteRoom(Long id);
         RoomDto getRoomById(Long id);
