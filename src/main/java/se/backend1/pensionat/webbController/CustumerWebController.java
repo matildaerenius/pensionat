@@ -32,5 +32,7 @@ public class CustumerWebController {
 
     }
     @PostMapping
-    public String createCustomer(@ModelAttribute("customer") Customer customer) {}
+    public String createCustomer(@ModelAttribute("customer") Customer customer) {
+     return "customer-form";
+    }
 }

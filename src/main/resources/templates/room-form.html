@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${roomDto.id == null} ? 'Nytt rum' : 'Redigera rum'">Rum</title>
+  <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<h1 th:text="${roomDto.id == null} ? 'Skapa nytt rum' : 'Redigera rum'}"></h1>
+
+<form th:action="@{/rooms}" th:object="${roomDto}" method="post">
+  <input type="hidden" th:field="*{id}" />
+
+  <div>
+    <label>Rumstyp:</label>
+    <select th:field="*{RoomType}">
+      <option th:each="type : ${types}"
+              th:value="${type}"
+              th:text="${type}">TYPE</option>
+    </select>
+    <div th:if="${#fields.hasErrors('roomType')}" th:errors="*{roomType}"></div>
+  </div>
+
+  <div>
+    <label>Rumsnummer:</label>
+    <input type="text" th:field="*{roomNumber}" />
+    <div th:if="${#fields.hasErrors('roomNumber')}" th:errors="*{roomNumber}"></div>
+  </div>
+
+  <div>
+    <label>Kapacitet:</label>
+    <input type="number" th:field="*{capacity}" min="1" max="4" />
+    <div th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></div>
+  </div>
+
+  <div>
+    <label>Extrasängar tillåtna?:</label>
+    <input type="checkbox" th:field="*{allowExtraBeds}" />
+  </div>
+
+  <div th:if="*{allowExtraBeds}">
+    <label>Max antal extrasängar:</label>
+    <input type="number" th:field="*{maxExtraBeds}" min="0" max="2" />
+    <div th:if="${#fields.hasErrors('maxExtraBeds')}" th:errors="*{maxExtraBeds}"></div>
+  </div>
+
+  <button type="submit">Spara</button>
+  <a th:href="@{/rooms}">Avbryt</a>
+</form>
+
+</body>
+</html>
