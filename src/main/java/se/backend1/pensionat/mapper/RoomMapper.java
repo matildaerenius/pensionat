@@ -19,7 +19,7 @@ public class RoomMapper {
         return room;
     }
 
-    public RoomDto toDto(Room room) {
+    public static RoomDto toDto(Room room) {
         if (room == null) return null;
         RoomDto dto = new RoomDto();
         dto.setId(room.getId());

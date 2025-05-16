@@ -27,14 +27,11 @@ public class RoomServiceImpl implements RoomService {
         this.roomMapper=roomMapper;
 
     }
-
     @Override
     public Room saveRoom(Room room){
-        //If the room is not a DOUBLE room but still has extra beds set (maxExtraBeds > 0), then that’s not allowed.
-        if(room.getRoomType()!=RoomType.DOUBLE&& room.getMaxExtraBeds()>0){
-            throw new IllegalArgumentException("Extrasängar är endast tillåtna för dubbelrum");
-        }
+        validateExtraBeds(room);
         return roomRepository.save(room);
+
     }
     @Override
     public List<RoomDto> getAllRooms() {
@@ -47,23 +44,53 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public RoomDto createRoom(RoomDto dto) {
         Room room = RoomMapper.toEntity(dto);
+        validateExtraBeds(room); //  VG: validate extra bed rules
+
         Room saved = roomRepository.save(room);
         return roomMapper.toDto(saved);
     }
 
     @Override
     public RoomDto updateRoom(Long id, RoomDto dto) {
-        return null;
+        roomRepository.findById(id.intValue())
+                .orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
+        Room updatedRoom = RoomMapper.toEntity(dto);
+        updatedRoom.setId(id);
+        validateExtraBeds(updatedRoom);
+        Room saved = roomRepository.save(updatedRoom);
+        return roomMapper.toDto(saved);
+
+
     }
 
     @Override
     public void deleteRoom(Long id) {
+        Room room = roomRepository.findById(id.intValue()).orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
 
+        if(!room.getBookings().isEmpty()) {
+            throw new IllegalStateException("Rummet har bokningar och kan inte tas bort");
+        }
+            roomRepository.delete(room);
     }
 
     @Override
     public RoomDto getRoomById(Long id) {
-        return null;
+        Room room = roomRepository.findById(id.intValue())
+                .orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
+
+        return roomMapper.toDto(room);
+    }
+
+
+    // Valideringsmetod som kontrollerar att bara dubbelrum får ha extrasängar
+    private void validateExtraBeds(Room room) {
+        if (room.getRoomType() != RoomType.DOUBLE && room.getMaxExtraBeds() > 0) {
+            throw new IllegalArgumentException("Extrasängar är endast tillåtna för dubbelrum");
+        }
+
+        if (room.getRoomType() == RoomType.SINGLE && room.getMaxExtraBeds() != 0) {
+            throw new IllegalArgumentException("Enkelrum får inte ha extrasängar");
+        }
     }
 /*
     @Override
