@@ -9,7 +9,7 @@ import java.util.List;
 public interface BookingService  {
     List<Booking> getBookingsForDate(LocalDate date);
 
-    boolean isRoomAvailable(Long roomId, LocalDate startDate, LocalDate endDate);
+    boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
 
     void saveBooking(Booking booking);
 

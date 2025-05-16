@@ -24,8 +24,8 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findBookingsByDate(date);
     }
     @Override
-    public boolean isRoomAvailable(Long roomId, LocalDate startDate, LocalDate endDate) {
-        List<Booking> conflicts = bookingRepository.findConflictingBookings(roomId, startDate, endDate);
+    public boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
+        List<Booking> conflicts = bookingRepository.findConflictingBookings(roomId, checkIn, checkOut);
         return conflicts.isEmpty(); // true = ledigt, false = dubbelbokning
     }
 
