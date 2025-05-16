@@ -1,9 +1,14 @@
 package se.backend1.pensionat.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.repository.BookingRepository;
@@ -24,14 +29,47 @@ public class BookingController {
 
 
     @GetMapping()
-    public List<Booking> getAllBookings(){
-        return null;
+    public String getAllBookings(Model model){
+        List<Booking> bookings = bookingService.getAllBookings();
+        model.addAttribute("bookings", bookings);
+        return "bookings/list";
     }
 
+    /**
+     * Visar formulär för att skapa en ny bokning
+     */
     @GetMapping("/create")
-    public String createBooking(){
-        return null;
-        //meddelande att det är klart kanske?
+    public String showCreateForm(Model model) {
+        model.addAttribute("bookingDto", new BookingDto());
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("rooms", roomService.getAllRooms());
+        return "bookings/create";
+    }
+
+    @PostMapping("/create")
+    public String createBooking(@ModelAttribute("bookingDto") @Valid BookingDto bookingDto,
+                                BindingResult result, RedirectAttributes redirectAttributes, Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("customers", customerService.getAllCustomers());
+            model.addAttribute("rooms", roomService.getAllRooms());
+            return "bookings/create";
+        }
+
+        if (!bookingService.isRoomAvailable(bookingDto.getRoomId(), bookingDto.getCheckIn(), bookingDto.getCheckOut())) {
+            result.rejectValue("roomId", "error.bookingDto", "Rummet är redan bokat för valt datum.");
+            model.addAttribute("customers", customerService.getAllCustomers());
+            model.addAttribute("rooms", roomService.getAllRooms());
+            return "bookings/create";
+        }
+
+        Booking booking = BookingMapper.toEntity(bookingDto);
+        booking.setCustomer(customerService.getCustomerById(bookingDto.getCustomerId())); // behöver toEntity om DTO returneras
+        booking.setRoom(roomService.getRoomById(bookingDto.getRoomId())); // samma här
+
+        bookingService.saveBooking(booking);
+        redirectAttributes.addFlashAttribute("success", "Bokningen skapades!");
+        return "redirect:/bookings";
     }
 
     @PostMapping("/edit/{id}")
@@ -41,14 +79,32 @@ public class BookingController {
 
     @PostMapping("/delete/{id}")
     public String deleteBooking(@PathVariable Long id){
-        return null;
+        bookingService.deleteBooking(id);
+        return "redirect:/bookings";
     }
 
     // @PatchMapping Denna uppdaterar bara en del?
     //annars är det samma metod som editbooking där uppe
-    @PutMapping("/bookings/update/{id}")
-    public String updateBooking(@PathVariable Long id){
-        return null;
+    @PostMapping("/edit/{id}")
+    public String updateBooking(@PathVariable Long id,
+                                @ModelAttribute("bookingDto") @Valid BookingDto bookingDto,
+                                BindingResult result,
+                                Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("customers", customerService.getAllCustomers());
+            model.addAttribute("rooms", roomService.getAllRooms());
+            return "bookings/edit";
+        }
+
+        if (!bookingService.isRoomAvailable(bookingDto.getRoomId(), bookingDto.getCheckIn(), bookingDto.getCheckOut())) {
+            result.rejectValue("roomId", "error.bookingDto", "Rummet är inte ledigt under den vald tidsinterbvall.");
+            model.addAttribute("customers", customerService.getAllCustomers());
+            model.addAttribute("rooms", roomService.getAllRooms());
+            return "bookings/edit";
+        }
+
+        bookingService.updateBooking(id, bookingDto);
+        return "redirect:/bookings";
     }
 
     @GetMapping("/search")
@@ -58,13 +114,36 @@ public class BookingController {
 
     //tar ut rum med bokning? Eller ska vi ta ut kund?
     // Står på trello att vi ska ta ut sökformulär
+    // Hämtar bokningar för ett rum
     @GetMapping("/bookings/search")
-    public List<Booking> getBookingsByRoom(@RequestParam Long roomId){
-        return null;
+    public String getBookingsByRoom(@RequestParam Long roomId, Model model){
+        List<Booking> bookings = bookingService.getBookingsByRoomId(roomId);
+        model.addAttribute("bookings", bookings);
+        return "bookings/list";
     }
     //Vi ska få ut lediga rum baserat på datum och antal personer
     @GetMapping("/bookings/search-results")
-    public List<Room> getRoomsAvailable(){return null;}
+    public String getRoomsAvailable(@RequestParam String checkIn,
+                                    @RequestParam String checkOut,
+                                    @RequestParam int guests,
+                                    Model model) {
+        List<Room> availableRooms = bookingService.findAvailableRooms(checkIn, checkOut, guests);
+        model.addAttribute("availableRooms", availableRooms);
+        return "bookings/available-rooms";
+    }
+
+    /**
+     * Visar formulär för att redigera bokning
+     */
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Booking booking = bookingService.getBookingById(id);
+        BookingDto bookingDto = BookingMapper.toDto(booking);
+        model.addAttribute("bookingDto", bookingDto);
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("rooms", roomService.getAllRooms());
+        return "bookings/edit";
+    }
 
 }
 
