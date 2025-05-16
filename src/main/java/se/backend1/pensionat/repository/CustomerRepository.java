@@ -5,7 +5,8 @@ import se.backend1.pensionat.entity.Customer;
 
 import java.util.List;
 
-public interface CustomerRepository extends JpaRepository<Customer, Long> { // Tillgång till Crud-metoder mot SQL.DB
+public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+    // Tillgång till Crud-metoder mot SQL.DB
 
 //                //Mer specifika metoder utanför JpaRepository
 //    List<Customer> findByLastName(String lastName);

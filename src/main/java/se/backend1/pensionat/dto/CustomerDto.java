@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerDto {
 
-    private long id;
+    private Long id;
 
     @NotBlank(message = "Namn får inte vara tomt")
     @Size(max = 100, message = "Namn får vara högst 100 tecken långt")
@@ -26,9 +26,9 @@ public class CustomerDto {
 
     @NotBlank(message = "Telefonnummer får inte vara tomt")
     @Pattern(regexp = "^\\+?[0-9. ()-]{7,25}$", message = "Ogiltigt telefonnummer")
-    private String phone;
+    private String phoneNumber;
 
     @NotBlank(message = "Adress får inte vara tom")
-    @Size(max = 100, message = "Adress får vara högst 200 tecken lång")
+    @Size(max = 200, message = "Adress får vara högst 200 tecken lång")
     private String address;
 }
