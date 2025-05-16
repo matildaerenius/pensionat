@@ -25,7 +25,7 @@ public class Room {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private RoomType RoomType;
+    private RoomType roomType;
 
     // auto generated? eller ska vi ha separata sifforr för vardera rum
     //Kanske borde skapa allt rum via Bean (bootstrap)

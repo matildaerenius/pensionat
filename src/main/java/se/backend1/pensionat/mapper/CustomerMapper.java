@@ -7,6 +7,7 @@ import se.backend1.pensionat.entity.Customer;
 @Component
 public class CustomerMapper {
 
+    //Customer > DTO
     public CustomerDto customerToCustomerDto(Customer customer) {
         return CustomerDto.builder()
                 .id(customer.getId())
@@ -14,6 +15,17 @@ public class CustomerMapper {
                 .email(customer.getEmail())
                 .phoneNumber(customer.getPhoneNumber())
                 .address(customer.getAddress())
+                .build();
+    }
+
+    // DTO > Customer
+    public Customer customerDtoToCustomer(CustomerDto customerDto) {
+        return Customer.builder()
+                .id(customerDto.getId())
+                .name(customerDto.getName())
+                .email(customerDto.getEmail())
+                .phoneNumber(customerDto.getPhoneNumber())
+                .address(customerDto.getAddress())
                 .build();
     }
 
