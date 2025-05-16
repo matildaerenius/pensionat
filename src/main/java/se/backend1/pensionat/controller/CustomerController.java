@@ -18,7 +18,7 @@ import se.backend1.pensionat.service.CustomerService;
 @RequestMapping("/customers")
 public class CustomerController {
 
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
 
     /**
