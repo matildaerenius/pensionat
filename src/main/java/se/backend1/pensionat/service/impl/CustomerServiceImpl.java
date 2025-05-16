@@ -26,7 +26,7 @@ public class CustomerServiceImpl implements CustomerService {
     // TODO : Kasta CustomerNotFoundException om kund inte hittas
     @Override
     public CustomerDto getCustomerById(Long id) {
-        return CustomerMapper.toDto(customer);
+        return null;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class CustomerServiceImpl implements CustomerService {
     // TODO : Kasta CustomerNotFoundException om kund inte hittas
     @Override
     public CustomerDto updateCustomer(Long id, CustomerDto customerDto) {
-        return CustomerMapper.toDto(updated);
+        return null;
     }
 
     // TODO : Checka om kund redan har aktiv bokning -> om ja, kasta CustomerHasBookingsException -> om nej, delete kund.

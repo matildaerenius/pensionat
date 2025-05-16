@@ -7,8 +7,8 @@ import se.backend1.pensionat.model.RoomType;
 
 import java.util.List;
 
-public interface RoomRepository extends JpaRepository<Room, Integer> {
-    List<Room> findByRoomType(RoomType roomType);
-    List <Room> findByBaseCapacityGreaterThanEqual(int baseCapacity);
-
-}
+//public interface RoomRepository extends JpaRepository<Room, Integer> {
+//    List<Room> findByRoomType(RoomType roomType);
+//    List <Room> findByBaseCapacityGreaterThanEqual(int baseCapacity);
+//
+//}
