@@ -1,5 +1,6 @@
 package se.backend1.pensionat.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.backend1.pensionat.dto.CustomerDto;
@@ -15,12 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
-    @Autowired
+
     private CustomerRepository customerRepository;
 
     // TODO : Denna måste mappas om till toDto fyi
+//    @Override
+//    public List<CustomerDto> getAllCustomers() {
+//        return List.of();
+//    }
+
+    //Bygger om customer -> DTO
+
+
     @Override
     public List<CustomerDto> getAllCustomers() {
         List<Customer> customers = customerRepository.findAll();

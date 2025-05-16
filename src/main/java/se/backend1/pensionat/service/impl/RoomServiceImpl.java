@@ -1,5 +1,6 @@
 package se.backend1.pensionat.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.backend1.pensionat.dto.RoomDto;
@@ -17,18 +18,13 @@ import java.util.stream.Collectors;
 // TODO : Kastar fel exceptions, har skapat specifika, ändra till rätta
 
 @Service
+@RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
     private RoomRepository roomRepository;
     private RoomMapper roomMapper;
 
 
-    @Autowired
-    public RoomServiceImpl(RoomRepository roomRepository, RoomMapper roomMapper) {
-        this.roomRepository = roomRepository;
-        this.roomMapper=roomMapper;
-
-    }
     @Override
     public Room saveRoom(Room room){
         validateExtraBeds(room);
