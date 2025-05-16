@@ -11,4 +11,5 @@ public interface RoomRepository extends JpaRepository<Room, Integer> {
     List<Room> findByRoomType(RoomType roomType);
     List <Room> findByBaseCapacityGreaterThanEqual(int baseCapacity);
 
+
 }

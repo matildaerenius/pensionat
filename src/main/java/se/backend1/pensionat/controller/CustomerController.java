@@ -23,16 +23,15 @@ public class CustomerController {
     public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
-
     @GetMapping
     public String getAllCustomers() {
-    return null;
+        return null;
     }
 
 
     @PostMapping("/create")
     public String createCustomer() {
-    return null;
+        return null;
     }
 
     @PostMapping("/edit/{id}")
@@ -42,7 +41,7 @@ public class CustomerController {
 
     @PostMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable Long id) {
-     return null;
+        return null;
     }
 
     // Här måste tror jag getCustomerById() vara
@@ -53,6 +52,5 @@ public class CustomerController {
 
     @GetMapping("/create")
     public String showCreateForm() {
-        return null;
-    }
+        return null;}
 }

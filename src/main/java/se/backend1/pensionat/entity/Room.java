@@ -26,6 +26,8 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomType RoomType;
 
+    // auto generated? eller ska vi ha separata sifforr för vardera rum
+    //Kanske borde skapa allt rum via Bean (bootstrap)
     private String roomNumber;
 
     @Min(value = 1, message = "Minst en gäst krävs")

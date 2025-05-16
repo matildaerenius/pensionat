@@ -1,8 +1,11 @@
 package se.backend1.pensionat.mapper;
 
+import org.springframework.stereotype.Component;
 import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.entity.Room;
 
+//Component görs så det inte blir error i roomserviceimpl
+@Component
 public class RoomMapper {
 
     public static Room toEntity(RoomDto dto) {
