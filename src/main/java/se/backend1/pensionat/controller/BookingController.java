@@ -60,6 +60,7 @@ public class BookingController {
     // Står på trello att vi ska ta ut sökformulär
     @GetMapping("/bookings/search")
     public List<Booking> getBookingsByRoom(@RequestParam Long roomId){
+
         return null;
     }
     //Vi ska få ut lediga rum baserat på datum och antal personer

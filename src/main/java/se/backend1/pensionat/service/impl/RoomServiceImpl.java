@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    private RoomRepository roomRepository;
-    private RoomMapper roomMapper;
+    private final RoomRepository roomRepository;
+    private final RoomMapper roomMapper;
 
     @Override
     public Room saveRoom(Room room){
@@ -65,7 +65,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto updateRoom(Long id, RoomDto dto) {
-        roomRepository.findById(id.intValue())
+        roomRepository.findById(id.longValue())
                 .orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
         Room updatedRoom = RoomMapper.toEntity(dto);
         updatedRoom.setId(id);
@@ -78,7 +78,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void deleteRoom(Long id) {
-        Room room = roomRepository.findById(id.intValue()).orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
+        Room room = roomRepository.findById(id.longValue()).orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
 
         if(!room.getBookings().isEmpty()) {
             throw new IllegalStateException("Rummet har bokningar och kan inte tas bort");
@@ -88,7 +88,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto getRoomById(Long id) {
-        Room room = roomRepository.findById(id.intValue())
+        Room room = roomRepository.findById(id.longValue())
                 .orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
 
         return roomMapper.toDto(room);

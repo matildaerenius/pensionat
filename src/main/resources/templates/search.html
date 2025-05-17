@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Sök efter lediga rum</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+
+<div th:replace="layout:: layout">
+<div th:fragment="content">
+
+  <h1>Sök lefiga rum</h1>
+  <form th:action="@{/rooms/search}"method ="get">
+      <labe for="startDatum">incheckning:</labe>
+      <input type="date" id="startDatum" name="startDatum" required>
+
+    <labe for="slutDatum">Utcheckning:</labe>
+    <input type="date" id="slutDatum" name="slutDatum" required>
+
+    <labe for="gäst">Antal personer:</labe>
+    <input type="nummer" id="gäst" min="1" required>
+
+    <button type="submit">Sök</button>
+
+  </form>
+
+
+  <div th:if="${availableRooms != null}">
+    <h2>Lediga rum</h2>
+    <table>
+      <tr>
+        <th>Rumsnummer</th>
+        <th>Typ</th>
+        <th>Kapacitet</th>
+
+      </tr>
+      <tr th:each="room : ${availableRooms}">
+        <td th:text="${room.number}">101</td>
+        <td th:text="${room.roomType}">Dubbelrum</td>
+        <td th:text="${room.capacity}">2</td>
+
+      </tr>
+    </table>
+  </div>
+</div>
+</div>
+</body>
+</html>

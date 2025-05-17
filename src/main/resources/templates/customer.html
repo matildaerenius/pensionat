@@ -1,42 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>KundLista</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
-<body>
+<html lang="sv" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<div th:fragment="content">
 
-<h1>Alla kunder</h1>
+    <h1>Alla kunder</h1>
 
-<a th:href="@{/customers/new}">Skapa ny kund</a>
+    <a th:href="@{/customers/new}">Skapa ny kund</a>
 
-<table>
+    <table>
         <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th>Namn</th>
             <th>Email</th>
             <th>Telefon</th>
             <th>Adress</th>
             <th>Åtgärder</th>
         </tr>
         </thead>
-    <tbody>
-    <tr th:each="cust : ${customers}">
-        <td th:text="${cust.id}">1</td>
-        <td th:text="${cust.name}">Namn</td>
-        <td th:text="${cust.email}">mail@exempel.com</td>
-        <td th:text="${cust.phone}">0123456789</td>
-        <td th:text="${cust.address}">Gatuadress 1</td>
-        <td>
-            <a th:href="@{|/customers/edit/${cust.id}|}">Edit</a> |
-            <a th:href="@{|/customers/delete/${cust.id}|}"
-               onclick="return confirm('Är du säker?');">Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        <tbody>
+        <tr th:each="cust : ${customers}">
+            <td th:text="${cust.id}">1</td>
+            <td th:text="${cust.name}">Namn</td>
+            <td th:text="${cust.email}">mail@exempel.com</td>
+            <td th:text="${cust.phone}">0123456789</td>
+            <td th:text="${cust.address}">Gatuadress 1</td>
+            <td>
+                <a th:href="@{|/customers/edit/${cust.id}|}">Redigera</a> |
+                <a th:href="@{|/customers/delete/${cust.id}|}"
+                   onclick="return confirm('Är du säker?');">Ta bort</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 
-</body>
+</div>
 </html>

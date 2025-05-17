@@ -21,6 +21,11 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final CustomerRepository customerRepository;
 
+    @Override
+    public void deleteBookingById(Long id) {
+
+        bookingRepository.deleteById(id);
+    }
 
 
     @Override
@@ -28,6 +33,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findBookingsByDate(date);
     }
     @Override
+
     public boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
         List<Booking> conflicts = bookingRepository.findConflictingBookings(roomId, checkIn, checkOut);
         return conflicts.isEmpty(); // true = ledigt, false = dubbelbokning

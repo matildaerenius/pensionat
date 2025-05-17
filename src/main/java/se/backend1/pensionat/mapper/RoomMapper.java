@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.entity.Room;
 
+import static se.backend1.pensionat.entity.Room.*;
+
 //Component görs så det inte blir error i roomserviceimpl
 @Component
 public class RoomMapper {
@@ -15,16 +17,16 @@ public class RoomMapper {
                 .id(room.getId())
                 .roomNumber(room.getRoomNumber())
                 .roomType(room.getRoomType())
-                .build();
+                .capacity().allowExtraBeds().maxExtraBeds().build();
     }
 
     // roomDTO till room
     public Room roomDtoToRoom(RoomDto roomDto) {
-        return Room.builder()
+        return builder()
                 .id(roomDto.getId())
                 .roomNumber(roomDto.getRoomNumber())
                 .roomType(roomDto.getRoomType())
-                .build();
+                .capacity().allowExtraBeds().maxExtraBeds().build();
     }
 
 //    public static Room toEntity(RoomDto dto) {

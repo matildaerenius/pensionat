@@ -1,4 +1,4 @@
-<!--
+<!-- för att skapa eller redigera rum-->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,14 +8,14 @@
 </head>
 <body>
 
-<h1 th:text="${roomDto.id == null} ? 'Skapa nytt rum' : 'Redigera rum'}"></h1>
+<h1 th:text="${roomDto.id == null} ? 'Skapa nytt rum' : 'Redigera rum'"></h1>
 
 <form th:action="@{/rooms}" th:object="${roomDto}" method="post">
   <input type="hidden" th:field="*{id}" />
 
   <div>
     <label>Rumstyp:</label>
-    <select th:field="*{RoomType}">
+    <select th:field="*{roomType}">
       <option th:each="type : ${types}"
               th:value="${type}"
               th:text="${type}">TYPE</option>
@@ -40,7 +40,7 @@
     <input type="checkbox" th:field="*{allowExtraBeds}" />
   </div>
 
-  <div th:if="*{allowExtraBeds}">
+    <div th:if="${roomDto.allowExtraBeds}">
     <label>Max antal extrasängar:</label>
     <input type="number" th:field="*{maxExtraBeds}" min="0" max="2" />
     <div th:if="${#fields.hasErrors('maxExtraBeds')}" th:errors="*{maxExtraBeds}"></div>
@@ -52,4 +52,3 @@
 
 </body>
 </html>
- -->
