@@ -29,9 +29,18 @@ public class BookingMapper {
                 .build();
     }
 
+    public Booking bookingDtoToBooking(BookingDto dto){
+     return    Booking.builder()
+                .id(dto.getId())
+                .checkIn(dto.getCheckIn())
+                .checkOut(dto.getCheckOut())
+                .numberOfGuests(dto.getNumberOfGuests())
+                .build();
+        //Kund ID och rum ID finns ej då det inte finns dessa variabler i booking objekt. enbart i dto objekt
+    }
 
 
-    //FÅR UT DETALJERAD MAP
+    //FÅR UT DETALJERAD MAP - detta kan vara bra för frontend för att få ut info om kunders bokning
     public DetailedBookingDto getDetailedBooking(Booking b) {
         return DetailedBookingDto.builder()
                 .customerId(b.getCustomer().getId())
