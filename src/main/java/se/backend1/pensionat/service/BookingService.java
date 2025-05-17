@@ -17,11 +17,15 @@ public interface BookingService  {
 
     List<Booking> getBookingsForDate(LocalDate date);
 
+    void deleteBookingById(Long id);
+
     boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
 
     void saveBooking(Booking booking);
 
 
     List<Booking> getAllBookings();
+
+
 
 }

@@ -9,7 +9,7 @@
 
 <h1>Alla kunder</h1>
 
-<a href="@/customer/new}">Skapa ny kund</a>
+<a th:href="@{/customers/new}">Skapa ny kund</a>
 
 <table>
         <thead>
@@ -23,21 +23,17 @@
         </tr>
         </thead>
     <tbody>
-
-    <!--th:text=renderar varje fälts värde.
-    th:href =bygger länkar med dynamiska ID:n.-->
-
-    <tr th:each="cust : ${customer}"> <!-- loopar över listan från Model.-->
+    <tr th:each="cust : ${customers}">
         <td th:text="${cust.id}">1</td>
         <td th:text="${cust.name}">Namn</td>
         <td th:text="${cust.email}">mail@exempel.com</td>
-        <td th:text="${cust.telephone}">0123456789</td>
+        <td th:text="${cust.phone}">0123456789</td>
         <td th:text="${cust.address}">Gatuadress 1</td>
+        <td>
+            <a th:href="@{|/customers/edit/${cust.id}|}">Edit</a> |
+            <a th:href="@{|/customers/delete/${cust.id}|}"
+               onclick="return confirm('Är du säker?');">Delete</a>
         </td>
-        <a href="@{|/customers/edit/${cust.id}|}">Edit</a> |
-        <a th:href="@{|/customers/delete/${cust.id}|}"
-           onclick="return confirm('Är du säker?');">Delete</a>
-    </td>
     </tr>
     </tbody>
 </table>
