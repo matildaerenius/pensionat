@@ -7,6 +7,7 @@ import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Customer;
+import se.backend1.pensionat.mapper.BookingMapper;
 import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.repository.CustomerRepository;
 import se.backend1.pensionat.service.BookingService;
@@ -20,13 +21,20 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final CustomerRepository customerRepository;
+    private final BookingMapper bookingMapper;
 
+    //första metod i bookingserivce.
+    @Override
+    public DetailedBookingDto getDetailedBooking(Booking booking) {
+        return bookingMapper.getDetailedBooking(booking);
+    }
 
 
     @Override
     public List<Booking> getBookingsForDate(LocalDate date) {
         return bookingRepository.findBookingsByDate(date);
     }
+
     @Override
     public boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut) {
         List<Booking> conflicts = bookingRepository.findConflictingBookings(roomId, checkIn, checkOut);

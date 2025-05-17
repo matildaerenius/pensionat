@@ -18,7 +18,7 @@ public class BookingMapper {
     }
 
     //Bygger från Booking TILL DTO
-    public BookingDto bookingToBookingDto (Booking b){
+    public BookingDto toDto (Booking b){
         return BookingDto.builder()
                 .id(b.getId())
                 .checkIn(b.getCheckIn())
@@ -29,7 +29,7 @@ public class BookingMapper {
                 .build();
     }
 
-    public Booking bookingDtoToBooking(BookingDto dto){
+    public Booking toEntity(BookingDto dto){
      return    Booking.builder()
                 .id(dto.getId())
                 .checkIn(dto.getCheckIn())

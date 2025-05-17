@@ -17,7 +17,7 @@ public class CustomerMapper {
     }
 
     //Customer > DTO
-    public CustomerDto customerToCustomerDto(Customer customer) {
+    public CustomerDto toDto(Customer customer) {
         return CustomerDto.builder()
                 .id(customer.getId())
                 .name(customer.getName())
@@ -28,7 +28,7 @@ public class CustomerMapper {
     }
 
     // DTO > Customer
-    public Customer customerDtoToCustomer(CustomerDto customerDto) {
+    public Customer toEntity(CustomerDto customerDto) {
         return Customer.builder()
                 .id(customerDto.getId())
                 .name(customerDto.getName())
@@ -37,6 +37,7 @@ public class CustomerMapper {
                 .address(customerDto.getAddress())
                 .build();
     }
+
 
 
     //får ut alla bokningar som en kund har samt deras
@@ -54,6 +55,7 @@ public class CustomerMapper {
                 .build();
 
     }
+
 
 //    public static Customer toEntity(CustomerDto dto) {
 //        if (dto == null) return null;

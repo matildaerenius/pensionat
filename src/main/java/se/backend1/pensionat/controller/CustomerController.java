@@ -35,6 +35,8 @@ public class CustomerController {
     @PostMapping("/create")
     public String createCustomer() {
         return null;
+
+       // customerService.createCustomer( bla bla bla)
     }
 
     @PostMapping("/edit/{id}")

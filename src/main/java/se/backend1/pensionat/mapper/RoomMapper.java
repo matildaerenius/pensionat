@@ -10,7 +10,7 @@ public class RoomMapper {
 
 
     // room till roomDTO
-    public RoomDto roomToRoomDto(Room room) {
+    public RoomDto toDto(Room room) {
         return RoomDto.builder()
                 .id(room.getId())
                 .roomNumber(room.getRoomNumber())
@@ -19,7 +19,7 @@ public class RoomMapper {
     }
 
     // roomDTO till room
-    public Room roomDtoToRoom(RoomDto roomDto) {
+    public Room toEntity(RoomDto roomDto) {
         return Room.builder()
                 .id(roomDto.getId())
                 .roomNumber(roomDto.getRoomNumber())
