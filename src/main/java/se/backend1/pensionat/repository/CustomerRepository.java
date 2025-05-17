@@ -5,7 +5,7 @@ import se.backend1.pensionat.entity.Customer;
 
 import java.util.List;
 
-public interface CustomerRepository extends JpaRepository<Customer, Integer> {
+public interface CustomerRepository extends JpaRepository<Customer, Long> {
     // Tillgång till Crud-metoder mot SQL.DB
 
                 //Mer specifika metoder utanför JpaRepository

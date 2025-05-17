@@ -8,7 +8,7 @@ import se.backend1.pensionat.entity.Booking;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface BookingRepository extends JpaRepository<Booking, Integer> {
+public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findBookingsByDate(@Param("date") LocalDate date);
     List<Booking> findConflictingBookings(
             @Param("roomId") Long roomId,

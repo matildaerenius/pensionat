@@ -7,21 +7,28 @@ import se.backend1.pensionat.entity.Customer;
 import java.util.List;
 
 public interface CustomerService {
+    //KLAR gör en DTO från frontend till entitet
+    CustomerDto createCustomer(CustomerDto customerDto);
+    //KLAR
+    CustomerDto updateCustomer(Long id, CustomerDto customerDto);
+    //KLAR
+    void deleteCustomer(Long id);
+    //KLAR
+    CustomerDto getCustomerById(Long id);
+    //KLAR
+    List<CustomerDto> getAllCustomers();
+    //KLAR
+    boolean hasBookings(Long id);
 
-    //CustomerDto customerToCustomerDto (Customer customer);
-
-
-    //Bygger om customer -> DTO
     DetailedCustomerDto getCustomerDetails(Long id);
 
-    List<CustomerDto> getAllCustomers();
 
-    CustomerDto getCustomerById(Long id);
 
-    //klar, gör en DTO från frontend till entitet
-    CustomerDto createCustomer(CustomerDto customerDto);
 
-    CustomerDto updateCustomer(Long id, CustomerDto customerDto);
 
-    void deleteCustomer(Long id);
+
+
+
+
+
 }
