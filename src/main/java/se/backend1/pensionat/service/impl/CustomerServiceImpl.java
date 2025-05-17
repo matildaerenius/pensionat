@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
 
-
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 

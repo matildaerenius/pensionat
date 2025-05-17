@@ -10,6 +10,7 @@ import se.backend1.pensionat.model.RoomType;
 import se.backend1.pensionat.repository.RoomRepository;
 import se.backend1.pensionat.service.RoomService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import java.util.List;
@@ -21,6 +22,14 @@ public class RoomServiceImpl implements RoomService {
 
     private RoomRepository roomRepository;
     private RoomMapper roomMapper;
+
+    //KLAR?
+    @Override
+    public Room createRoom(RoomDto roomDto) {
+        Room room= roomMapper.toEntity(roomDto);
+        validateExtraBeds(room);
+        return roomRepository.save(room);
+    }
 
     @Override
     public Room saveRoom(Room room){
@@ -34,7 +43,7 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public Room saveRoomFromFrontEnd(RoomDto roomDto) {
         validateExtraBedsDto(roomDto);
-        return roomMapper.roomDtoToRoom(roomDto);
+        return roomMapper.toEntity(roomDto);
     }
 
     @Override
@@ -48,26 +57,28 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public Room createRoom(RoomDto roomDto) {
-     Room room= roomMapper.roomDtoToRoom(roomDto);
-     validateExtraBeds(room);
-     return roomRepository.save(room);
+    public List<RoomDto> findAvailableRooms(LocalDate checkIn, LocalDate checkOut, int guests) {
+        return List.of();
     }
+
+
 
     @Override
     public RoomDto createRoomDto(RoomDto dto) {
-        Room room = RoomMapper.toEntity(dto);
+        Room room = roomMapper.toEntity(dto);
         validateExtraBeds(room); //  VG: validate extra bed rules
         Room saved = roomRepository.save(room);
         return roomMapper.toDto(saved);
 
     }
 
+
+
     @Override
     public RoomDto updateRoom(Long id, RoomDto dto) {
-        roomRepository.findById(id.intValue())
+        roomRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
-        Room updatedRoom = RoomMapper.toEntity(dto);
+        Room updatedRoom = roomMapper.toEntity(dto);
         updatedRoom.setId(id);
         validateExtraBeds(updatedRoom);
         Room saved = roomRepository.save(updatedRoom);
@@ -78,7 +89,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void deleteRoom(Long id) {
-        Room room = roomRepository.findById(id.intValue()).orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
+        Room room = roomRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
 
         if(!room.getBookings().isEmpty()) {
             throw new IllegalStateException("Rummet har bokningar och kan inte tas bort");
@@ -88,13 +99,15 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto getRoomById(Long id) {
-        Room room = roomRepository.findById(id.intValue())
+        Room room = roomRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Rum med ID " + id + " hittades inte"));
 
         return roomMapper.toDto(room);
     }
 
 
+
+    // TODO: Ska inte det vara någon kontroll av ID på rummet för att se om de är dubbel eller ej
     // Valideringsmetod som kontrollerar att bara dubbelrum får ha extrasängar
     private void validateExtraBeds(Room room) {
         if (room.getRoomType() != RoomType.DOUBLE && room.getMaxExtraBeds() > 0) {
