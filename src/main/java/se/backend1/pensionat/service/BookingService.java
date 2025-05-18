@@ -19,6 +19,7 @@ public interface BookingService  {
     boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
 
 
+
     //Gammalt oklart om detta ska med
     DetailedBookingDto getDetailedBooking(Booking booking);
     List<Booking> getBookingsForDate(LocalDate date);

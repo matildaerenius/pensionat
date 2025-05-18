@@ -19,7 +19,7 @@ public interface CustomerService {
     List<CustomerDto> getAllCustomers();
     //KLAR
     boolean hasBookings(Long id);
-
+    //KLAR
     DetailedCustomerDto getCustomerDetails(Long id);
 
 

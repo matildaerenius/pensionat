@@ -23,6 +23,9 @@ public class BookingServiceImpl implements BookingService {
     private final CustomerRepository customerRepository;
     private final BookingMapper bookingMapper;
 
+
+    // Placera denna metod from bookingRepo findConflictingBookings
+
     //första metod i bookingserivce.
     @Override
     public DetailedBookingDto getDetailedBooking(Booking booking) {

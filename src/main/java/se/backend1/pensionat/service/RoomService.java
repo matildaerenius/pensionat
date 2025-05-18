@@ -11,28 +11,16 @@ import se.backend1.pensionat.entity.Room;
 import java.util.List;
 
 public interface RoomService {
-        //tror klar
-        RoomDto createRoomDto(RoomDto dto);
-
+        // KLAR
+        RoomDto createRoom(RoomDto dto);
+        //KLAR
         RoomDto updateRoom(Long id, RoomDto dto);
-
+        //KLAR
         void deleteRoom(Long id);
-
+        //KLAR
         RoomDto getRoomById(Long id);
-
+        //KLAR
         List<RoomDto> getAllRooms();
-
+        //KLAR
         List<RoomDto> findAvailableRooms(LocalDate checkIn, LocalDate checkOut, int guests);
-
-
-
-
-        Room saveRoom(Room room);
-        //Tittar rad 15 och rad 35 i impl
-        Room saveRoomFromFrontEnd(RoomDto roomDto);
-
-        Room createRoom(RoomDto dto);
-
-
-
 }
