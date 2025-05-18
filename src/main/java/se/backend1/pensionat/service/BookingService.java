@@ -9,19 +9,24 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface BookingService  {
-    //Nytt
+    //KLAR
     BookingDto createBooking(BookingDto dto);
-    void saveBooking(Booking booking); //OKLART OM DETTA SKA MED
+    // KLAR
     BookingDto updateBooking(Long id, BookingDto dto);
-    void cancelBooking(Long id);
+    //Dubbelkolla!!!!
+    void deleteBooking(Long id);
+    //KLAR
     BookingDto getBookingById(Long id);
+    //KLAR
     List<BookingDto> getBookingsByCustomer(Long customerId);
+    //KLAR
     boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
-
-
-
-    //Gammalt oklart om detta ska med
+    //KLAR
     DetailedBookingDto getDetailedBooking(Booking booking);
+    //KLAR
+    List<BookingDto> getAllBookings();
+
+    //Gammalt eller oklart om detta ska med
     List<Booking> getBookingsForDate(LocalDate date);
-    List<Booking> getAllBookings();
+
 }

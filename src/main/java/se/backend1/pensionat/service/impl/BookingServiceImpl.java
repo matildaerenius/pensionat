@@ -1,19 +1,21 @@
 package se.backend1.pensionat.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
-import se.backend1.pensionat.entity.Customer;
+import se.backend1.pensionat.exception.BookingNotFoundException;
+import se.backend1.pensionat.exception.CustomerHasBookingsException;
 import se.backend1.pensionat.mapper.BookingMapper;
 import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.repository.CustomerRepository;
 import se.backend1.pensionat.service.BookingService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,18 +26,55 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
 
 
-    // Placera denna metod from bookingRepo findConflictingBookings
-
-    //första metod i bookingserivce.
     @Override
-    public DetailedBookingDto getDetailedBooking(Booking booking) {
-        return bookingMapper.getDetailedBooking(booking);
+    public BookingDto createBooking(BookingDto dto) {
+        Booking bookinEntity = bookingMapper.toEntity(dto);
+        Booking saved= bookingRepository.save(bookinEntity);
+        return bookingMapper.toDto(saved);
     }
 
+    @Override
+    public BookingDto updateBooking(Long id, BookingDto dto) {
+        Booking exisitng= bookingRepository.findById(id)
+                .orElseThrow( () ->new BookingNotFoundException("Booking not found with ID" + id));
+
+        exisitng.setCheckIn(dto.getCheckIn());
+        exisitng.setCheckOut(dto.getCheckOut());
+        exisitng.setNumberOfGuests(dto.getNumberOfGuests());
+
+        Booking saved= bookingRepository.save(exisitng);
+
+        return bookingMapper.toDto(saved);
+    }
 
     @Override
-    public List<Booking> getBookingsForDate(LocalDate date) {
-        return bookingRepository.findBookingsByDate(date);
+    public void deleteBooking(Long id) {
+        Booking exisitng= bookingRepository.findById(id)
+                .orElseThrow( () ->new BookingNotFoundException("Booking not found with ID" + id));
+
+        if (exisitng!=null) {
+            throw new CustomerHasBookingsException("Customer has bookings, cannot delete");
+        }else
+            bookingRepository.delete(exisitng);
+    }
+
+    @Override
+    public BookingDto getBookingById(Long id) {
+        Booking exisitng= bookingRepository.findById(id)
+                .orElseThrow( () ->new BookingNotFoundException("Booking not found with ID" + id));
+        return bookingMapper.toDto(exisitng);
+    }
+
+    @Override
+    public List<BookingDto> getBookingsByCustomer(Long customerId) {
+        List<Booking> bookings = bookingRepository.findById((customerId)).stream().toList();
+        List<BookingDto> dtoList = new ArrayList<>();
+
+        for (var booking : bookings) {
+            BookingDto bookingDto= bookingMapper.toDto(booking);
+            dtoList.add(bookingDto);
+        }
+        return dtoList;
     }
 
     @Override
@@ -44,15 +83,21 @@ public class BookingServiceImpl implements BookingService {
         return conflicts.isEmpty(); // true = ledigt, false = dubbelbokning
     }
 
-    @Override
-    public void saveBooking(Booking booking) {
 
+    // Placera denna metod from bookingRepo findConflictingBookings
+    @Override
+    public DetailedBookingDto getDetailedBooking(Booking booking) {
+        return bookingMapper.getDetailedBooking(booking);
     }
 
+    @Override
+    public List<BookingDto> getAllBookings() {
+        return bookingRepository.findAll().stream().map(bookingMapper::toDto).collect(Collectors.toList());
+    }
 
     @Override
-    public List<Booking> getAllBookings() {
-        return List.of();
+    public List<Booking> getBookingsForDate(LocalDate date) {
+        return bookingRepository.findBookingsByDate(date);
     }
 
 }

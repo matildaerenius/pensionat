@@ -49,7 +49,7 @@ public class BookingMapper {
                 .roomNumber(b.getRoom().getRoomNumber())
                 .roomType(b.getRoom().getRoomType())
                 .numberOfGuests(b.getNumberOfGuests())
-                .bookingDto(bookingToBookingDto(b))
+                .bookingDto(toDto(b))
                 .build();
     }
 //    public static Booking toEntity(BookingDto dto) {
