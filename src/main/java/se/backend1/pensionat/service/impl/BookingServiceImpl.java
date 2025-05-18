@@ -52,9 +52,12 @@ public class BookingServiceImpl implements BookingService {
         Booking exisitng= bookingRepository.findById(id)
                 .orElseThrow( () ->new BookingNotFoundException("Booking not found with ID" + id));
 
-        if (exisitng!=null) {
-            throw new CustomerHasBookingsException("Customer has bookings, cannot delete");
-        }else
+        LocalDate today = LocalDate.now();
+
+        // Om checkOut är idag eller senare → pågående eller framtida bokning
+        if (!exisitng.getCheckOut().isBefore(today)) {
+            throw new CustomerHasBookingsException("Customer has bookings, cannot be removed");
+        }
             bookingRepository.delete(exisitng);
     }
 
@@ -67,14 +70,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDto> getBookingsByCustomer(Long customerId) {
-        List<Booking> bookings = bookingRepository.findById((customerId)).stream().toList();
-        List<BookingDto> dtoList = new ArrayList<>();
-
-        for (var booking : bookings) {
-            BookingDto bookingDto= bookingMapper.toDto(booking);
-            dtoList.add(bookingDto);
-        }
-        return dtoList;
+        List<Booking> bookings = bookingRepository.findByCustomerId(customerId).stream().toList();
+        return bookings.stream().map(bookingMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
