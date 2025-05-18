@@ -37,7 +37,7 @@ public class Room {
     private boolean allowExtraBeds; //VG
 //VG
     @Min(value = 0, message = "Minst 0 extrasängar")
-    @Max(value = 3, message = "Max 2 extrasängar tillåtna")
+    @Max(value = 2, message = "Max 2 extrasängar tillåtna")
     private int maxExtraBeds;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
