@@ -1,9 +1,12 @@
 package se.backend1.pensionat.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import se.backend1.pensionat.service.BookingService;
 import se.backend1.pensionat.service.CustomerService;
+import se.backend1.pensionat.service.RoomService;
 
 
 /**
@@ -13,16 +16,16 @@ import se.backend1.pensionat.service.CustomerService;
  */
 
 
-@Controller
+@RestController
+@RequiredArgsConstructor //detta gör att vi kan ta bort Autowired o slipper göra konstruktorer
 @RequestMapping("/customers")
 public class CustomerController {
 
-    private CustomerService customerService;
+    private final BookingService bookingService;
+    private final CustomerService customerService;
+    private final RoomService roomService;
 
-    @Autowired
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
+
     @GetMapping
     public String getAllCustomers() {
         return null;
@@ -32,6 +35,8 @@ public class CustomerController {
     @PostMapping("/create")
     public String createCustomer() {
         return null;
+
+       // customerService.createCustomer( bla bla bla)
     }
 
     @PostMapping("/edit/{id}")

@@ -1,5 +1,6 @@
 package se.backend1.pensionat.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,20 +13,15 @@ import se.backend1.pensionat.service.RoomService;
 
 import java.util.List;
 
-@Controller
+@RestController
+@RequiredArgsConstructor //detta gör att vi kan ta bort Autowired o slipper göra konstruktorer
 @RequestMapping("/bookings")
 public class BookingController {
 
-    private BookingService bookingService;
-    private CustomerService customerService;
-    private RoomService roomService;
+    private final BookingService bookingService;
+    private final CustomerService customerService;
+    private final RoomService roomService;
 
-    @Autowired
-    public BookingController(BookingService bookingService, CustomerService customerService, RoomService roomService) {
-        this.bookingService = bookingService;
-        this.customerService = customerService;
-        this.roomService = roomService;
-    }
 
     @GetMapping()
     public List<Booking> getAllBookings(){

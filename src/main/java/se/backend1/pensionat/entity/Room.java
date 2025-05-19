@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import se.backend1.pensionat.model.RoomType;
@@ -15,8 +16,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "room")
-
 public class Room {
 
     @Id
@@ -24,7 +25,7 @@ public class Room {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private RoomType RoomType;
+    private RoomType roomType;
 
     // auto generated? eller ska vi ha separata sifforr för vardera rum
     //Kanske borde skapa allt rum via Bean (bootstrap)
@@ -42,4 +43,5 @@ public class Room {
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Booking> bookings = new ArrayList<>();
+    
 }
