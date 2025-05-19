@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.List;
 import java.util.stream.Collectors;
 
+// TODO : Kastar fel exceptions, har skapat specifika, ändra till rätta
+
 @Service
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {

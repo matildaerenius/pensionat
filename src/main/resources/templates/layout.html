@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="sv"
+      th:fragment="layout">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pensionat</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+
+<body>
+
+<header>
+    <h1>Pensionat bokningssystem</h1>
+    <nav>
+        <ul>
+            <li><a th:href="@{/}">Start</a></li>
+            <li><a th:href="@{/customers}">Kunder</a></li>
+            <li><a th:href="@{/rooms}">Rum</a></li>
+            <li><a th:href="@{/bookings}">Bokningar</a></li>
+            <li><a th:href="@{/search}">Sök lediga rum</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div th:replace="~{::content}"></div>
+</main>
+
+<footer>
+    <p>&copy; 2025 Pensionat</p>
+</footer>
+
+</body>
+</html>
