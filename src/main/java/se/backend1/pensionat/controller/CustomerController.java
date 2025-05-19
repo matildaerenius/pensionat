@@ -58,7 +58,7 @@ public class CustomerController {
         return "customers/form";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("customerDto", new CustomerDto());
         model.addAttribute("edit", false);
