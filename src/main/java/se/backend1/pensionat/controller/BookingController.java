@@ -94,10 +94,11 @@ public class BookingController {
         return "bookings/search";
     }
 
-    @PostMapping("/edit/{id}")
-    public String editBooking(@PathVariable Long id){
-        return null;
-    }
+//    @GetMapping("/edit/{id}")
+//    public String editBooking(@PathVariable Long id, Model model) {
+//        model.addAttribute("bookingDto", bookingService.getBookingById(id));
+//        return "bookings/form";
+//    }
 
     @GetMapping("/search-results")
     public String getAvailableRooms(@RequestParam LocalDate checkIn,

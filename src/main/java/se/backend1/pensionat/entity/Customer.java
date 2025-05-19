@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "customers")
 public class Customer {
 
     @Id

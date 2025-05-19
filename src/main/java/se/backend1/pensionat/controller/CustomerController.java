@@ -53,14 +53,15 @@ public class CustomerController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        CustomerDto customerDto = customerService.getCustomerById(id);
-        model.addAttribute("customer", customerDto);
-        return "customers/edit";
+        model.addAttribute("customerDto", customerService.getCustomerById(id));
+        model.addAttribute("edit", true);
+        return "customers/form";
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("customerDto", new CustomerDto());
-        return "customers/create";
+        model.addAttribute("edit", false);
+        return "customers/form";
     }
 }

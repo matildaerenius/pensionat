@@ -1,5 +1,6 @@
 package se.backend1.pensionat.mapper;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import se.backend1.pensionat.dto.CustomerDto;
 import se.backend1.pensionat.dto.DetailedCustomerDto;
@@ -12,7 +13,7 @@ public class CustomerMapper {
 
     private final BookingMapper bookingMapper;
 
-    public CustomerMapper(BookingMapper bookingMapper) {
+    public CustomerMapper(@Lazy BookingMapper bookingMapper) {
         this.bookingMapper = bookingMapper;
     }
 
