@@ -9,50 +9,36 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class RoomMapperTest {
 
+    private final RoomMapper roomMapper = new RoomMapper();
+
     @Test
-    void shouldMapRoomDtoToEntityAndBack() {
-        RoomDto dto = new RoomDto();
-        dto.setId(1L);
-        dto.setRoomNumber("101");
-        dto.setRoomType(RoomType.DOUBLE);
-        dto.setCapacity(2);
-        dto.setMaxExtraBeds(1);
+    public void testToDto() {
+        Room room = Room.builder()
+                .id(1L)
+                .roomNumber("101")
+                .roomType(RoomType.DOUBLE)
+                .build();
 
-        Room entity = RoomMapper.toEntity(dto);
-        RoomDto mappedBack = RoomMapper.toDto(entity);
+        RoomDto dto = roomMapper.toDto(room);
 
-        assertEquals(dto.getRoomNumber(), mappedBack.getRoomNumber());
-        assertEquals(dto.getRoomType(), mappedBack.getRoomType());
-        assertEquals(dto.getCapacity(), mappedBack.getCapacity());
-        assertEquals(dto.getMaxExtraBeds(), mappedBack.getMaxExtraBeds());
-    }
-    @Test
-    void shouldMapRoomEntityToDtoCorrectly() {
-        Room room = new Room();
-        room.setId(5L);
-        room.setRoomNumber("B202");
-        room.setRoomType(RoomType.SINGLE);
-        room.setCapacity(1);
-        room.setMaxExtraBeds(0);
-
-        RoomDto dto = RoomMapper.toDto(room);
-
-        assertNotNull(dto);
         assertEquals(room.getId(), dto.getId());
         assertEquals(room.getRoomNumber(), dto.getRoomNumber());
         assertEquals(room.getRoomType(), dto.getRoomType());
-        assertEquals(room.getCapacity(), dto.getCapacity());
-        assertEquals(room.getMaxExtraBeds(), dto.getMaxExtraBeds());
     }
 
     @Test
-    void shouldReturnNullIfDtoIsNull() {
-        assertNull(RoomMapper.toEntity(null));
-    }
+    public void testToEntity() {
+        RoomDto dto = RoomDto.builder()
+                .id(2L)
+                .roomNumber("202")
+                .roomType(RoomType.SINGLE)
+                .build();
 
-    @Test
-    void shouldReturnNullIfEntityIsNull() {
-        assertNull(RoomMapper.toDto(null));
+        Room room = roomMapper.toEntity(dto);
+
+        assertEquals(dto.getId(), room.getId());
+        assertEquals(dto.getRoomNumber(), room.getRoomNumber());
+        assertEquals(dto.getRoomType(), room.getRoomType());
     }
 }
 

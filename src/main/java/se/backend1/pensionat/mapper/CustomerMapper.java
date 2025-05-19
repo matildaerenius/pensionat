@@ -49,7 +49,7 @@ public class CustomerMapper {
                 .email(customer.getEmail())
                 .bookings(
                         customer.getBookings().stream()
-                                .map(bookingMapper::bookingToBookingDto)
+                                .map(bookingMapper::toDto)
                                 .collect(Collectors.toList())
                 )
                 .build();

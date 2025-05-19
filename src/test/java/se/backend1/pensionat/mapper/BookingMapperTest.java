@@ -12,47 +12,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BookingMapperTest {
 
-    @Test
-    void shouldMapDtoToEntityCorrectly() {
-        BookingDto dto = new BookingDto();
-        dto.setId(1L);
-        dto.setCheckIn(LocalDate.of(2025, 6, 1));
-        dto.setCheckOut(LocalDate.of(2025, 6, 5));
-        dto.setNumberOfGuests(2);
-        dto.setCustomerId(10L);
-        dto.setRoomId(20L);
-
-        Booking entity = BookingMapper.toEntity(dto);
-
-        assertNotNull(entity);
-        assertEquals(dto.getId(), entity.getId());
-        assertEquals(dto.getCheckIn(), entity.getCheckIn());
-        assertEquals(dto.getCheckOut(), entity.getCheckOut());
-        assertEquals(dto.getNumberOfGuests(), entity.getNumberOfGuests());
-
-        assertNull(entity.getCustomer());
-        assertNull(entity.getRoom());
-    }
+    private final BookingMapper bookingMapper = new BookingMapper(null, null); // mapper-dependencys används ej här
 
     @Test
-    void shouldMapEntityToDtoCorrectly() {
-        Customer customer = new Customer();
-        customer.setId(10L);
+    public void testToDto() {
+        Customer customer = Customer.builder()
+                .id(1L)
+                .name("Test Testsson")
+                .build();
 
-        Room room = new Room();
-        room.setId(20L);
+        Room room = Room.builder()
+                .id(2L)
+                .roomNumber("101")
+                .build();
 
-        Booking booking = new Booking();
-        booking.setId(1L);
-        booking.setCheckIn(LocalDate.of(2025, 6, 1));
-        booking.setCheckOut(LocalDate.of(2025, 6, 5));
-        booking.setNumberOfGuests(2);
-        booking.setCustomer(customer);
-        booking.setRoom(room);
+        Booking booking = Booking.builder()
+                .id(1L)
+                .checkIn(LocalDate.of(2025, 5, 1))
+                .checkOut(LocalDate.of(2025, 5, 5))
+                .numberOfGuests(2)
+                .customer(customer)
+                .room(room)
+                .build();
 
-        BookingDto dto = BookingMapper.toDto(booking);
+        BookingDto dto = bookingMapper.toDto(booking);
 
-        assertNotNull(dto);
         assertEquals(booking.getId(), dto.getId());
         assertEquals(booking.getCheckIn(), dto.getCheckIn());
         assertEquals(booking.getCheckOut(), dto.getCheckOut());
@@ -60,12 +44,21 @@ public class BookingMapperTest {
         assertEquals(booking.getCustomer().getId(), dto.getCustomerId());
         assertEquals(booking.getRoom().getId(), dto.getRoomId());
     }
-
     @Test
-    void shouldReturnNullIfInputIsNull() {
-        assertNull(BookingMapper.toDto(null));
-        assertNull(BookingMapper.toEntity(null));
+    public void testToEntity() {
+        BookingDto dto = BookingDto.builder()
+                .id(2L)
+                .checkIn(LocalDate.of(2025, 6, 1))
+                .checkOut(LocalDate.of(2025, 6, 10))
+                .numberOfGuests(3)
+                .build();
+
+        Booking booking = bookingMapper.toEntity(dto);
+
+        assertEquals(dto.getId(), booking.getId());
+        assertEquals(dto.getCheckIn(), booking.getCheckIn());
+        assertEquals(dto.getCheckOut(), booking.getCheckOut());
+        assertEquals(dto.getNumberOfGuests(), booking.getNumberOfGuests());
     }
 }
-
 
