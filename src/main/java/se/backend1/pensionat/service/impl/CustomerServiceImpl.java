@@ -22,7 +22,6 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
 
-    // KLAR
     @Override
     public CustomerDto createCustomer(CustomerDto dto) {
         Customer entity = customerMapper.toEntity(dto);
@@ -30,9 +29,6 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toDto(saved);  // inkluderar ID, sparad i backend
     }
 
-
-    // TODO : Kasta CustomerNotFoundException om kund inte hittas
-    //KLAR
     @Override
     public CustomerDto updateCustomer(Long id, CustomerDto customerDto) {
         Customer existing = customerRepository.findById(id)
@@ -48,31 +44,25 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toDto(saved);
     }
 
-    // TODO : Checka om kund redan har aktiv bokning -> om ja, kasta CustomerHasBookingsException -> om nej, delete kund.
-    // TODO : Kasta även CustomerNotFoundException om kund inte hittas
-    // KLAR
     @Override
     public void deleteCustomer(Long id) {
-        Customer existing = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("There is no existing customer"));
+        Customer existing = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID " + id));
 
         if (existing.getBookings() != null && !existing.getBookings().isEmpty()) {
             throw new CustomerHasBookingsException("Kan ej ta bort, kund har bokning");
-        }else
-            customerRepository.delete(existing);
+        }
+
+        customerRepository.delete(existing);
     }
 
-
-
-    // TODO : Kasta CustomerNotFoundException om kund inte hittas
-    //KLAR
     @Override
     public CustomerDto getCustomerById(Long id) {
-        Customer existing = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID: " + id));
-        CustomerDto dto = customerMapper.toDto(existing);
-        return dto;
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID: " + id));
+        return customerMapper.toDto(customer);
     }
 
-    //KLAR
     @Override
     public List<CustomerDto> getAllCustomers() {
         List<Customer> customers =customerRepository.findAll();
@@ -83,7 +73,7 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return dtos;
     }
-    //KLAR
+
     @Override
     public boolean hasBookings(Long id) {
         Customer existing = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID: " + id));
@@ -92,15 +82,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     }
 
-
-    //Bygger om customer -> DTO
-    //KLAR
     @Override
     public DetailedCustomerDto getCustomerDetails(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID: " + id));
 
-        // Här kallar du på mappningsmetod
         return customerMapper.detailedCustomer(customer);
     }
 
