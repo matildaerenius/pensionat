@@ -2,6 +2,7 @@ package se.backend1.pensionat.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ import se.backend1.pensionat.service.RoomService;
 import java.time.LocalDate;
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/bookings")
 public class BookingController {
