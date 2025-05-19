@@ -1,7 +1,6 @@
 package se.backend1.pensionat.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.entity.Booking;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +24,6 @@ public class RoomServiceImpl implements RoomService {
     private RoomRepository roomRepository;
     private RoomMapper roomMapper;
 
-    //KLAR
     @Override
     public RoomDto createRoom(RoomDto dto) {
         Room room = roomMapper.toEntity(dto);
