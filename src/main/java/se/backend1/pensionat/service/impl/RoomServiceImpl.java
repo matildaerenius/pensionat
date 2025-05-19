@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO : Kastar fel exceptions, har skapat specifika, ändra till rätta
-
 @Service
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
@@ -40,18 +38,18 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto updateRoom(Long id, RoomDto dto) {
-       Room updatingRoom= roomRepository.findById(id)
+        Room updatingRoom= roomRepository.findById(id)
                 .orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + id));
-       //alla fält i DTO som uppdateras
-       updatingRoom.setRoomNumber(dto.getRoomNumber());
-       updatingRoom.setRoomType(dto.getRoomType());
-       updatingRoom.setMaxExtraBeds(dto.getMaxExtraBeds());
-       updatingRoom.setCapacity(dto.getCapacity());
+        //alla fält i DTO som uppdateras
+        updatingRoom.setRoomNumber(dto.getRoomNumber());
+        updatingRoom.setRoomType(dto.getRoomType());
+        updatingRoom.setMaxExtraBeds(dto.getMaxExtraBeds());
+        updatingRoom.setCapacity(dto.getCapacity());
 
-       validateExtraBeds(updatingRoom);
+        validateExtraBeds(updatingRoom);
 
-       Room saved = roomRepository.save(updatingRoom);
-       return roomMapper.toDto(saved);
+        Room saved = roomRepository.save(updatingRoom);
+        return roomMapper.toDto(saved);
     }
 
     @Override
@@ -74,7 +72,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDto> getAllRooms() {
-       return roomRepository.findAll().stream().map(roomMapper::toDto).collect(Collectors.toList());
+        return roomRepository.findAll().stream().map(roomMapper::toDto).collect(Collectors.toList());
     }
 
 
@@ -87,25 +85,25 @@ public class RoomServiceImpl implements RoomService {
 
         //går igenom varje rum
         for (Room room : rooms) {
-                //Kontroll av kapacitet med antalet gäster
-             if (room.getCapacity()<guests) {
+            //Kontroll av kapacitet med antalet gäster
+            if (room.getCapacity()<guests) {
                 continue;
-             }
-             boolean isAvailable= true;
+            }
+            boolean isAvailable= true;
 
-             for (Booking booking : room.getBookings()) {
-                 LocalDate start= booking.getCheckIn();
-                 LocalDate end= booking.getCheckOut();
-                 //Datumlogik för att se att datum inte överlappar.
-                 if (!(checkOut.isBefore(start) || checkIn.isAfter(end.minusDays(1)))) {
-                 isAvailable= false;
-                 break;
-                 }
-                 //Konverterar till DTO och sparar i listan
-                 if (isAvailable) {
-                 roomDtos.add(roomMapper.toDto(room));
-                 }
-             }
+            for (Booking booking : room.getBookings()) {
+                LocalDate start= booking.getCheckIn();
+                LocalDate end= booking.getCheckOut();
+                //Datumlogik för att se att datum inte överlappar.
+                if (!(checkOut.isBefore(start) || checkIn.isAfter(end.minusDays(1)))) {
+                    isAvailable= false;
+                    break;
+                }
+                //Konverterar till DTO och sparar i listan
+                if (isAvailable) {
+                    roomDtos.add(roomMapper.toDto(room));
+                }
+            }
         }
         return roomDtos;
     }

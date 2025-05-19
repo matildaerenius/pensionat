@@ -58,7 +58,7 @@ public class BookingServiceImpl implements BookingService {
         if (!exisitng.getCheckOut().isBefore(today)) {
             throw new CustomerHasBookingsException("Customer has bookings, cannot be removed");
         }
-            bookingRepository.delete(exisitng);
+        bookingRepository.delete(exisitng);
     }
 
     @Override
