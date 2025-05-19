@@ -27,7 +27,7 @@ public class CustomerController {
 
     @PostMapping("/create")
     public String createCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result) {
-        if (result.hasErrors()) return "customers/create";
+        if (result.hasErrors()) return "customers/form";
         customerService.createCustomer(customerDto);
         return "redirect:/customers";
     }
@@ -58,10 +58,15 @@ public class CustomerController {
         return "customers/form";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("customerDto", new CustomerDto());
         model.addAttribute("edit", false);
         return "customers/form";
+    }
+    @PostMapping("/save")
+    public String saveCustomer(@ModelAttribute("customerDto") CustomerDto customerDto) {
+        customerService.save(customerDto);
+        return "redirect:/customers";
     }
 }

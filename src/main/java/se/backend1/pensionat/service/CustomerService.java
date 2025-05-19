@@ -23,13 +23,6 @@ public interface CustomerService {
     DetailedCustomerDto getCustomerDetails(Long id);
 
 
-
-
-
-
-
-
-
-
+    void save(CustomerDto customerDto);
 }
 

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kunder</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div class="container">
+    <h1>Alla kunder</h1>
+
+    <a class="btn" th:href="@{/customers/create}">➕ Skapa ny kund</a>
+
+    <table class="styled-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Namn</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Åtgärder</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="customer : ${customers}">
+            <td th:text="${customer.id}">1</td>
+            <td th:text="${customer.name}">Namn</td>
+            <td th:text="${customer.email}">email@example.com</td>
+            <td th:text="${customer.phoneNumber}">070-1234567</td>
+            <td>
+                <a class="btn-edit" th:href="@{'/customers/edit/' + ${customer.id}}">✏️ Redigera</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

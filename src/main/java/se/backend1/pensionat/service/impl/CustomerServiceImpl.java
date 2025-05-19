@@ -90,4 +90,10 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.detailedCustomer(customer);
     }
 
+    @Override
+    public void save(CustomerDto customerDto) {
+        Customer customer = customerMapper.toEntity(customerDto);
+        customerRepository.save(customer);
+    }
+
 }

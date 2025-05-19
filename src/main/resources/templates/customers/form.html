@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${edit} ? 'Redigera kund' : 'Skapa kund'">Kundformulär</title>
+  <link rel="stylesheet" th:href="@{/style.css}" />
+
+</head>
+<body>
+<h1 th:text="${edit} ? 'Redigera kund' : 'Skapa kund'"></h1>
+
+
+<form th:action="@{/customers/save}" th:object="${customerDto}" method="post">
+  <label>Namn:</label>
+  <input type="text" th:field="*{name}" /><br/>
+
+  <label>Email:</label>
+  <input type="email" th:field="*{email}" /><br/>
+
+  <label>Telefon:</label>
+  <input type="text" th:field="*{phoneNumber}" /><br/>
+
+  <label>Adress:</label>
+  <input type="text" th:field="*{address}" /><br/>
+
+  <button type="submit" th:text="${edit} ? 'Uppdatera' : 'Skapa'"></button>
+</form>
+</body>
+</html>
