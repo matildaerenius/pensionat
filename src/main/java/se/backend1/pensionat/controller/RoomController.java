@@ -2,6 +2,7 @@ package se.backend1.pensionat.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -9,10 +10,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.service.RoomService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/rooms")
 public class RoomController {
@@ -20,9 +22,21 @@ public class RoomController {
     private final RoomService roomService;
 
 
-    @GetMapping()
-    public String getAllRooms(Model model) {
-        List<RoomDto> rooms = roomService.getAllRooms();
+    @GetMapping
+    public String getAllRooms(@RequestParam(required = false) String checkIn,
+                              @RequestParam(required = false) String checkOut,
+                              @RequestParam(required = false) Integer guests,
+                              Model model) {
+        List<RoomDto> rooms;
+
+        if (checkIn != null && checkOut != null && guests != null) {
+            LocalDate start = LocalDate.parse(checkIn);
+            LocalDate end = LocalDate.parse(checkOut);
+            rooms = roomService.findAvailableRooms(start, end, guests);
+        } else {
+            rooms = roomService.getAllRooms();
+        }
+
         model.addAttribute("rooms", rooms);
         return "rooms/list";
     }
