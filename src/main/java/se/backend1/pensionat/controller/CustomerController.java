@@ -65,8 +65,18 @@ public class CustomerController {
         return "customers/form";
     }
     @PostMapping("/save")
-    public String saveCustomer(@ModelAttribute("customerDto") CustomerDto customerDto) {
-        customerService.save(customerDto);
+    public String saveCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result) {
+        if (result.hasErrors()) return "customers/form";
+
+        if (customerDto.getId() != null) {
+            // ID finns = det är en uppdatering
+            customerService.updateCustomer(customerDto.getId(), customerDto);
+        } else {
+            // Ny kund
+            customerService.createCustomer(customerDto);
+        }
+
         return "redirect:/customers";
     }
+
 }
