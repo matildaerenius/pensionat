@@ -10,6 +10,8 @@
 
 
 <form th:action="@{/customers/save}" th:object="${customerDto}" method="post">
+  <input type="hidden" th:field="*{id}" />
+
   <label>Namn:</label>
   <input type="text" th:field="*{name}" /><br/>
 
