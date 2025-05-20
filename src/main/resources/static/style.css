@@ -94,7 +94,7 @@ button:hover {
     background-color: #0056b3;
 }
 
-
+/*Kund listan*/
 .container {
     max-width: 900px;
     margin: auto;
@@ -149,4 +149,31 @@ a.btn-edit:hover {
 .styled-table tr:hover {
     background-color: #f9f9f9;
 }
+
+
+
+.inline-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
+
+/* Delete knapp */
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
 
