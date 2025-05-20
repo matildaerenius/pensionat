@@ -9,9 +9,10 @@
 
 </head>
 <body>
-<div class="container">
+<div class="form-wrapper">
     <h1 th:text="${edit} ? 'Redigera bokning' : 'Skapa ny bokning'"></h1>
 
+    <div class="form-center">
     <form th:action="@{${formAction}}" th:object="${bookingDto}" method="post">
 
         <input type="hidden" th:field="*{id}" />
@@ -57,7 +58,7 @@
         <button type="submit" th:text="${edit} ? 'Uppdatera bokning' : 'Skapa bokning'"></button>
     </form>
 </div>
-
+</div>
 <script>
     flatpickr(".date-picker", {
         dateFormat: "Y-m-d"
