@@ -21,7 +21,8 @@ public class CustomerMapper {
     public CustomerDto toDto(Customer customer) {
         return CustomerDto.builder()
                 .id(customer.getId())
-                .name(customer.getName())
+                .firstName(customer.getFirstName())
+                .lastName(customer.getLastName())
                 .email(customer.getEmail())
                 .phoneNumber(customer.getPhoneNumber())
                 .address(customer.getAddress())
@@ -32,7 +33,8 @@ public class CustomerMapper {
     public Customer toEntity(CustomerDto customerDto) {
         return Customer.builder()
                 .id(customerDto.getId())
-                .name(customerDto.getName())
+                .firstName(customerDto.getFirstName())
+                .lastName(customerDto.getLastName())
                 .email(customerDto.getEmail())
                 .phoneNumber(customerDto.getPhoneNumber())
                 .address(customerDto.getAddress())
@@ -46,7 +48,8 @@ public class CustomerMapper {
     public DetailedCustomerDto detailedCustomer(Customer customer) {
         return DetailedCustomerDto.builder()
                 .id(customer.getId())
-                .firstName(customer.getName())
+                .firstName(customer.getFirstName())
+                .lastName(customer.getLastName())
                 .email(customer.getEmail())
                 .bookings(
                         customer.getBookings().stream()

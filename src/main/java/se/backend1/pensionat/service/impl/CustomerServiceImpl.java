@@ -35,7 +35,8 @@ public class CustomerServiceImpl implements CustomerService {
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID" + id));
 
         // Uppdatera bara det som kommer in i DTO:n
-        existing.setName(customerDto.getName());
+        existing.setFirstName(customerDto.getFirstName());
+        existing.setLastName(customerDto.getLastName());
         existing.setEmail(customerDto.getEmail());
         existing.setPhoneNumber(customerDto.getPhoneNumber());
         existing.setAddress(customerDto.getAddress());
