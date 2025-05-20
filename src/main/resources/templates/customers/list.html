@@ -17,7 +17,8 @@
     <table class="styled-table">
         <thead>
         <tr>
-            <th>Namn</th>
+            <th>Förnamn</th>
+            <th>Efternamn</th>
             <th>Email</th>
             <th>Telefon</th>
             <th>Address</th>
@@ -28,7 +29,8 @@
         <tbody>
         <tr th:each="customer : ${customers}">
 
-            <td th:text="${customer.name}">Namn</td>
+            <td th:text="${customer.firstName}">Förnamn</td>
+            <td th:text="${customer.lastName}">Efternamn</td>
             <td th:text="${customer.email}">email@example.com</td>
             <td th:text="${customer.phoneNumber}">070-1234567</td>
             <td th:text="${customer.address}">Testgatan 1</td>

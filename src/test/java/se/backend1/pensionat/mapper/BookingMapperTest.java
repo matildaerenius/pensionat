@@ -18,7 +18,8 @@ public class BookingMapperTest {
     public void testToDto() {
         Customer customer = Customer.builder()
                 .id(1L)
-                .name("Test Testsson")
+                .firstName("Test")
+                .lastName("Testsson")
                 .build();
 
         Room room = Room.builder()

@@ -12,8 +12,11 @@
 <form th:action="@{/customers/save}" th:object="${customerDto}" method="post">
   <input type="hidden" th:field="*{id}" />
 
-  <label>Namn:</label>
-  <input type="text" th:field="*{name}" /><br/>
+  <label>Förnamn:</label>
+  <input type="text" th:field="*{firstName}" /><br/>
+
+  <label>Efternamn:</label>
+  <input type="text" th:field="*{lastName}" /><br/>
 
   <label>Email:</label>
   <input type="email" th:field="*{email}" /><br/>

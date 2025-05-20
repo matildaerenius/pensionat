@@ -20,7 +20,8 @@ public class CustomerMapperTest {
     public void testToDto() {
         Customer customer = Customer.builder()
                 .id(1L)
-                .name("Jane Doe")
+                .firstName("Jane")
+                .lastName("Doe")
                 .email("jane@example.com")
                 .phoneNumber("0701234567")
                 .address("Nacka")
@@ -29,7 +30,8 @@ public class CustomerMapperTest {
         CustomerDto dto = customerMapper.toDto(customer);
 
         assertEquals(customer.getId(), dto.getId());
-        assertEquals(customer.getName(), dto.getName());
+        assertEquals(customer.getFirstName(), dto.getFirstName());
+        assertEquals(customer.getLastName(), dto.getLastName());
         assertEquals(customer.getEmail(), dto.getEmail());
         assertEquals(customer.getPhoneNumber(), dto.getPhoneNumber());
         assertEquals(customer.getAddress(), dto.getAddress());
@@ -39,7 +41,8 @@ public class CustomerMapperTest {
     public void testToEntity() {
         CustomerDto dto = CustomerDto.builder()
                 .id(2L)
-                .name("Kalle Hamilton")
+                .firstName("Kalle")
+                .lastName("Svensson")
                 .email("kalle@example.com")
                 .phoneNumber("0737654321")
                 .address("Haparanda")
@@ -48,7 +51,8 @@ public class CustomerMapperTest {
         Customer customer = customerMapper.toEntity(dto);
 
         assertEquals(dto.getId(), customer.getId());
-        assertEquals(dto.getName(), customer.getName());
+        assertEquals(dto.getFirstName(), customer.getFirstName());
+        assertEquals(dto.getLastName(), customer.getLastName());
         assertEquals(dto.getEmail(), customer.getEmail());
         assertEquals(dto.getPhoneNumber(), customer.getPhoneNumber());
         assertEquals(dto.getAddress(), customer.getAddress());
