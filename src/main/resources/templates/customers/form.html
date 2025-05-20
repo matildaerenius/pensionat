@@ -6,9 +6,10 @@
 
 </head>
 <body>
-<h1 th:text="${edit} ? 'Redigera kund' : 'Skapa kund'"></h1>
+<div class="form-wrapper">
+  <h1 th:text="${edit} ? 'Redigera kund' : 'Skapa kund'"></h1>
 
-
+  <div class="form-center">
 <form th:action="@{/customers/save}" th:object="${customerDto}" method="post">
   <input type="hidden" th:field="*{id}" />
 
@@ -29,5 +30,7 @@
 
   <button type="submit" th:text="${edit} ? 'Uppdatera' : 'Skapa'"></button>
 </form>
+  </div>
+</div>
 </body>
 </html>

@@ -8,7 +8,9 @@
 <div class="container">
     <h1>Alla bokningar</h1>
 
+    <div class="button-wrapper">
     <a class="btn" th:href="@{/bookings/create}">➕ Skapa ny bokning</a>
+    </div>
 
     <div th:if="${success}" class="success-message" th:text="${success}"></div>
     <div th:if="${error}" class="error-message" th:text="${error}"></div>
