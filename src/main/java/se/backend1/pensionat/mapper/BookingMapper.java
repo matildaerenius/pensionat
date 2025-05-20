@@ -44,7 +44,8 @@ public class BookingMapper {
     public DetailedBookingDto getDetailedBooking(Booking b) {
         return DetailedBookingDto.builder()
                 .customerId(b.getCustomer().getId())
-                .name(b.getCustomer().getName())
+                .firstName(b.getCustomer().getFirstName())
+                .lastName(b.getCustomer().getLastName())
                 .roomId(b.getRoom().getId())
                 .roomNumber(b.getRoom().getRoomNumber())
                 .roomType(b.getRoom().getRoomType())
