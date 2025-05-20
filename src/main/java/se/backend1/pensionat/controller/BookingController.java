@@ -1,58 +1,92 @@
 package se.backend1.pensionat.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import se.backend1.pensionat.entity.Booking;
-import se.backend1.pensionat.entity.Room;
-import se.backend1.pensionat.repository.BookingRepository;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import se.backend1.pensionat.dto.BookingDto;
+import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.service.BookingService;
 import se.backend1.pensionat.service.CustomerService;
 import se.backend1.pensionat.service.RoomService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/bookings")
 public class BookingController {
 
-    private BookingService bookingService;
-    private CustomerService customerService;
-    private RoomService roomService;
+    private final BookingService bookingService;
+    private final CustomerService customerService;
+    private final RoomService roomService;
 
-    @Autowired
-    public BookingController(BookingService bookingService, CustomerService customerService, RoomService roomService) {
-        this.bookingService = bookingService;
-        this.customerService = customerService;
-        this.roomService = roomService;
-    }
 
-    @GetMapping()
-    public List<Booking> getAllBookings(){
-        return null;
+    @GetMapping
+    public String getAllBookings(Model model){
+        model.addAttribute("bookings", bookingService.getAllBookings());
+        return "bookings/list";
     }
 
     @GetMapping("/create")
-    public String createBooking(){
-        return null;
-        //meddelande att det är klart kanske?
+    public String showCreateForm(Model model) {
+        model.addAttribute("bookingDto", new BookingDto());
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("rooms", roomService.getAllRooms());
+        return "bookings/create";
+    }
+
+    @PostMapping("/create")
+    public String createBooking(@ModelAttribute("bookingDto") @Valid BookingDto bookingDto,
+                                BindingResult result,
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("customers", customerService.getAllCustomers());
+            model.addAttribute("rooms", roomService.getAllRooms());
+            return "bookings/create";
+        }
+        bookingService.createBooking(bookingDto);
+        redirectAttributes.addFlashAttribute("success", "Bokning skapad!");
+        return "redirect:/bookings";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        BookingDto dto = bookingService.getBookingById(id);
+        model.addAttribute("bookingDto", dto);
+        model.addAttribute("customers", customerService.getAllCustomers());
+        model.addAttribute("rooms", roomService.getAllRooms());
+        return "bookings/edit";
     }
 
     @PostMapping("/edit/{id}")
-    public String editBooking(@PathVariable Long id){
-        return null;
+    public String updateBooking(@PathVariable Long id,
+                                @ModelAttribute("bookingDto") @Valid BookingDto bookingDto,
+                                BindingResult result,
+                                Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("customers", customerService.getAllCustomers());
+            model.addAttribute("rooms", roomService.getAllRooms());
+            return "bookings/edit";
+        }
+        bookingService.updateBooking(id, bookingDto);
+        return "redirect:/bookings";
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteBooking(@PathVariable Long id){
-        return null;
-    }
-
-    // @PatchMapping Denna uppdaterar bara en del?
-    //annars är det samma metod som editbooking där uppe
-    @PutMapping("/bookings/update/{id}")
-    public String updateBooking(@PathVariable Long id){
-        return null;
+    public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            bookingService.deleteBooking(id);
+            redirectAttributes.addFlashAttribute("success", "Bokning raderad!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Det gick inte att ta bort bokningen.");
+        }
+        return "redirect:/bookings";
     }
 
     @GetMapping("/search")
@@ -60,33 +94,20 @@ public class BookingController {
         return "bookings/search";
     }
 
-    //tar ut rum med bokning? Eller ska vi ta ut kund?
-    // Står på trello att vi ska ta ut sökformulär
-    @GetMapping("/bookings/search")
-    public List<Booking> getBookingsByRoom(@RequestParam Long roomId){
-        return null;
-    }
-    //Vi ska få ut lediga rum baserat på datum och antal personer
-    @GetMapping("/bookings/search-results")
-    public List<Room> getRoomsAvailable(){return null;}
+//    @GetMapping("/edit/{id}")
+//    public String editBooking(@PathVariable Long id, Model model) {
+//        model.addAttribute("bookingDto", bookingService.getBookingById(id));
+//        return "bookings/form";
+//    }
 
+    @GetMapping("/search-results")
+    public String getAvailableRooms(@RequestParam LocalDate checkIn,
+                                    @RequestParam LocalDate checkOut,
+                                    @RequestParam int guests,
+                                    Model model) {
+        List<RoomDto> availableRooms = roomService.findAvailableRooms(checkIn, checkOut, guests);
+        model.addAttribute("availableRooms", availableRooms);
+        return "bookings/search-results";
+    }
 }
 
-
-/**
- * Kustomiserade Querys
- *
- * två olika sätt att skriva
- *
- *  * @Modifying
- *  * @Transactional
- *  * @Query ("update X set y=:newVal where x=:oldVal")
- *  public void updateVal(Sting newVal, String oldVal)
- *
- * @Modifying
- * @Transactional
- * @Query ("update X set y=?1 where x=?2")
- * public void updateVal(@Param ("newVal")
- * String newVal, @param("oldvVal) String oldVal)
- *
- */

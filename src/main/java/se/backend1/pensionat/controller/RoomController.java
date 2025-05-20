@@ -1,83 +1,90 @@
 package se.backend1.pensionat.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import se.backend1.pensionat.dto.RoomDto;
-import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.service.RoomService;
 
 import java.util.List;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import se.backend1.pensionat.service.RoomService;
-
-@Controller
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("/rooms")
 public class RoomController {
-    private RoomService roomService;
-    private BookingController bookingController;
 
+    private final RoomService roomService;
 
-    @Autowired
-    public RoomController(RoomService roomService, BookingController bookingController) {
-        this.roomService = roomService;
-        this.bookingController = bookingController;
-    }
 
     @GetMapping()
-    public List<RoomDto> getAllRooms() {
-       return getAllRooms();
-       //kommer från roomService
+    public String getAllRooms(Model model) {
+        List<RoomDto> rooms = roomService.getAllRooms();
+        model.addAttribute("rooms", rooms);
+        return "rooms/list";
+    }
+
+    // TODO : Denna behövs inte om vi inte ska kunna skapa nya rum?
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("roomDto", new RoomDto());
+        return "rooms/create";
     }
 
     @GetMapping("/occupied")
-    public List<RoomDto> getAllOccupiedRooms() {
-        return ;
+    public String showOccupiedRooms(Model model) {
+        // Ej implementerat – kräver extra logik
+        model.addAttribute("message", "Funktion ej klar");
+        return "rooms/occupied";
     }
 
-
-    private RoomService roomService;
-
-    @Autowired
-    public RoomController(RoomService roomService) {
-        this.roomService = roomService;
-    }
-
-    @GetMapping
-    public String listRooms() {
-        return null;
-    }
-
-    @GetMapping("/create")
-    public String showCreateForm() {
-        return null;
-    }
-
+    // TODO : Denna behövs inte?
     @PostMapping("/create")
-    public String createRoom() {
-        return null;
-     }
+    public String createRoom(@ModelAttribute("roomDto") @Valid RoomDto roomDto,
+                             BindingResult result,
+                             RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "rooms/create";
+        }
+        roomService.createRoom(roomDto);
+        redirectAttributes.addFlashAttribute("success", "Rum skapat!");
+        return "redirect:/rooms";
+    }
 
-     @GetMapping("/edit/{id}")
-    public String showEditFrom() {
-        return null;
-     }
+    // TODO : Denna behövs inte?
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        RoomDto roomDto = roomService.getRoomById(id);
+        model.addAttribute("roomDto", roomDto);
+        return "rooms/edit";
+    }
 
-     @PostMapping("/edit/{id}")
-    public String updateRoom() {
-        return null;
-     }
+    // TODO : Denna behövs inte?
+    @PostMapping("/edit/{id}")
+    public String updateRoom(@PathVariable Long id,
+                             @ModelAttribute("roomDto") @Valid RoomDto roomDto,
+                             BindingResult result,
+                             RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "rooms/edit";
+        }
+        roomService.updateRoom(id, roomDto);
+        redirectAttributes.addFlashAttribute("success", "Rummet har uppdaterats.");
+        return "redirect:/rooms";
+    }
 
-     @PostMapping("/delete/{id}")
-    public String deleteRoom() {
-        return null;
-     }
+    // TODO : Denna behövs inte?
+    @PostMapping("/delete/{id}")
+    public String deleteRoom(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            roomService.deleteRoom(id);
+            redirectAttributes.addFlashAttribute("success", "Rummet raderat.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Rummet kunde inte tas bort.");
+        }
+        return "redirect:/rooms";
+    }
 }

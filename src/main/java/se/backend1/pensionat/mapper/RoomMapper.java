@@ -4,29 +4,26 @@ import org.springframework.stereotype.Component;
 import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.entity.Room;
 
-//Component görs så det inte blir error i roomserviceimpl
 @Component
 public class RoomMapper {
 
-    public static Room toEntity(RoomDto dto) {
-        if (dto == null) return null;
-        Room room = new Room();
-        room.setId(dto.getId());
-        room.setRoomNumber(dto.getRoomNumber());
-        room.setRoomType(dto.getRoomType());
-        room.setCapacity(dto.getCapacity());
-        room.setMaxExtraBeds(dto.getMaxExtraBeds());
-        return room;
+
+    // room till roomDTO
+    public RoomDto toDto(Room room) {
+        return RoomDto.builder()
+                .id(room.getId())
+                .roomNumber(room.getRoomNumber())
+                .roomType(room.getRoomType())
+                .build();
     }
 
-    public RoomDto toDto(Room room) {
-        if (room == null) return null;
-        RoomDto dto = new RoomDto();
-        dto.setId(room.getId());
-        dto.setRoomNumber(room.getRoomNumber());
-        dto.setRoomType(room.getRoomType());
-        dto.setCapacity(room.getCapacity());
-        dto.setMaxExtraBeds(room.getMaxExtraBeds());
-        return dto;
+    // roomDTO till room
+    public Room toEntity(RoomDto roomDto) {
+        return Room.builder()
+                .id(roomDto.getId())
+                .roomNumber(roomDto.getRoomNumber())
+                .roomType(roomDto.getRoomType())
+                .build();
     }
+
 }
