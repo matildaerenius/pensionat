@@ -12,18 +12,18 @@
     <h1>Pensionat bokningssystem</h1>
     <nav>
         <ul>
-            <li><a th:href="@{/}">Start</a></li>
-            <li><a th:href="@{/customers}">Kunder</a></li>
-            <li><a th:href="@{/rooms}">Rum</a></li>
-            <li><a th:href="@{/bookings}">Bokningar</a></li>
+            <li><a th:href="@{/static}">Start</a></li>
+            <li><a th:href="@{/bookings/create}">Skapa bokning</a></li>
+            <li><a th:href="@{/customers/create}">Skapa kund</a></li>
+            <li><a th:href="@{/templates/bookings}">Bokningar</a></li>
+            <li><a th:href="@{/templates/customers}">Kunder</a></li>
+            <li><a th:href="@{/templates/rooms}">Rum</a></li>
         </ul>
     </nav>
 </header>
 
 <main>
-    <div layout:fragment="content">
-        <!-- Här ersätts innehållet av undersidor -->
-    </div>
+    <div layout:fragment="content"></div>
 </main>
 
 <footer>
