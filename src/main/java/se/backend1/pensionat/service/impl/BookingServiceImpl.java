@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
+import se.backend1.pensionat.entity.Customer;
 import se.backend1.pensionat.exception.BookingNotFoundException;
 import se.backend1.pensionat.exception.CustomerHasBookingsException;
 import se.backend1.pensionat.mapper.BookingMapper;
@@ -92,6 +93,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookingsForDate(LocalDate date) {
         return bookingRepository.findBookingsByDate(date);
+    }
+
+    @Override
+    public void save(BookingDto bookingDto) {
+        Booking booking = bookingMapper.toEntity(bookingDto);
+        bookingRepository.save(booking);
     }
 
 }

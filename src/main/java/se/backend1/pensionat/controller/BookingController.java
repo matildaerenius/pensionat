@@ -51,10 +51,10 @@ public class BookingController {
             model.addAttribute("customers", customerService.getAllCustomers());
             model.addAttribute("rooms", roomService.getAllRooms());
             model.addAttribute("edit", false);
+            model.addAttribute("formAction", "/bookings");
             return "bookings/form";
         }
-        bookingService.createBooking(bookingDto);
-        redirectAttributes.addFlashAttribute("success", "Bokning skapad!");
+        bookingService.save(bookingDto);
         return "redirect:/bookings";
     }
 

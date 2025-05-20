@@ -1,5 +1,6 @@
 package se.backend1.pensionat.service;
 
+import jakarta.validation.Valid;
 import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
@@ -29,5 +30,6 @@ public interface BookingService  {
     //Gammalt eller oklart om detta ska med
     List<Booking> getBookingsForDate(LocalDate date);
 
+    void save(@Valid BookingDto bookingDto);
 }
 
