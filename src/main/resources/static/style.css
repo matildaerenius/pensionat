@@ -258,3 +258,48 @@ input[type="text"].date-picker {
 }
 
 
+
+
+
+.start-page {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 2rem;
+}
+
+.start-title {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
+}
+
+.button-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.search-section {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+}
+
+.search-section h3 {
+    margin-bottom: 1rem;
+    color: #444;
+}
+
+.search-section form {
+    display: grid;
+    gap: 1rem;
+    max-width: 500px;
+    margin: auto;
+}
+
+
+
