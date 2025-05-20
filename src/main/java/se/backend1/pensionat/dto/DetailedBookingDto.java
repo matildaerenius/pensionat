@@ -23,7 +23,7 @@ public class DetailedBookingDto {
     private Long roomId;
     private String roomNumber;
     private RoomType roomType;
-    private int numberOfGuests;
+    private Integer numberOfGuests;
 
     private BookingDto bookingDto;
 }

@@ -37,7 +37,9 @@ public class BookingController {
         model.addAttribute("bookingDto", new BookingDto());
         model.addAttribute("customers", customerService.getAllCustomers());
         model.addAttribute("rooms", roomService.getAllRooms());
-        return "bookings/create";
+        model.addAttribute("edit", false);
+        model.addAttribute("formAction", "/bookings/create");
+        return "bookings/form";
     }
 
     @PostMapping("/create")
@@ -48,7 +50,8 @@ public class BookingController {
         if (result.hasErrors()) {
             model.addAttribute("customers", customerService.getAllCustomers());
             model.addAttribute("rooms", roomService.getAllRooms());
-            return "bookings/create";
+            model.addAttribute("edit", false);
+            return "bookings/form";
         }
         bookingService.createBooking(bookingDto);
         redirectAttributes.addFlashAttribute("success", "Bokning skapad!");
@@ -57,11 +60,12 @@ public class BookingController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        BookingDto dto = bookingService.getBookingById(id);
-        model.addAttribute("bookingDto", dto);
+        model.addAttribute("bookingDto", bookingService.getBookingById(id));
         model.addAttribute("customers", customerService.getAllCustomers());
         model.addAttribute("rooms", roomService.getAllRooms());
-        return "bookings/edit";
+        model.addAttribute("edit", true);
+        model.addAttribute("formAction", "/bookings/edit/" + id);
+        return "bookings/form";
     }
 
     @PostMapping("/edit/{id}")
@@ -72,7 +76,8 @@ public class BookingController {
         if (result.hasErrors()) {
             model.addAttribute("customers", customerService.getAllCustomers());
             model.addAttribute("rooms", roomService.getAllRooms());
-            return "bookings/edit";
+            model.addAttribute("edit", true);
+            return "bookings/form";
         }
         bookingService.updateBooking(id, bookingDto);
         return "redirect:/bookings";

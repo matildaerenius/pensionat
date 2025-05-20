@@ -1,10 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="${edit} ? 'Redigera bokning' : 'Skapa bokning'">Bokningsformulär</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 </head>
 <body>
+<div class="container">
+    <h1 th:text="${edit} ? 'Redigera bokning' : 'Skapa ny bokning'"></h1>
 
+    <form th:action="@{${formAction}}" th:object="${bookingDto}" method="post">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <!-- Incheckning -->
+        <label th:for="*{checkIn}">Incheckning:</label>
+        <input type="text" th:field="*{checkIn}" class="date-picker"/><br/>
+        <div th:if="${#fields.hasErrors('checkIn')}" th:errors="*{checkIn}" class="error"></div>
+
+        <!-- Utcheckning -->
+        <label th:for="*{checkOut}">Utcheckning:</label>
+        <input type="text" th:field="*{checkOut}" class="date-picker"/><br/>
+        <div th:if="${#fields.hasErrors('checkOut')}" th:errors="*{checkOut}" class="error"></div>
+
+        <!-- Antal gäster -->
+        <label th:for="*{numberOfGuests}">Antal gäster:</label>
+        <input type="number" th:field="*{numberOfGuests}" min="1" class="input"/><br/>
+        <div th:if="${#fields.hasErrors('numberOfGuests')}" th:errors="*{numberOfGuests}" class="error"></div>
+
+        <!-- Kund -->
+        <label th:for="*{customerId}">Kund:</label>
+        <select th:field="*{customerId}">
+            <option value="" th:text="'-- Välj något --'"></option>
+            <option th:each="cust : ${customers}"
+                    th:value="${cust.id}"
+                    th:text="${cust.firstName + ' ' + cust.lastName}">
+            </option>
+        </select><br/>
+        <div th:if="${#fields.hasErrors('customerId')}" th:errors="*{customerId}" class="error"></div>
+
+        <!-- Rum -->
+        <label th:for="*{roomId}">Rum:</label>
+        <select th:field="*{roomId}">
+            <option value="" th:text="'-- Välj rum --'"></option>
+            <option th:each="room : ${rooms}"
+                    th:value="${room.id}"
+                    th:text="${room.roomNumber + ' (' + room.roomType + ')'}">
+            </option>
+        </select><br/>
+        <div th:if="${#fields.hasErrors('roomId')}" th:errors="*{roomId}" class="error"></div>
+
+        <br/>
+        <button type="submit" th:text="${edit} ? 'Uppdatera bokning' : 'Skapa bokning'"></button>
+    </form>
+</div>
+
+<script>
+    flatpickr(".date-picker", {
+        dateFormat: "Y-m-d"
+    });
+</script>
 </body>
 </html>

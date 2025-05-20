@@ -24,7 +24,7 @@ public class BookingDto {
     private LocalDate checkOut;
 
     @Min(value = 1, message = "Minst en gäst krävs")
-    private int numberOfGuests;
+    private Integer numberOfGuests;
 
     @NotNull(message = "Kund måste väljas")
     private Long customerId;

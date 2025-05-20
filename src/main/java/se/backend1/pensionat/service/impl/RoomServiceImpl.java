@@ -21,8 +21,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    private RoomRepository roomRepository;
-    private RoomMapper roomMapper;
+    private final RoomRepository roomRepository;
+    private final RoomMapper roomMapper;
 
     @Override
     public RoomDto createRoom(RoomDto dto) {
