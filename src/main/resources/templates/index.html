@@ -8,15 +8,13 @@
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
-<div layout:fragment="content" class="start-page">
-    <h2 class="start-title">Välkommen till pensionatet</h2>
+<div layout:fragment="content">
+
+    <h2 class="page-title">Välkommen till pensionatet</h2>
     <div th:insert="~{fragments/navigation :: buttonGrid}"></div>
 
-
-</div>
-
-    <div class="search-section">
-        <h3>Sök lediga rum</h3>
+    <div class="search-box">
+        <h3 class="search-title">Sök lediga rum</h3>
         <form method="get" th:action="@{/rooms}">
             <label for="checkIn">Från:</label>
             <input type="date" id="checkIn" name="checkIn" required />
@@ -31,5 +29,6 @@
         </form>
     </div>
 </div>
+
 </body>
 </html>
