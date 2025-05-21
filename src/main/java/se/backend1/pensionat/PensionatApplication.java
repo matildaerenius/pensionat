@@ -18,7 +18,7 @@ public class PensionatApplication {
         SpringApplication.run(PensionatApplication.class, args);
     }
 
-/*
+
     @Bean
     public CommandLineRunner commandLineRunner(RoomRepository repository) {
         return args -> {
@@ -52,5 +52,5 @@ public class PensionatApplication {
         return room;
     }
 
-     */
+
 }

@@ -15,7 +15,7 @@
 
     <div class="search-box">
         <h3 class="search-title">Sök lediga rum</h3>
-        <form method="get" th:action="@{/rooms}">
+        <form method="get" action="/">
             <label for="checkIn">Från:</label>
             <input type="date" id="checkIn" name="checkIn" required />
 
@@ -27,6 +27,14 @@
 
             <button type="submit" class="btn">🔍 Sök</button>
         </form>
+
+        <div th:if="${rooms != null}">
+            <h2>Lediga rum</h2>
+            <ul>
+                <li th:each="room : ${rooms}" th:text="'Rum ' + ${room.roomNumber} + ' - ' + ${room.roomType}">...</li>
+            </ul>
+        </div>
+
     </div>
 </div>
 

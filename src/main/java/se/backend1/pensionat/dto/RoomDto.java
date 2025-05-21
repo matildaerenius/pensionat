@@ -18,6 +18,7 @@ import se.backend1.pensionat.model.RoomType;
 public class RoomDto {
 
     private Long id;
+    private boolean allowExtraBeds;
 
     @NotBlank(message = "Rumsnummer krävs")
     @Size(max = 20, message = "Rumsnummer får max vara 20 tecken")
@@ -28,7 +29,7 @@ public class RoomDto {
 
     @Min(value = 1, message = "Kapacitet måste vara minst 1")
     @Max(value = 4, message = "Kapacitet får max vara 4")
-    private int Capacity;
+    private int capacity;
 
     @Min(value = 0, message = "Extrasängar kan inte vara negativt")
     private int maxExtraBeds;

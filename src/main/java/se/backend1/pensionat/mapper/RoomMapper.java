@@ -14,6 +14,7 @@ public class RoomMapper {
                 .id(room.getId())
                 .roomNumber(room.getRoomNumber())
                 .roomType(room.getRoomType())
+                .allowExtraBeds(room.isAllowExtraBeds())
                 .build();
     }
 
