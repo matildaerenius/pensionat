@@ -32,6 +32,9 @@ public interface BookingService  {
     //Gammalt eller oklart om detta ska med
     List<Booking> getBookingsForDate(LocalDate date);
 
+    //senaste trellometod
+    void checkConflictingAndSave(BookingDto dto);
+
     void save(@Valid BookingDto bookingDto);
 
     void validateNoDoubleBooking(Room room, LocalDate checkIn, LocalDate checkOut);
