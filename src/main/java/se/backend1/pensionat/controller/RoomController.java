@@ -1,91 +1,104 @@
 package se.backend1.pensionat.controller;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.ui.Model;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import se.backend1.pensionat.dto.RoomDto;
-import se.backend1.pensionat.entity.Room;
-import se.backend1.pensionat.service.BookingService;
-import se.backend1.pensionat.service.CustomerService;
 import se.backend1.pensionat.service.RoomService;
 
 import java.time.LocalDate;
 import java.util.List;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import se.backend1.pensionat.service.RoomService;
-
 @Controller
-@RequiredArgsConstructor //detta gör att vi kan ta bort Autowired o slipper göra konstruktorer
+@RequiredArgsConstructor
 @RequestMapping("/rooms")
 public class RoomController {
 
-    private final BookingService bookingService;
-    private final CustomerService customerService;
     private final RoomService roomService;
 
+
     @GetMapping
-    public String listRooms(Model model) {
-        List<RoomDto> rooms = roomService.getAllRooms();
+    public String getAllRooms(@RequestParam(required = false) String checkIn,
+                              @RequestParam(required = false) String checkOut,
+                              @RequestParam(required = false) Integer guests,
+                              Model model) {
+        List<RoomDto> rooms;
+
+        if (checkIn != null && checkOut != null && guests != null) {
+            LocalDate start = LocalDate.parse(checkIn);
+            LocalDate end = LocalDate.parse(checkOut);
+            rooms = roomService.findAvailableRooms(start, end, guests);
+        } else {
+            rooms = roomService.getAllRooms();
+        }
+
         model.addAttribute("rooms", rooms);
-        return "room-list";
+        return "rooms/list";
     }
 
-    @GetMapping("/search")
-    public String searchAvailableRooms(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                       @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                       @RequestParam("guests") int guests,
-                                       Model model) {
-
-        List<RoomDto> availableRooms = roomService.findAvailableRooms(startDate, endDate, guests);
-        model.addAttribute("availableRooms", availableRooms);
-        return "search";
-    }
-
-    @GetMapping()
-    public List<RoomDto> getAllRooms() {
-       return getAllRooms();
-       //kommer från roomService
-    }
-    @GetMapping("/occupied")
-    public List<RoomDto> getAllOccupiedRooms() {
-        return null ;
-    }
-
-    @GetMapping
-    public String listRooms() {
-        return null;
-    }
-
+    // TODO : Denna behövs inte om vi inte ska kunna skapa nya rum?
     @GetMapping("/create")
-    public String showCreateForm() {
-        return null;
+    public String showCreateForm(Model model) {
+        model.addAttribute("roomDto", new RoomDto());
+        return "rooms/create";
     }
 
+    @GetMapping("/occupied")
+    public String showOccupiedRooms(Model model) {
+        // Ej implementerat – kräver extra logik
+        model.addAttribute("message", "Funktion ej klar");
+        return "rooms/occupied";
+    }
+
+    // TODO : Denna behövs inte?
     @PostMapping("/create")
-    public String createRoom() {
-        return null;
-     }
+    public String createRoom(@ModelAttribute("roomDto") @Valid RoomDto roomDto,
+                             BindingResult result,
+                             RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "rooms/create";
+        }
+        roomService.createRoom(roomDto);
+        redirectAttributes.addFlashAttribute("success", "Rum skapat!");
+        return "redirect:/rooms";
+    }
 
-     @GetMapping("/edit/{id}")
-    public String showEditFrom() {
-        return null;
-     }
+    // TODO : Denna behövs inte?
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        RoomDto roomDto = roomService.getRoomById(id);
+        model.addAttribute("roomDto", roomDto);
+        return "rooms/edit";
+    }
 
-     @PostMapping("/edit/{id}")
-    public String updateRoom() {
-        return null;
-     }
+    // TODO : Denna behövs inte?
+    @PostMapping("/edit/{id}")
+    public String updateRoom(@PathVariable Long id,
+                             @ModelAttribute("roomDto") @Valid RoomDto roomDto,
+                             BindingResult result,
+                             RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            return "rooms/edit";
+        }
+        roomService.updateRoom(id, roomDto);
+        redirectAttributes.addFlashAttribute("success", "Rummet har uppdaterats.");
+        return "redirect:/rooms";
+    }
 
-     @PostMapping("/delete/{id}")
-    public String deleteRoom() {
-        return null;
-     }
+    // TODO : Denna behövs inte?
+    @PostMapping("/delete/{id}")
+    public String deleteRoom(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            roomService.deleteRoom(id);
+            redirectAttributes.addFlashAttribute("success", "Rummet raderat.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Rummet kunde inte tas bort.");
+        }
+        return "redirect:/rooms";
+    }
 }

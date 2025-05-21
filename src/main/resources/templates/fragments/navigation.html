@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<body>
+<div th:fragment="buttonGrid" class="button-grid-container">
+    <div class="button-grid">
+        <a class="btn" th:href="@{/}">🏠 Start</a>
+        <a class="btn" th:href="@{/bookings}">📅 Bokningar</a>
+        <a class="btn" th:href="@{/customers}">👥 Kunder</a>
+        <a class="btn" th:href="@{/rooms}">🏨 Rum</a>
+    </div>
+</div>
+</body>
+</html>

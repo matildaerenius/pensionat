@@ -18,8 +18,12 @@ public class CustomerDto {
     private Long id;
 
     @NotBlank(message = "Namn får inte vara tomt")
-    @Size(max = 100, message = "Namn får vara högst 100 tecken långt")
-    private String name;
+    @Size(max = 30, message = "Namn får vara högst 100 tecken långt")
+    private String firstName;
+
+    @NotBlank(message = "Namn får inte vara tomt")
+    @Size(max = 30, message = "Namn får vara högst 100 tecken långt")
+    private String lastName;
 
     @NotBlank(message = "E-post får inte vara tom")
     @Pattern(regexp = ".*@.*", message = "Adress måste innehålla tecknet '@'")

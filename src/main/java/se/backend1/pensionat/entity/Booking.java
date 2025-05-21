@@ -29,13 +29,15 @@ public class Booking {
     private LocalDate checkOut;
 
     @Min(value = 1, message = "Minst en gäst krävs")
-    private int numberOfGuests;
+    private Integer numberOfGuests;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    //at JSONignore, tar bort
     @ManyToOne
+    //cascade? Rum ska försvinna från aktuell bokning, fråga sigrun!
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 

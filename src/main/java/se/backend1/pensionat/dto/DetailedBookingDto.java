@@ -16,13 +16,14 @@ public class DetailedBookingDto {
 
     // Kundinformation
     private Long customerId;
-    private String name;
+    private String firstName;
+    private String lastName;
 
     // Rumsinformation
     private Long roomId;
     private String roomNumber;
     private RoomType roomType;
-    private int numberOfGuests;
+    private Integer numberOfGuests;
 
     private BookingDto bookingDto;
 }

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Kunder</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
+<div class="container">
+    <h1 class="page-title">Alla kunder</h1>
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
+
+
+    <div class="button-wrapper">
+        <a href="/customers/create" class="btn">➕ Skapa ny kund</a>
+    </div>
+
+    <table class="styled-table">
+        <thead>
+        <tr>
+            <th>Förnamn</th>
+            <th>Efternamn</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Address</th>
+            <th>Åtgärder</th>
+            <th>Radera</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="customer : ${customers}">
+
+            <td th:text="${customer.firstName}">Förnamn</td>
+            <td th:text="${customer.lastName}">Efternamn</td>
+            <td th:text="${customer.email}">email@example.com</td>
+            <td th:text="${customer.phoneNumber}">070-1234567</td>
+            <td th:text="${customer.address}">Testgatan 1</td>
+            <td>
+                <a class="btn-edit" th:href="@{'/customers/edit/' + ${customer.id}}">✏️ Redigera</a>
+
+            </td>
+            <td>
+                <form th:action="@{'/customers/delete/' + ${customer.id}}" method="post" class="inline-form">
+
+                    <button type="submit" class="btn-delete" title="Ta bort" onclick="return confirm('Är du säker på att du vill ta bort kunden?');">🗑️</button>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

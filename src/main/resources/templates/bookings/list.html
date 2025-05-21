@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Alla bokningar</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
+<div class="container">
+    <h1 class="page-title">Alla bokningar</h1>
+
+    <div class="button-wrapper">
+    <a class="btn" th:href="@{/bookings/create}">➕ Skapa ny bokning</a>
+    </div>
+
+    <div th:if="${success}" class="success-message" th:text="${success}"></div>
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+    <table class="styled-table">
+        <thead>
+        <tr>
+            <th>Incheckning</th>
+            <th>Utcheckning</th>
+            <th>Gäster</th>
+            <th>Kund</th>
+            <th>Rum</th>
+            <th>Åtgärder</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking : ${bookings}">
+            <td th:text="${booking.checkIn}"></td>
+            <td th:text="${booking.checkOut}"></td>
+            <td th:text="${booking.numberOfGuests}"></td>
+            <td th:text="${booking.customerId}"></td> <!-- TODO: visa namn via DetailedBookingDto istället kanske -->
+            <td th:text="${booking.roomId}"></td>
+            <td>
+                <a th:href="@{'/bookings/edit/' + ${booking.id}}" class="btn-edit">✏️</a>
+                <form th:action="@{'/bookings/delete/' + ${booking.id}}" method="post" style="display:inline">
+                    <button type="submit" class="btn-delete" onclick="return confirm('Ta bort bokning?')">🗑️</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

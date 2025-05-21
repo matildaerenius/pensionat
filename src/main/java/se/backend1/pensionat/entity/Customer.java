@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Builder
-@Table(name = "customers")
 public class Customer {
 
     @Id
@@ -24,8 +23,12 @@ public class Customer {
     private Long id;
 
     @NotBlank(message = "Namn krävs")
-    @Size(max = 100, message = "Namn får max vara 100 tecken")
-    private String name;
+    @Size(max = 30, message = "Namn får max vara 100 tecken")
+    private String firstName;
+
+    @NotBlank(message = "Namn krävs")
+    @Size(max = 30, message = "Namn får max vara 100 tecken")
+    private String lastName;
 
     @NotBlank(message = "E-post krävs")
     @Email(message = "Ogiltig e-postadress")

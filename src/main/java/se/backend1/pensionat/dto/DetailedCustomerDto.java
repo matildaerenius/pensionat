@@ -13,5 +13,11 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class DetailedCustomerDto {
-    private List<CustomerDto> customers;
+
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private List<BookingDto> bookings;
+
 }

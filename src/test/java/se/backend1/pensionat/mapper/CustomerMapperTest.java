@@ -14,50 +14,47 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomerMapperTest {
 
-    @Test
-    void shouldMapDtoToEntityCorrectly() {
-        CustomerDto dto = new CustomerDto();
-        dto.setId(1L);
-        dto.setName("Jane Doe");
-        dto.setEmail("janedoe@example.com");
-        dto.setPhoneNumber("0701234567");
-        dto.setAddress("Testgatan 1");
-
-        Customer entity = CustomerMapper.toEntity(dto);
-
-        assertNotNull(entity);
-        assertEquals(dto.getId(), entity.getId());
-        assertEquals(dto.getName(), entity.getName());
-        assertEquals(dto.getEmail(), entity.getEmail());
-        assertEquals(dto.getPhoneNumber(), entity.getPhoneNumber());
-        assertEquals(dto.getAddress(), entity.getAddress());
-    }
+    private final CustomerMapper customerMapper = new CustomerMapper(null); // bookingMapper används ej i dessa tester
 
     @Test
-    void shouldMapEntityToDtoCorrectly() {
+    public void testToDto() {
+        Customer customer = Customer.builder()
+                .id(1L)
+                .firstName("Jane")
+                .lastName("Doe")
+                .email("jane@example.com")
+                .phoneNumber("0701234567")
+                .address("Nacka")
+                .build();
 
+        CustomerDto dto = customerMapper.toDto(customer);
 
-        Customer customer = new Customer();
-        customer.setId(2L);
-        customer.setName("John Doe");
-        customer.setEmail("jane@example.com");
-        customer.setPhoneNumber("0737654321");
-        customer.setAddress("Exempelgatan 2");
-
-
-        CustomerDto dto = CustomerMapper.toDto(customer);
-
-        assertNotNull(dto);
         assertEquals(customer.getId(), dto.getId());
-        assertEquals(customer.getName(), dto.getName());
+        assertEquals(customer.getFirstName(), dto.getFirstName());
+        assertEquals(customer.getLastName(), dto.getLastName());
         assertEquals(customer.getEmail(), dto.getEmail());
         assertEquals(customer.getPhoneNumber(), dto.getPhoneNumber());
         assertEquals(customer.getAddress(), dto.getAddress());
     }
 
     @Test
-    void shouldReturnNullIfInputIsNull() {
-        assertNull(CustomerMapper.toDto(null));
-        assertNull(CustomerMapper.toEntity(null));
+    public void testToEntity() {
+        CustomerDto dto = CustomerDto.builder()
+                .id(2L)
+                .firstName("Kalle")
+                .lastName("Svensson")
+                .email("kalle@example.com")
+                .phoneNumber("0737654321")
+                .address("Haparanda")
+                .build();
+
+        Customer customer = customerMapper.toEntity(dto);
+
+        assertEquals(dto.getId(), customer.getId());
+        assertEquals(dto.getFirstName(), customer.getFirstName());
+        assertEquals(dto.getLastName(), customer.getLastName());
+        assertEquals(dto.getEmail(), customer.getEmail());
+        assertEquals(dto.getPhoneNumber(), customer.getPhoneNumber());
+        assertEquals(dto.getAddress(), customer.getAddress());
     }
 }
