@@ -300,6 +300,9 @@ input[type="text"].date-picker {
     max-width: 500px;
     margin: auto;
 }
+.button-grid-container {
+    padding-top: 25px;
+}
 
 
 
