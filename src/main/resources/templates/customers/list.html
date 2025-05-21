@@ -5,6 +5,7 @@
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
 <body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
 <div class="container">
     <h1>Alla kunder</h1>
     <div th:if="${error}" class="error-message">

@@ -9,6 +9,7 @@
 
 </head>
 <body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
 <div class="form-wrapper">
     <h1 th:text="${edit} ? 'Redigera bokning' : 'Skapa ny bokning'"></h1>
 
