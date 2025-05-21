@@ -8,7 +8,7 @@
 <body>
 <div th:insert="~{fragments/navigation :: buttonGrid}"></div>
 <div class="form-wrapper">
-  <h1 th:text="${edit} ? 'Redigera kund' : 'Skapa kund'"></h1>
+  <h1 class="page-title" th:text="${edit} ? 'Redigera kund' : 'Skapa kund'"></h1>
 
   <div class="form-center">
 <form th:action="@{/customers/save}" th:object="${customerDto}" method="post">
