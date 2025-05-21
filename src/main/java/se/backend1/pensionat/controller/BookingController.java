@@ -12,6 +12,8 @@ import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Room;
+import se.backend1.pensionat.exception.CustomerHasBookingsException;
+import se.backend1.pensionat.exception.RoomNotFoundException;
 import se.backend1.pensionat.mapper.BookingMapper;
 import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.repository.RoomRepository;
@@ -55,22 +57,24 @@ public class BookingController {
     @PostMapping("/create")
     public String createBooking(@ModelAttribute("bookingDto") @Valid BookingDto bookingDto,
                                 BindingResult result,
-                                Model model,
-                                RedirectAttributes redirectAttributes) {
+                                RedirectAttributes redirectAttributes,
+                                Model model) {
+
 
         if (bookingDto.getCheckIn().isAfter(bookingDto.getCheckOut())) {
             result.rejectValue("checkIn", "invalid", "Incheckning kan inte vara efter utcheckning.");
         }
 
+
         Room room = roomRepository.findById(bookingDto.getRoomId())
-                .orElseThrow(() -> new IllegalArgumentException("Rum finns inte"));
+                .orElseThrow(() -> new RoomNotFoundException("Rum finns inte"));
 
         int maxGuests = room.getCapacity() + (room.isAllowExtraBeds() ? room.getMaxExtraBeds() : 0);
         if (bookingDto.getNumberOfGuests() > maxGuests) {
             result.rejectValue("numberOfGuests", "invalid", "För många gäster för detta rum. Max: " + maxGuests);
         }
 
-        // Om valideringsfel finns, visar formuläret igen
+
         if (result.hasErrors()) {
             model.addAttribute("customers", customerService.getAllCustomers());
             model.addAttribute("rooms", roomService.getAllRooms());
@@ -79,13 +83,20 @@ public class BookingController {
             return "bookings/form";
         }
 
-        // Dubbelbokningskontroll
-        bookingService.validateNoDoubleBooking(room, bookingDto.getCheckIn(), bookingDto.getCheckOut());
+        try {
 
-        Booking booking = bookingMapper.toEntity(bookingDto);
-        booking.setRoom(room);
-        bookingRepository.save(booking);
-        return "redirect:/bookings";
+            bookingService.save(bookingDto);
+            redirectAttributes.addFlashAttribute("success", "Bokning skapad!");
+            return "redirect:/bookings";
+        } catch (RuntimeException e) {
+
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("customers", customerService.getAllCustomers());
+            model.addAttribute("rooms", roomService.getAllRooms());
+            model.addAttribute("edit", false);
+            model.addAttribute("formAction", "/bookings/create");
+            return "bookings/form";
+        }
     }
 
 
@@ -119,10 +130,11 @@ public class BookingController {
     public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             bookingService.deleteBooking(id);
-            redirectAttributes.addFlashAttribute("success", "Bokning avbokad!");
+            redirectAttributes.addFlashAttribute("success", "Bokning avbokad.");
+        } catch (CustomerHasBookingsException e) {
+            redirectAttributes.addFlashAttribute("error", "Bokningen kunde inte tas bort: " + e.getMessage());
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Det gick inte att ta bort bokningen.");
-            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Ett fel uppstod vid borttagning av bokning.");
         }
         return "redirect:/bookings";
     }
