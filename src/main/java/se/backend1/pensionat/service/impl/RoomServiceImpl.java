@@ -82,26 +82,29 @@ public class RoomServiceImpl implements RoomService {
 
         //går igenom varje rum
         for (Room room : rooms) {
+            int totCapacity = room.getCapacity() + room.getMaxExtraBeds();
             //Kontroll av kapacitet med antalet gäster
-            if (room.getCapacity()<guests) {
+            if (totCapacity<guests) {
                 continue;
             }
             boolean isAvailable= true;
 
             for (Booking booking : room.getBookings()) {
-                LocalDate start= booking.getCheckIn();
-                LocalDate end= booking.getCheckOut();
+                LocalDate start = booking.getCheckIn();
+                LocalDate end = booking.getCheckOut();
                 //Datumlogik för att se att datum inte överlappar.
                 if (!(checkOut.isBefore(start) || checkIn.isAfter(end.minusDays(1)))) {
-                    isAvailable= false;
+                    isAvailable = false;
                     break;
                 }
+            }
                 //Konverterar till DTO och sparar i listan
                 if (isAvailable) {
                     roomDtos.add(roomMapper.toDto(room));
                 }
+
             }
-        }
+
         return roomDtos;
     }
     // Valideringsmetod som kontrollerar att bara dubbelrum får ha extrasängar
