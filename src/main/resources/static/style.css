@@ -10,9 +10,30 @@ body {
 }
 
 .error {
-    color: red;
-    font-size: 0.9em;
-    margin-bottom: 10px;
+    background-color: #ffe0e0;
+    color: #b30000;
+    border-left: 6px solid #ff4d4d;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    max-width: 600px;
+    margin: 0 auto 1.5rem auto;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(255, 0, 0, 0.1);
+}
+.success {
+    background-color: #e0f7e9;
+    color: #008000;
+    border-left: 6px solid #00c851;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    max-width: 600px;
+    margin: 0 auto 1.5rem auto;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
 }
 
 
@@ -373,6 +394,11 @@ input[type="text"].date-picker {
         opacity: 1;
     }
 }
+
+
+
+
+
 
 
 

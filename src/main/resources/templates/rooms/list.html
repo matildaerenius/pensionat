@@ -6,27 +6,15 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 <body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
 <div class="container">
-    <h1>Alla rum</h1>
+    <h1 class="page-title">Alla rum</h1>
 
     <div th:if="${error}" class="error-message">
         <p th:text="${error}"></p>
     </div>
 
-    <form method="get" th:action="@{/rooms}" class="search-form">
-        <label for="checkIn">Från:</label>
-        <input type="text" id="checkIn" name="checkIn" class="date-picker" placeholder="yyyy-mm-dd"/>
 
-        <label for="checkOut">Till:</label>
-        <input type="text" id="checkOut" name="checkOut" class="date-picker" placeholder="yyyy-mm-dd"/>
-
-        <label for="guests">Gäster:</label>
-        <input type="number" id="guests" name="guests" min="1" placeholder="Antal"/>
-
-        <button type="submit" class="btn">🔍 Sök lediga rum</button>
-    </form>
-
-    <a class="btn" th:href="@{/rooms/create}">➕ Skapa nytt rum</a>
 
     <table class="styled-table">
         <thead>
@@ -43,7 +31,8 @@
             <td th:text="${room.roomNumber}">101</td>
             <td th:text="${room.roomType}">Dubbel</td>
             <td th:text="${room.capacity}">2</td>
-            <td th:text="${room.allowExtraBeds ? 'Ja' : 'Nej'}"></td>
+            <span th:text="${room.maxExtraBeds > 0 ? 'Ja' : 'Nej'}"></span>
+
             <td>
                 <a class="btn-edit" th:href="@{'/rooms/edit/' + ${room.id}}">✏️ Redigera</a>
             </td>

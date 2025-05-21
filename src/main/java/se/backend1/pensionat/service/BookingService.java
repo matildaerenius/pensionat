@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
+import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.repository.BookingRepository;
 
 import java.time.LocalDate;
@@ -23,7 +24,8 @@ public interface BookingService  {
     //KLAR
     boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
     //KLAR
-    DetailedBookingDto getDetailedBooking(Booking booking);
+    List<DetailedBookingDto> getAllDetailedBookings();
+
     //KLAR
     List<BookingDto> getAllBookings();
 
@@ -31,5 +33,7 @@ public interface BookingService  {
     List<Booking> getBookingsForDate(LocalDate date);
 
     void save(@Valid BookingDto bookingDto);
+
+    void validateNoDoubleBooking(Room room, LocalDate checkIn, LocalDate checkOut);
 }
 

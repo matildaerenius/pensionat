@@ -12,6 +12,9 @@
 <div th:insert="~{fragments/navigation :: buttonGrid}"></div>
 <div class="form-wrapper">
     <h1 class="page-title" th:text="${edit} ? 'Redigera bokning' : 'Skapa ny bokning'"></h1>
+    <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+
 
     <div class="form-center">
     <form th:action="@{${formAction}}" th:object="${bookingDto}" method="post">
@@ -36,7 +39,7 @@
         <!-- Kund -->
         <label th:for="*{customerId}">Kund:</label>
         <select th:field="*{customerId}">
-            <option value="" th:text="'-- Välj något --'"></option>
+            <option value="" th:text="'-- Välj kund --'"></option>
             <option th:each="cust : ${customers}"
                     th:value="${cust.id}"
                     th:text="${cust.firstName + ' ' + cust.lastName}">
@@ -63,6 +66,25 @@
 <script>
     flatpickr(".date-picker", {
         dateFormat: "Y-m-d"
+    });
+    const today = new Date();
+
+    const checkInInput = document.querySelector('input[name="checkIn"]');
+    const checkOutInput = document.querySelector('input[name="checkOut"]');
+
+    const checkInPicker = flatpickr(checkInInput, {
+        dateFormat: "Y-m-d",
+        minDate: today,
+        onChange: function (selectedDates) {
+            if (selectedDates.length > 0) {
+                checkOutPicker.set('minDate', selectedDates[0]);
+            }
+        }
+    });
+
+    const checkOutPicker = flatpickr(checkOutInput, {
+        dateFormat: "Y-m-d",
+        minDate: today
     });
 </script>
 </body>

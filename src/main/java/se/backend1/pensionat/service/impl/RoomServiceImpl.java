@@ -75,37 +75,25 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDto> findAvailableRooms(LocalDate checkIn, LocalDate checkOut, int guests) {
-        //Steg 1 tar ut alla rum
-        List <Room> rooms= roomRepository.findAll().stream().toList();
-        // Steg 2 skapar en lista
-        List <RoomDto> roomDtos= new ArrayList<>();
+        List<Room> allRooms = roomRepository.findAll();
+        List<RoomDto> availableRooms = new ArrayList<>();
 
-        //går igenom varje rum
-        for (Room room : rooms) {
-            int totCapacity = room.getCapacity() + room.getMaxExtraBeds();
-            //Kontroll av kapacitet med antalet gäster
-            if (totCapacity<guests) {
+        for (Room room : allRooms) {
+            int totalCapacity = room.getCapacity() + room.getMaxExtraBeds();
+            if (totalCapacity < guests) {
                 continue;
             }
-            boolean isAvailable= true;
 
-            for (Booking booking : room.getBookings()) {
-                LocalDate start = booking.getCheckIn();
-                LocalDate end = booking.getCheckOut();
-                //Datumlogik för att se att datum inte överlappar.
-                if (!(checkOut.isBefore(start) || checkIn.isAfter(end.minusDays(1)))) {
-                    isAvailable = false;
-                    break;
-                }
+            boolean isAvailable = room.getBookings().stream().noneMatch(booking ->
+                    !(checkOut.isBefore(booking.getCheckIn()) || checkIn.isAfter(booking.getCheckOut().minusDays(1)))
+            );
+
+            if (isAvailable) {
+                availableRooms.add(roomMapper.toDto(room));
             }
-                //Konverterar till DTO och sparar i listan
-                if (isAvailable) {
-                    roomDtos.add(roomMapper.toDto(room));
-                }
+        }
 
-            }
-
-        return roomDtos;
+        return availableRooms;
     }
     // Valideringsmetod som kontrollerar att bara dubbelrum får ha extrasängar
     private void validateExtraBeds(Room room) {

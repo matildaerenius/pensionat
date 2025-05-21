@@ -6,10 +6,12 @@ import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Customer;
-import se.backend1.pensionat.exception.BookingNotFoundException;
-import se.backend1.pensionat.exception.CustomerHasBookingsException;
+import se.backend1.pensionat.entity.Room;
+import se.backend1.pensionat.exception.*;
 import se.backend1.pensionat.mapper.BookingMapper;
 import se.backend1.pensionat.repository.BookingRepository;
+import se.backend1.pensionat.repository.CustomerRepository;
+import se.backend1.pensionat.repository.RoomRepository;
 import se.backend1.pensionat.service.BookingService;
 
 import java.time.LocalDate;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
+    private final CustomerRepository customerRepository;
+    private final RoomRepository roomRepository;
     private final BookingMapper bookingMapper;
 
 
@@ -34,13 +38,30 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDto updateBooking(Long id, BookingDto dto) {
         Booking existing = bookingRepository.findById(id)
-                .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID" + id));
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID " + id));
+
+        if (!existing.getRoom().getId().equals(dto.getRoomId()) ||
+                !existing.getCheckIn().equals(dto.getCheckIn()) ||
+                !existing.getCheckOut().equals(dto.getCheckOut())) {
+
+            if (!isRoomAvailable(dto.getRoomId(), dto.getCheckIn(), dto.getCheckOut())) {
+                throw new RoomUnavailableException("Rummet är upptaget under vald period.");
+            }
+        }
 
         existing.setCheckIn(dto.getCheckIn());
         existing.setCheckOut(dto.getCheckOut());
         existing.setNumberOfGuests(dto.getNumberOfGuests());
 
-        Booking saved= bookingRepository.save(existing);
+        Customer customer = customerRepository.findById(dto.getCustomerId())
+                .orElseThrow(() -> new CustomerNotFoundException("Kund saknas"));
+        Room room = roomRepository.findById(dto.getRoomId())
+                .orElseThrow(() -> new RoomNotFoundException("Rum saknas"));
+
+        existing.setCustomer(customer);
+        existing.setRoom(room);
+
+        Booking saved = bookingRepository.save(existing);
         return bookingMapper.toDto(saved);
     }
 
@@ -49,9 +70,8 @@ public class BookingServiceImpl implements BookingService {
         Booking existing= bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID" + id));
 
-        // Om checkOut är idag eller senare → pågående eller framtida bokning
-        if (!existing.getCheckOut().isBefore(LocalDate.now())) {
-            throw new CustomerHasBookingsException("Customer has bookings, cannot be removed");
+        if (!existing.getCheckIn().isAfter(LocalDate.now())) {
+            throw new ActiveBookingDeletionException("Pågående bokningar kan inte raderas.");
         }
         bookingRepository.delete(existing);
     }
@@ -76,12 +96,13 @@ public class BookingServiceImpl implements BookingService {
         return conflicts.isEmpty(); // true = ledigt, false = dubbelbokning
     }
 
-
-    // Placera denna metod from bookingRepo findConflictingBookings
     @Override
-    public DetailedBookingDto getDetailedBooking(Booking booking) {
-        return bookingMapper.getDetailedBooking(booking);
+    public List<DetailedBookingDto> getAllDetailedBookings() {
+        return bookingRepository.findAll().stream()
+                .map(bookingMapper::getDetailedBooking)
+                .collect(Collectors.toList());
     }
+
 
     @Override
     public List<BookingDto> getAllBookings() {
@@ -97,8 +118,31 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public void save(BookingDto bookingDto) {
+        if (!isRoomAvailable(bookingDto.getRoomId(), bookingDto.getCheckIn(), bookingDto.getCheckOut())) {
+            throw new RoomUnavailableException("Rummet är inte tillgängligt under vald period.");
+        }
+
         Booking booking = bookingMapper.toEntity(bookingDto);
+        Customer customer = customerRepository.findById(bookingDto.getCustomerId())
+                .orElseThrow(() -> new CustomerNotFoundException("Kund saknas"));
+        Room room = roomRepository.findById(bookingDto.getRoomId())
+                .orElseThrow(() -> new RoomNotFoundException("Rum saknas"));
+
+        booking.setCustomer(customer);
+        booking.setRoom(room);
         bookingRepository.save(booking);
+    }
+
+    @Override
+    public void validateNoDoubleBooking(Room room, LocalDate checkIn, LocalDate checkOut) {
+        List<Booking> existingBookings = bookingRepository.findByRoom(room);
+
+        for (Booking booking : existingBookings) {
+            boolean overlap = !(checkOut.isBefore(booking.getCheckIn()) || checkIn.isAfter(booking.getCheckOut()));
+            if (overlap) {
+                throw new RoomUnavailableException("Rummet är redan bokat under vald period.");
+            }
+        }
     }
 
 }

@@ -33,10 +33,10 @@ public class Room {
 
     @Min(value = 1, message = "Minst en gäst krävs")
     @Max(value = 4, message = "Max 4 gäst")
-    private int capacity = 4;
+    private Integer capacity;
 
-    private boolean allowExtraBeds; //VG
-//VG
+    private boolean allowExtraBeds;
+
     @Min(value = 0, message = "Minst 0 extrasängar")
     @Max(value = 2, message = "Max 2 extrasängar tillåtna")
     private int maxExtraBeds;
