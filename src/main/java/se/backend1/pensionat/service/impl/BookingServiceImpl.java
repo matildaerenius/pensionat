@@ -8,6 +8,7 @@ import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Customer;
 import se.backend1.pensionat.exception.BookingNotFoundException;
 import se.backend1.pensionat.exception.CustomerHasBookingsException;
+import se.backend1.pensionat.exception.RoomUnavailableException;
 import se.backend1.pensionat.mapper.BookingMapper;
 import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.service.BookingService;
@@ -93,6 +94,21 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookingsForDate(LocalDate date) {
         return bookingRepository.findBookingsByDate(date);
+    }
+
+    @Override
+    public void checkConflictingAndSave(BookingDto dto) {
+        Long roomId = dto.getRoomId(); // säkerställ att dto har rum med ID
+        LocalDate checkIn = dto.getCheckIn();
+        LocalDate checkOut = dto.getCheckOut();
+
+        List<Booking> conflicting = bookingRepository.findConflictingBookings(roomId, checkIn, checkOut);
+
+        if (!conflicting.isEmpty()) {
+            throw new RoomUnavailableException("Room " + roomId + " is already booked for the selected dates.");
+        }
+
+        save(dto);
     }
 
     @Override

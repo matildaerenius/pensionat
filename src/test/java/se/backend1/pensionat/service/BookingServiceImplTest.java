@@ -11,23 +11,21 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
-import se.backend1.pensionat.entity.Customer;
+import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.exception.CustomerHasBookingsException;
+import se.backend1.pensionat.exception.RoomUnavailableException;
 import se.backend1.pensionat.mapper.BookingMapper;
-import se.backend1.pensionat.mapper.CustomerMapper;
 import se.backend1.pensionat.repository.BookingRepository;
-import se.backend1.pensionat.repository.CustomerRepository;
 import se.backend1.pensionat.service.impl.BookingServiceImpl;
-import se.backend1.pensionat.service.impl.CustomerServiceImpl;
+
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static jdk.internal.org.objectweb.asm.util.CheckClassAdapter.verify;
-import static org.hamcrest.Matchers.any;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @AutoConfigureMockMvc
 @ExtendWith(MockitoExtension.class)
@@ -60,6 +58,7 @@ public class BookingServiceImplTest {
         bookingDto.setCheckIn(booking.getCheckIn());
         bookingDto.setCheckOut(booking.getCheckOut());
         bookingDto.setNumberOfGuests(2);
+
     }
 
     @Test
@@ -176,6 +175,46 @@ public class BookingServiceImplTest {
 
         assertEquals(1, result.size());
         assertEquals(booking.getId(), result.get(0).getId());
+    }
+
+    @Test
+    public void checkConflictingAndSaveTests() {
+        bookingDto.setCheckIn(LocalDate.of(2025, 7, 1));
+        bookingDto.setCheckOut(LocalDate.of(2025, 7, 5));
+
+        Long roomId = 1L;
+        bookingDto.setRoomId(roomId);
+
+        Booking bookings = new Booking();
+        when(bookingMapper.toEntity(bookingDto)).thenReturn(bookings);
+        when(bookingRepository.findConflictingBookings(1L, bookingDto.getCheckIn(), bookingDto.getCheckOut()))
+                .thenReturn(Collections.emptyList());
+
+        bookingServiceImpl.checkConflictingAndSave(bookingDto);
+
+        verify(bookingRepository).save(bookings);
+    }
+
+    @Test
+    public void checkConflictingAndSaveTest_error() {
+        bookingDto.setCheckIn(LocalDate.of(2025, 7, 1));
+        bookingDto.setCheckOut(LocalDate.of(2025, 7, 5));
+
+        Room room = new Room();
+        room.setId(1L);
+        bookingDto.setRoomId(room.getId());
+
+        Booking conflictingBooking = new Booking();
+
+        when(bookingRepository.findConflictingBookings(1L, bookingDto.getCheckIn(), bookingDto.getCheckOut()))
+                .thenReturn(List.of(conflictingBooking));
+
+        assertThrows(RoomUnavailableException.class, () -> {
+            bookingServiceImpl.checkConflictingAndSave(bookingDto);
+        });
+
+        // Kontrollera att bookingRepository.save INTE anropas
+        verify(bookingRepository, never()).save(any());
     }
 
     @Test
