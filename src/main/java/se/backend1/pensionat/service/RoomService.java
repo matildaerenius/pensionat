@@ -23,4 +23,9 @@ public interface RoomService {
         List<RoomDto> getAllRooms();
         //KLAR
         List<RoomDto> findAvailableRooms(LocalDate checkIn, LocalDate checkOut, int guests);
+
+        List<RoomDto> findAvailableRoomFromQuery(LocalDate checkIn, LocalDate checkOut, int guests);
+
+      //  List <RoomDto> findAvailableRoomsfromDates(LocalDate checkIn, LocalDate checkOut);
+
 }

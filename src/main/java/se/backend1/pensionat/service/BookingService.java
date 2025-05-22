@@ -1,9 +1,13 @@
 package se.backend1.pensionat.service;
 
 import jakarta.validation.Valid;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
+import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.entity.Booking;
+import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.repository.BookingRepository;
 
 import java.time.LocalDate;
@@ -29,6 +33,9 @@ public interface BookingService  {
 
     //Gammalt eller oklart om detta ska med
     List<Booking> getBookingsForDate(LocalDate date);
+
+    //senaste trellometod
+    void checkConflictingAndSave(BookingDto dto);
 
     void save(@Valid BookingDto bookingDto);
 }

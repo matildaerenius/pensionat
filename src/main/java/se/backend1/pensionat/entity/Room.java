@@ -17,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "room")
 public class Room {
 
     @Id
@@ -36,12 +35,12 @@ public class Room {
     private int capacity = 4;
 
     private boolean allowExtraBeds; //VG
-//VG
+    //VG
     @Min(value = 0, message = "Minst 0 extrasängar")
     @Max(value = 2, message = "Max 2 extrasängar tillåtna")
     private int maxExtraBeds;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<Booking> bookings = new ArrayList<>();
-    
+
 }

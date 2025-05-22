@@ -5,6 +5,7 @@ import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.entity.Booking;
 
+
 @Component
 public class BookingMapper {
 

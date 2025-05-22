@@ -8,6 +8,7 @@ import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Customer;
 import se.backend1.pensionat.exception.BookingNotFoundException;
 import se.backend1.pensionat.exception.CustomerHasBookingsException;
+import se.backend1.pensionat.exception.RoomUnavailableException;
 import se.backend1.pensionat.mapper.BookingMapper;
 import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.service.BookingService;
@@ -48,9 +49,9 @@ public class BookingServiceImpl implements BookingService {
     public void deleteBooking(Long id) {
         Booking existing= bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID" + id));
-
+        LocalDate today = LocalDate.now();
         // Om checkOut är idag eller senare → pågående eller framtida bokning
-        if (!existing.getCheckOut().isBefore(LocalDate.now())) {
+        if ((!existing.getCheckIn().isAfter(today) && !existing.getCheckOut().isBefore(today))) {
             throw new CustomerHasBookingsException("Customer has bookings, cannot be removed");
         }
         bookingRepository.delete(existing);
@@ -93,6 +94,22 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getBookingsForDate(LocalDate date) {
         return bookingRepository.findBookingsByDate(date);
+    }
+
+    //kontroll av ett rum
+    @Override
+    public void checkConflictingAndSave(BookingDto dto) {
+        Long roomId = dto.getRoomId(); // säkerställ att dto har rum med ID
+        LocalDate checkIn = dto.getCheckIn();
+        LocalDate checkOut = dto.getCheckOut();
+
+        List<Booking> conflicting = bookingRepository.findConflictingBookings(roomId, checkIn, checkOut);
+
+        if (!conflicting.isEmpty()) {
+            throw new RoomUnavailableException("Room " + roomId + " is already booked for the selected dates.");
+        }
+
+        save(dto);
     }
 
     @Override
