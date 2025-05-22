@@ -401,6 +401,26 @@ input[type="text"].date-picker {
     align-items: center;
     gap: 0.25rem;
 }
+.btn-book {
+    background-color: #1d4ed8;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s ease-in-out;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+}
+
+.btn-book:hover {
+    background-color: #2563eb;
+    transform: scale(1.05);
+}
 
 
 .page-title  {

@@ -50,25 +50,31 @@ public class BookingController {
     public String showCreateForm(@RequestParam(required = false) LocalDate checkIn,
                                  @RequestParam(required = false) LocalDate checkOut,
                                  @RequestParam(required = false) Integer guests,
+                                 @RequestParam(required = false) Long roomId,
                                  Model model) {
+
         BookingDto bookingDto = new BookingDto();
-        bookingDto.setCheckIn(checkIn);
-        bookingDto.setCheckOut(checkOut);
-        bookingDto.setNumberOfGuests(guests);
+
+        // Förifyll om värden finns
+        if (checkIn != null) bookingDto.setCheckIn(checkIn);
+        if (checkOut != null) bookingDto.setCheckOut(checkOut);
+        if (guests != null) bookingDto.setNumberOfGuests(guests);
+        if (roomId != null) bookingDto.setRoomId(roomId);
 
         model.addAttribute("bookingDto", bookingDto);
         model.addAttribute("customers", customerService.getAllCustomers());
+
+        // visar tillgängliga rum baserat på input
+        List<RoomDto> rooms = (checkIn != null && checkOut != null && guests != null)
+                ? roomService.findAvailableRoomFromQuery(checkIn, checkOut, guests)
+                : roomService.getAllRooms();
+
+        model.addAttribute("rooms", rooms);
         model.addAttribute("edit", false);
         model.addAttribute("formAction", "/bookings/create");
-
-        if (checkIn != null && checkOut != null && guests != null) {
-            model.addAttribute("rooms", roomService.findAvailableRoomFromQuery(checkIn, checkOut, guests));
-        } else {
-            model.addAttribute("rooms", List.of());
-        }
-
         return "bookings/form";
     }
+
 
     @PostMapping("/create")
     public String createBooking(@ModelAttribute("bookingDto") @Valid BookingDto bookingDto,

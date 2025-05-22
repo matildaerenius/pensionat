@@ -22,17 +22,28 @@
         <tr>
             <th>Rumsnummer</th>
             <th>Typ</th>
-            <th>Kapacitet</th>
+            <th>Gästkapacitet</th>
             <th>Max extrasängar</th>
+            <th>Boka</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="room : ${availableRooms}">
-            <td th:text="${room.roomNumber}">101</td>
-            <td th:text="${room.roomType}">DOUBLE</td>
-            <td th:text="${room.capacity}">2</td>
-            <td th:text="${room.maxExtraBeds}">1</td>
+            <td th:text="${room.roomNumber}"></td>
+            <td th:text="${room.roomType}"></td>
+            <td th:text="${room.capacity}"></td>
+            <td th:text="${room.maxExtraBeds}"></td>
+            <td>
+                <a th:href="@{/bookings/create(
+                        checkIn=${checkIn},
+                        checkOut=${checkOut},
+                        guests=${guests},
+                        roomId=${room.id}
+                    )}"
+                   class="btn-book">Boka</a>
+            </td>
         </tr>
+
         </tbody>
     </table>
 </div>
