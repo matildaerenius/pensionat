@@ -32,7 +32,6 @@ public class RoomServiceImpl implements RoomService {
         validateExtraBeds(room); //  VG: validate extra bed rules
         Room saved = roomRepository.save(room);
         return roomMapper.toDto(saved);
-
     }
 
     @Override

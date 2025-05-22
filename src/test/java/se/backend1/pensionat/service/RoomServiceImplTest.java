@@ -16,6 +16,7 @@ import se.backend1.pensionat.mapper.BookingMapper;
 import se.backend1.pensionat.mapper.CustomerMapper;
 import se.backend1.pensionat.mapper.RoomMapper;
 import se.backend1.pensionat.model.RoomType;
+import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.repository.CustomerRepository;
 import se.backend1.pensionat.repository.RoomRepository;
 import se.backend1.pensionat.service.impl.CustomerServiceImpl;
@@ -23,6 +24,7 @@ import se.backend1.pensionat.service.impl.RoomServiceImpl;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +42,9 @@ public class RoomServiceImplTest {
 
     @Mock
     private RoomRepository roomRepository;
+
+    @Mock
+    private BookingRepository bookingRepository;
 
 
     @InjectMocks
@@ -217,5 +222,35 @@ public class RoomServiceImplTest {
         assertEquals("101", available.get(0).getRoomNumber());
     }
 
+    @Test
+    void findAvailableRoomFromQueryTest() {
+        // Arrange
+        LocalDate checkIn = LocalDate.now().plusDays(5);
+        LocalDate checkOut = LocalDate.now().plusDays(7);
+        int guests = 2;
+
+        List<Room> roomsWithCapacity = List.of(room);
+
+        // Simulera att rummet inte har några bokningskonflikter
+        when(roomRepository.findByTotalCapacityGreaterThanEqual(guests))
+                .thenReturn(roomsWithCapacity);
+
+        when(bookingRepository.findConflictingBookings(room.getId(), checkIn, checkOut))
+                .thenReturn(Collections.emptyList());
+
+        when(roomMapper.toDto(room)).thenReturn(roomDto);
+
+        // Act
+        List<RoomDto> result = roomServiceImpl.findAvailableRoomFromQuery(checkIn, checkOut, guests);
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(roomDto, result.get(0));
+
+        // Verify
+        verify(roomRepository).findByTotalCapacityGreaterThanEqual(guests);
+        verify(bookingRepository).findConflictingBookings(room.getId(), checkIn, checkOut);
+        verify(roomMapper).toDto(room);
+    }
 
 }
