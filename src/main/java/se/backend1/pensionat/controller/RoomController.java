@@ -2,6 +2,7 @@ package se.backend1.pensionat.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -101,4 +102,17 @@ public class RoomController {
         }
         return "redirect:/rooms";
     }
+    @GetMapping("/available")
+    public String getAvailableRooms(@RequestParam("checkIn") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
+                                    @RequestParam("checkOut") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut,
+                                    @RequestParam("guests") int guests,
+                                    Model model) {
+        List<RoomDto> availableRooms = roomService.findAvailableRoomFromQuery(checkIn, checkOut, guests);
+        model.addAttribute("availableRooms", availableRooms);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
+        model.addAttribute("guests", guests);
+        return "rooms/available-rooms";
+    }
+
 }

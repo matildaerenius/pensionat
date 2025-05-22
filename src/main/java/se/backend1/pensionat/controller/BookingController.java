@@ -166,14 +166,6 @@ public class BookingController {
 //        return "bookings/form";
 //    }
 
-    @GetMapping("/search-results")
-    public String getAvailableRooms(@RequestParam LocalDate checkIn,
-                                    @RequestParam LocalDate checkOut,
-                                    @RequestParam int guests,
-                                    Model model) {
-        List<RoomDto> availableRooms = roomService.findAvailableRooms(checkIn, checkOut, guests);
-        model.addAttribute("availableRooms", availableRooms);
-        return "bookings/search-results";
-    }
+
 }
 

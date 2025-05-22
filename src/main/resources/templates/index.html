@@ -17,8 +17,9 @@
 
     <div class="search-box">
         <h3 class="search-title">Sök lediga rum</h3>
-        <form method="get" th:action="@{/rooms}">
-            <label for="checkIn">Från:</label>
+        <form method="get" th:action="@{/rooms/available}">
+
+        <label for="checkIn">Från:</label>
             <input type="text" id="checkIn" name="checkIn" class="date-picker" required />
 
             <label for="checkOut">Till:</label>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lediga rum</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
+<div class="container">
+    <h1 class="page-title">Lediga rum</h1>
+    <div class="search-summary">
+        <span><strong>📅 Från:</strong> <span th:text="${checkIn}"></span></span>
+        <span><strong>📅 Till:</strong> <span th:text="${checkOut}"></span></span>
+        <span><strong>👤 Gäster:</strong> <span th:text="${guests}"></span></span>
+    </div>
+
+
+    <div th:if="${#lists.isEmpty(availableRooms)}" class="error">Inga rum tillgängliga för vald period.</div>
+
+    <table class="styled-table" th:if="${!#lists.isEmpty(availableRooms)}">
+        <thead>
+        <tr>
+            <th>Rumsnummer</th>
+            <th>Typ</th>
+            <th>Kapacitet</th>
+            <th>Max extrasängar</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="room : ${availableRooms}">
+            <td th:text="${room.roomNumber}">101</td>
+            <td th:text="${room.roomType}">DOUBLE</td>
+            <td th:text="${room.capacity}">2</td>
+            <td th:text="${room.maxExtraBeds}">1</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
