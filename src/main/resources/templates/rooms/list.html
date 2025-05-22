@@ -21,9 +21,8 @@
         <tr>
             <th>Rum nr</th>
             <th>Typ</th>
-            <th>Kapacitet</th>
-            <th>Extrasängar</th>
-            <th>Åtgärder</th>
+            <th>Gästkapacitet</th>
+            <th>Antal extrasängar</th>
         </tr>
         </thead>
         <tbody>
@@ -31,11 +30,8 @@
             <td th:text="${room.roomNumber}">101</td>
             <td th:text="${room.roomType}">Dubbel</td>
             <td th:text="${room.capacity}">2</td>
-            <span th:text="${room.maxExtraBeds > 0 ? 'Ja' : 'Nej'}"></span>
+            <td th:text="${room.maxExtraBeds}">1</td>
 
-            <td>
-                <a class="btn-edit" th:href="@{'/rooms/edit/' + ${room.id}}">✏️ Redigera</a>
-            </td>
         </tr>
         </tbody>
     </table>
