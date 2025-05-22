@@ -4,6 +4,8 @@
       lang="sv"
       layout:decorate="~{layout}">
 <head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <title layout:fragment="title">Start | Pensionat</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 </head>
@@ -17,10 +19,10 @@
         <h3 class="search-title">Sök lediga rum</h3>
         <form method="get" th:action="@{/rooms}">
             <label for="checkIn">Från:</label>
-            <input type="date" id="checkIn" name="checkIn" required />
+            <input type="text" id="checkIn" name="checkIn" class="date-picker" required />
 
             <label for="checkOut">Till:</label>
-            <input type="date" id="checkOut" name="checkOut" required />
+            <input type="text" id="checkOut" name="checkOut" class="date-picker" required />
 
             <label for="guests">Antal gäster:</label>
             <input type="number" id="guests" name="guests" min="1" required />
@@ -29,6 +31,33 @@
         </form>
     </div>
 </div>
+<script>
+    flatpickr(".date-picker", {
+        dateFormat: "Y-m-d",
+        minDate: "today"
+    });
+        const checkInInput = document.querySelector("#checkIn");
+        const checkOutInput = document.querySelector("#checkOut");
+
+        const checkInPicker = flatpickr(checkInInput, {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        onChange: function(selectedDates) {
+        if (selectedDates.length > 0) {
+
+        const nextDay = new Date(selectedDates[0]);
+        nextDay.setDate(nextDay.getDate() + 1);
+        checkOutPicker.set('minDate', nextDay);
+    }
+    }
+    });
+
+        const checkOutPicker = flatpickr(checkOutInput, {
+        dateFormat: "Y-m-d",
+        minDate: "today"
+    });
+
+</script>
 
 </body>
 </html>
