@@ -89,7 +89,9 @@ public class BookingServiceImplTest {
 
     @Test
     public void deleteBookingTest() {
-        booking.setCheckOut(LocalDate.of(2023, 6, 1)); // tidigare än idag
+        booking.setCheckIn(LocalDate.of(2023, 5, 1));
+        booking.setCheckOut(LocalDate.of(2023, 6, 1)); // Avslutad
+
         when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
 
         bookingServiceImpl.deleteBooking(1L);
@@ -99,12 +101,16 @@ public class BookingServiceImplTest {
 
     @Test
     public void deleteBookingTest_WithError() {
-        booking.setCheckOut(LocalDate.now().plusDays(1)); // framtida
+        booking.setCheckIn(LocalDate.now().plusDays(1));
+        booking.setCheckOut(LocalDate.now().plusDays(3));
+
         when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
 
         assertThrows(CustomerHasBookingsException.class, () -> {
             bookingServiceImpl.deleteBooking(1L);
         });
+
+        verify(bookingRepository, never()).delete(any());
     }
 
     @Test
