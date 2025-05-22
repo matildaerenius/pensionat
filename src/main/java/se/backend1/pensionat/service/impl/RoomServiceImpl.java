@@ -8,6 +8,7 @@ import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.exception.RoomNotFoundException;
 import se.backend1.pensionat.mapper.RoomMapper;
 import se.backend1.pensionat.model.RoomType;
+import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.repository.RoomRepository;
 import se.backend1.pensionat.service.RoomService;
 
@@ -23,6 +24,7 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
+    private final BookingRepository bookingRepository;
 
     @Override
     public RoomDto createRoom(RoomDto dto) {
@@ -94,6 +96,26 @@ public class RoomServiceImpl implements RoomService {
 
         return availableRooms;
     }
+
+    @Override
+    public List<RoomDto> findAvailableRoomFromQuery(LocalDate checkIn, LocalDate checkOut, int guests) {
+        // Steg 1: Hitta rum med tillräcklig kapacitet
+        List<Room> roomsWithCapacity = roomRepository.findByTotalCapacityGreaterThanEqual(guests);
+
+        // Steg 2: Filtrera bort rum med konflikter
+        List<Room> availableRooms = roomsWithCapacity.stream()
+                .filter(room -> {
+                    List<Booking> conflicts = bookingRepository.findConflictingBookings(
+                            room.getId(), checkIn, checkOut);
+                    return conflicts.isEmpty();
+                })
+                .collect(Collectors.toList());
+
+        return availableRooms.stream()
+                .map(roomMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     // Valideringsmetod som kontrollerar att bara dubbelrum får ha extrasängar
     private void validateExtraBeds(Room room) {
         if (room.getRoomType() != RoomType.DOUBLE && room.getMaxExtraBeds() > 0) {

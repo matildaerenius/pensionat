@@ -119,6 +119,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public void checkConflictingAndSave(BookingDto dto) {
+
+    }
+
+    @Override
     public void save(BookingDto bookingDto) {
         if (!isRoomAvailable(bookingDto.getRoomId(), bookingDto.getCheckIn(), bookingDto.getCheckOut())) {
             throw new RoomUnavailableException("Rummet är inte tillgängligt under vald period.");
