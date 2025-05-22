@@ -118,10 +118,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findBookingsByDate(date);
     }
 
-    @Override
-    public void checkConflictingAndSave(BookingDto dto) {
 
-    }
 
     @Override
     public void save(BookingDto bookingDto) {

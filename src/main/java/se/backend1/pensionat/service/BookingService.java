@@ -36,7 +36,7 @@ public interface BookingService  {
     List<Booking> getBookingsForDate(LocalDate date);
 
     //senaste trellometod
-    void checkConflictingAndSave(BookingDto dto);
+//    void checkConflictingAndSave(BookingDto dto);
 
     void save(@Valid BookingDto bookingDto);
 

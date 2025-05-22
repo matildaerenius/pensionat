@@ -26,8 +26,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 """)
     List<Booking> findConflictingBookings(
             @Param("roomId") Long roomId,
-            @Param("checkIn") LocalDate checkIn,
-            @Param("checkOut") LocalDate checkOut
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
     );
 
     List<Booking> findByRoom(Room room);
