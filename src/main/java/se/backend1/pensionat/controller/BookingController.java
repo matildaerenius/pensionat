@@ -12,6 +12,8 @@ import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Room;
+import se.backend1.pensionat.exception.ActiveBookingDeletionException;
+import se.backend1.pensionat.exception.BookingNotFoundException;
 import se.backend1.pensionat.exception.CustomerHasBookingsException;
 import se.backend1.pensionat.exception.RoomNotFoundException;
 import se.backend1.pensionat.mapper.BookingMapper;
@@ -130,9 +132,9 @@ public class BookingController {
     public String deleteBooking(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             bookingService.deleteBooking(id);
-            redirectAttributes.addFlashAttribute("success", "Bokning avbokad.");
-        } catch (CustomerHasBookingsException e) {
-            redirectAttributes.addFlashAttribute("error", "Bokningen kunde inte tas bort: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("cancel", "Bokning avbokad!");
+        } catch (ActiveBookingDeletionException e) {
+            redirectAttributes.addFlashAttribute("error", "Pågående bokning kan inte tas bort");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Ett fel uppstod vid borttagning av bokning.");
         }

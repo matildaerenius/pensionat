@@ -70,8 +70,10 @@ public class BookingServiceImpl implements BookingService {
         Booking existing= bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID" + id));
 
-        if (!existing.getCheckIn().isAfter(LocalDate.now())) {
-            throw new ActiveBookingDeletionException("Pågående bokningar kan inte raderas.");
+        LocalDate today = LocalDate.now();
+        // Om checkOut är idag eller senare → pågående eller framtida bokning
+        if ((!existing.getCheckIn().isAfter(today) && !existing.getCheckOut().isBefore(today))) {
+            throw new ActiveBookingDeletionException("Pågående bokning kan inte raderas.");
         }
         bookingRepository.delete(existing);
     }

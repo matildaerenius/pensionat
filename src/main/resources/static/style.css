@@ -35,6 +35,19 @@ body {
     text-align: center;
     box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
 }
+.cancel {
+    background-color: #fff8e1;
+    color: #b8860b;
+    border-left: 6px solid #ffc107;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    max-width: 600px;
+    margin: 0 auto 1.5rem auto;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
 
 
 header {
