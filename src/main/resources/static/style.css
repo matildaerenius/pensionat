@@ -48,6 +48,14 @@ body {
     text-align: center;
     box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
 }
+.field-error {
+    color: #d8000c;
+    background-color: #ffd2d2;
+    padding: 0.3rem 0.5rem;
+    border-radius: 5px;
+    margin-top: 5px;
+    font-size: 0.9rem;
+}
 
 
 header {

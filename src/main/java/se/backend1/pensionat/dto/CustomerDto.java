@@ -17,16 +17,16 @@ public class CustomerDto {
 
     private Long id;
 
-    @NotBlank(message = "Namn får inte vara tomt")
+    @NotBlank(message = "Förnamn får inte vara tomt")
     @Size(max = 30, message = "Namn får vara högst 100 tecken långt")
     private String firstName;
 
-    @NotBlank(message = "Namn får inte vara tomt")
+    @NotBlank(message = "Efternamn får inte vara tomt")
     @Size(max = 30, message = "Namn får vara högst 100 tecken långt")
     private String lastName;
 
     @NotBlank(message = "E-post får inte vara tom")
-    @Pattern(regexp = ".*@.*", message = "Adress måste innehålla tecknet '@'")
+    @Pattern(regexp = ".*@.*", message = "E-post måste innehålla tecknet '@'")
     @Email(message = "Ogiltig e-postadress")
     private String email;
 
@@ -35,6 +35,6 @@ public class CustomerDto {
     private String phoneNumber;
 
     @NotBlank(message = "Adress får inte vara tom")
-    @Size(max = 200, message = "Adress får vara högst 200 tecken lång")
+    @Size(max = 200, message = "Adress får vara högst 200 tecken långt")
     private String address;
 }

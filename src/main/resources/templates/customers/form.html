@@ -14,20 +14,25 @@
 <form th:action="@{/customers/save}" th:object="${customerDto}" method="post">
   <input type="hidden" th:field="*{id}" />
 
-  <label>Förnamn:</label>
-  <input type="text" th:field="*{firstName}" /><br/>
+  <label for="firstName">Förnamn</label>
+  <input type="text" id="firstName" name="firstName" th:field="*{firstName}">
+  <div class="field-error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
 
-  <label>Efternamn:</label>
-  <input type="text" th:field="*{lastName}" /><br/>
+  <label for="lastName">Efternamn</label>
+  <input type="text" id="lastName" name="lastName" th:field="*{lastName}">
+  <div class="field-error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
 
-  <label>Email:</label>
-  <input type="email" th:field="*{email}" /><br/>
+  <label for="email">E-post</label>
+  <input type="email" id="email" name="email" th:field="*{email}">
+  <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
 
-  <label>Telefon:</label>
-  <input type="text" th:field="*{phoneNumber}" /><br/>
+  <label for="phoneNumber">Telefonnummer</label>
+  <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}">
+  <div class="field-error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
 
-  <label>Adress:</label>
-  <input type="text" th:field="*{address}" /><br/>
+  <label for="address">Adress</label>
+  <input type="text" id="address" name="address" th:field="*{address}">
+  <div class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
 
   <button type="submit" th:text="${edit} ? 'Uppdatera' : 'Skapa'"></button>
 </form>
