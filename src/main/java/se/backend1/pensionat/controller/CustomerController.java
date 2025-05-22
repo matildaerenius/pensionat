@@ -26,9 +26,12 @@ public class CustomerController {
     }
 
     @PostMapping("/create")
-    public String createCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result) {
+    public String createCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto,
+                                 BindingResult result,
+                                 RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) return "customers/form";
         customerService.createCustomer(customerDto);
+        redirectAttributes.addFlashAttribute("success", "Kund skapad!");
         return "redirect:/customers";
     }
 
@@ -43,6 +46,7 @@ public class CustomerController {
     public String deleteCustomer(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             customerService.deleteCustomer(id);
+            redirectAttributes.addFlashAttribute("cancel", "Kund borttagen!");
         } catch (CustomerHasBookingsException e) {
             redirectAttributes.addFlashAttribute("error", "Kunden har aktiva bokningar och kan inte tas bort");
         } catch (CustomerNotFoundException e) {
@@ -65,15 +69,17 @@ public class CustomerController {
         return "customers/form";
     }
     @PostMapping("/save")
-    public String saveCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result) {
+    public String saveCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) return "customers/form";
 
         if (customerDto.getId() != null) {
             // ID finns = det är en uppdatering
             customerService.updateCustomer(customerDto.getId(), customerDto);
+            redirectAttributes.addFlashAttribute("success", "Kund uppdaterad!");
         } else {
             // Ny kund
             customerService.createCustomer(customerDto);
+            redirectAttributes.addFlashAttribute("success", "Kund skapad!");
         }
 
         return "redirect:/customers";
