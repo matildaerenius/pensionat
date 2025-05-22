@@ -101,9 +101,8 @@ public class BookingServiceImplTest {
 
     @Test
     public void deleteBookingTest_WithError() {
-        booking.setCheckIn(LocalDate.now().plusDays(1));
-        booking.setCheckOut(LocalDate.now().plusDays(3));
-
+        booking.setCheckIn(LocalDate.now().minusDays(1));
+        booking.setCheckOut(LocalDate.now().plusDays(1));
         when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
 
         assertThrows(CustomerHasBookingsException.class, () -> {
