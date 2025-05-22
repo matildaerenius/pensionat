@@ -47,12 +47,26 @@ public class BookingController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("bookingDto", new BookingDto());
+    public String showCreateForm(@RequestParam(required = false) LocalDate checkIn,
+                                 @RequestParam(required = false) LocalDate checkOut,
+                                 @RequestParam(required = false) Integer guests,
+                                 Model model) {
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setCheckIn(checkIn);
+        bookingDto.setCheckOut(checkOut);
+        bookingDto.setNumberOfGuests(guests);
+
+        model.addAttribute("bookingDto", bookingDto);
         model.addAttribute("customers", customerService.getAllCustomers());
-        model.addAttribute("rooms", roomService.getAllRooms());
         model.addAttribute("edit", false);
         model.addAttribute("formAction", "/bookings/create");
+
+        if (checkIn != null && checkOut != null && guests != null) {
+            model.addAttribute("rooms", roomService.findAvailableRoomFromQuery(checkIn, checkOut, guests));
+        } else {
+            model.addAttribute("rooms", List.of());
+        }
+
         return "bookings/form";
     }
 

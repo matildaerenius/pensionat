@@ -56,6 +56,7 @@
                     th:text="${room.roomNumber + ' (' + room.roomType + ')'}">
             </option>
         </select><br/>
+        <div th:if="${#lists.isEmpty(rooms)}" class="error">Inga lediga rum för vald period och antal gäster</div>
         <div th:if="${#fields.hasErrors('roomId')}" th:errors="*{roomId}" class="error"></div>
 
         <br/>
@@ -86,6 +87,25 @@
         dateFormat: "Y-m-d",
         minDate: today
     });
+    function fetchAvailableRooms() {
+        const checkIn = document.querySelector('input[name="checkIn"]').value;
+        const checkOut = document.querySelector('input[name="checkOut"]').value;
+        const guests = document.querySelector('input[name="numberOfGuests"]').value;
+
+        if (checkIn && checkOut && guests) {
+            const params = new URLSearchParams({
+                checkIn: checkIn,
+                checkOut: checkOut,
+                guests: guests
+            });
+
+            window.location.href = `/bookings/create?${params.toString()}`;
+        }
+    }
+
+    document.querySelector('input[name="checkIn"]').addEventListener('change', fetchAvailableRooms);
+    document.querySelector('input[name="checkOut"]').addEventListener('change', fetchAvailableRooms);
+    document.querySelector('input[name="numberOfGuests"]').addEventListener('change', fetchAvailableRooms);
 </script>
 </body>
 </html>

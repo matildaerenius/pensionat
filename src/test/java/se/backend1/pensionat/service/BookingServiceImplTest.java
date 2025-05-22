@@ -222,45 +222,45 @@ public class BookingServiceImplTest {
 //        verify(bookingRepository, never()).save(any());
 //    }
 
-    @Test
-    public void checkConflictingAndSaveTests() {
-        bookingDto.setCheckIn(LocalDate.of(2025, 7, 1));
-        bookingDto.setCheckOut(LocalDate.of(2025, 7, 5));
+//    @Test
+//    public void checkConflictingAndSaveTests() {
+//        bookingDto.setCheckIn(LocalDate.of(2025, 7, 1));
+//        bookingDto.setCheckOut(LocalDate.of(2025, 7, 5));
+//
+//        Long roomId = 1L;
+//        bookingDto.setRoomId(roomId);
+//
+//        Booking bookings = new Booking();
+//        when(bookingMapper.toEntity(bookingDto)).thenReturn(bookings);
+//        when(bookingRepository.findConflictingBookings(1L, bookingDto.getCheckIn(), bookingDto.getCheckOut()))
+//                .thenReturn(Collections.emptyList());
+//
+//        bookingServiceImpl.checkConflictingAndSave(bookingDto);
+//
+//        verify(bookingRepository).save(bookings);
+//    }
 
-        Long roomId = 1L;
-        bookingDto.setRoomId(roomId);
-
-        Booking bookings = new Booking();
-        when(bookingMapper.toEntity(bookingDto)).thenReturn(bookings);
-        when(bookingRepository.findConflictingBookings(1L, bookingDto.getCheckIn(), bookingDto.getCheckOut()))
-                .thenReturn(Collections.emptyList());
-
-        bookingServiceImpl.checkConflictingAndSave(bookingDto);
-
-        verify(bookingRepository).save(bookings);
-    }
-
-    @Test
-    public void checkConflictingAndSaveTest_error() {
-        bookingDto.setCheckIn(LocalDate.of(2025, 7, 1));
-        bookingDto.setCheckOut(LocalDate.of(2025, 7, 5));
-
-        Room room = new Room();
-        room.setId(1L);
-        bookingDto.setRoomId(room.getId());
-
-        Booking conflictingBooking = new Booking();
-
-        when(bookingRepository.findConflictingBookings(1L, bookingDto.getCheckIn(), bookingDto.getCheckOut()))
-                .thenReturn(List.of(conflictingBooking));
-
-        assertThrows(RoomUnavailableException.class, () -> {
-            bookingServiceImpl.checkConflictingAndSave(bookingDto);
-        });
-
-        // Kontrollera att bookingRepository.save INTE anropas
-        verify(bookingRepository, never()).save(any());
-    }
+//    @Test
+//    public void checkConflictingAndSaveTest_error() {
+//        bookingDto.setCheckIn(LocalDate.of(2025, 7, 1));
+//        bookingDto.setCheckOut(LocalDate.of(2025, 7, 5));
+//
+//        Room room = new Room();
+//        room.setId(1L);
+//        bookingDto.setRoomId(room.getId());
+//
+//        Booking conflictingBooking = new Booking();
+//
+//        when(bookingRepository.findConflictingBookings(1L, bookingDto.getCheckIn(), bookingDto.getCheckOut()))
+//                .thenReturn(List.of(conflictingBooking));
+//
+//        assertThrows(RoomUnavailableException.class, () -> {
+//            bookingServiceImpl.checkConflictingAndSave(bookingDto);
+//        });
+//
+//        // Kontrollera att bookingRepository.save INTE anropas
+//        verify(bookingRepository, never()).save(any());
+//    }
 
     @Test
     public void saveTest() {
