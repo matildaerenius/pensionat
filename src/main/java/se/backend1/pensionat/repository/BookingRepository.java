@@ -15,8 +15,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     //Oklart om dessa ska vara med
     List<Booking> findByCustomerId(Long customerId); // Alla bokningar för kund
-    List<Booking> findByRoomId(Long roomId);         // Alla bokningar för ett rum
-    List<Booking> findByCheckInBetween(LocalDate start, LocalDate end); // Periodvis
+    //GÖR DENNA
 
     //Query för att se om bokningar krockar.
     @Query("""

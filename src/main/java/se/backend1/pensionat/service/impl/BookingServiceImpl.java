@@ -49,9 +49,9 @@ public class BookingServiceImpl implements BookingService {
     public void deleteBooking(Long id) {
         Booking existing= bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID" + id));
-
+        LocalDate today = LocalDate.now();
         // Om checkOut är idag eller senare → pågående eller framtida bokning
-        if (!existing.getCheckOut().isBefore(LocalDate.now())) {
+        if ((!existing.getCheckIn().isAfter(today) && !existing.getCheckOut().isBefore(today))) {
             throw new CustomerHasBookingsException("Customer has bookings, cannot be removed");
         }
         bookingRepository.delete(existing);
@@ -96,6 +96,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findBookingsByDate(date);
     }
 
+    //kontroll av ett rum
     @Override
     public void checkConflictingAndSave(BookingDto dto) {
         Long roomId = dto.getRoomId(); // säkerställ att dto har rum med ID

@@ -8,6 +8,7 @@ import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.exception.RoomNotFoundException;
 import se.backend1.pensionat.mapper.RoomMapper;
 import se.backend1.pensionat.model.RoomType;
+import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.repository.RoomRepository;
 import se.backend1.pensionat.service.RoomService;
 
@@ -23,6 +24,7 @@ public class RoomServiceImpl implements RoomService {
 
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
+    private final BookingRepository bookingRepository;
 
     @Override
     public RoomDto createRoom(RoomDto dto) {
@@ -76,9 +78,9 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<RoomDto> findAvailableRooms(LocalDate checkIn, LocalDate checkOut, int guests) {
         //Steg 1 tar ut alla rum
-        List <Room> rooms= roomRepository.findAll().stream().toList();
+        List <Room> rooms= roomRepository.findAll();
         // Steg 2 skapar en lista
-        List <RoomDto> roomDtos= new ArrayList<>();
+        List <RoomDto> availableRooms = new ArrayList<>();
 
         //går igenom varje rum
         for (Room room : rooms) {
@@ -100,13 +102,44 @@ public class RoomServiceImpl implements RoomService {
             }
                 //Konverterar till DTO och sparar i listan
                 if (isAvailable) {
-                    roomDtos.add(roomMapper.toDto(room));
+                    availableRooms.add(roomMapper.toDto(room));
                 }
 
             }
 
-        return roomDtos;
+        return availableRooms;
     }
+
+    //Denna metod ska vara bättre enl AI, vi kontrollerar conflicting bookings
+    @Override
+    public List<RoomDto> findAvailableRoomFromQuery(LocalDate checkIn, LocalDate checkOut, int guests) {
+        // Steg 1: Hitta rum med tillräcklig kapacitet
+        List<Room> roomsWithCapacity = roomRepository.findByTotalCapacityGreaterThanEqual(guests);
+
+        // Steg 2: Filtrera bort rum med konflikter
+        List<Room> availableRooms = roomsWithCapacity.stream()
+                .filter(room -> {
+                    List<Booking> conflicts = bookingRepository.findConflictingBookings(
+                            room.getId(), checkIn, checkOut);
+                    return conflicts.isEmpty();
+                })
+                .collect(Collectors.toList());
+
+        return availableRooms.stream()
+                .map(roomMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+//    //Visar alla lediga rum, ha gäster som inparameter
+//    @Override
+//    public List<RoomDto> findAvailableRoomsfromDates(LocalDate checkIn, LocalDate checkOut) {
+//
+//        List<Room> roomsFromDates=roomRepository.findBookingsBetweenDates(checkIn, checkOut);
+//
+//        return roomsFromDates.stream().map(roomMapper::toDto).collect(Collectors.toList());
+//    }
+
+
     // Valideringsmetod som kontrollerar att bara dubbelrum får ha extrasängar
     private void validateExtraBeds(Room room) {
         if (room.getRoomType() != RoomType.DOUBLE && room.getMaxExtraBeds() > 0) {
