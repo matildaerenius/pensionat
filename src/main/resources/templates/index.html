@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="sv"
+      layout:decorate="~{layout}">
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <title layout:fragment="title">Start | Pensionat</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<div layout:fragment="content">
+
+    <h2 class="page-title">Välkommen till pensionatet</h2>
+    <div th:insert="~{fragments/navigation :: buttonGrid}"></div>
+
+    <div class="search-box">
+        <h3 class="search-title">Sök lediga rum</h3>
+        <form th:action="@{/rooms/search}" th:object="${roomSearchDto}" method="post">
+            <label for="checkIn">Från:</label>
+            <input type="text" id="checkIn" th:field="*{checkIn}" class="date-picker"/>
+            <div th:if="${#fields.hasErrors('checkIn')}" th:errors="*{checkIn}" class="field-error"></div>
+
+            <label for="checkOut">Till:</label>
+            <input type="text" id="checkOut" th:field="*{checkOut}" class="date-picker"/>
+            <div th:if="${#fields.hasErrors('checkOut')}" th:errors="*{checkOut}" class="field-error"></div>
+
+            <label for="numberOfGuests">Antal gäster:</label>
+            <input type="number" id="numberOfGuests" min="1" th:field="*{numberOfGuests}"/>
+            <div th:if="${#fields.hasErrors('numberOfGuests')}" th:errors="*{numberOfGuests}" class="field-error"></div>
+
+            <button type="submit" class="btn">🔍 Sök</button>
+        </form>
+
+    </div>
+</div>
+<script>
+    flatpickr(".date-picker", {
+        dateFormat: "Y-m-d",
+        minDate: "today"
+    });
+        const checkInInput = document.querySelector("#checkIn");
+        const checkOutInput = document.querySelector("#checkOut");
+
+        const checkInPicker = flatpickr(checkInInput, {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        onChange: function(selectedDates) {
+        if (selectedDates.length > 0) {
+
+        const nextDay = new Date(selectedDates[0]);
+        nextDay.setDate(nextDay.getDate() + 1);
+        checkOutPicker.set('minDate', nextDay);
+    }
+    }
+    });
+
+        const checkOutPicker = flatpickr(checkOutInput, {
+        dateFormat: "Y-m-d",
+        minDate: "today"
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,4 +1,7 @@
 package se.backend1.pensionat.repository;
 
-public interface CustomerRepository {
-}
+import org.springframework.data.jpa.repository.JpaRepository;
+import se.backend1.pensionat.entity.Customer;
+
+
+public interface CustomerRepository extends JpaRepository<Customer, Long> {}

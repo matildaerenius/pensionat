@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${edit} ? 'Redigera kund' : 'Skapa kund'">Kundformulär</title>
+  <link rel="stylesheet" th:href="@{/style.css}" />
+
+</head>
+<body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
+<div class="form-wrapper">
+  <h1 class="page-title" th:text="${edit} ? 'Redigera kund' : 'Skapa kund'"></h1>
+
+  <div class="form-center">
+    <form th:action="@{${formAction}}" th:object="${customerDto}" method="post">
+
+
+    <input type="hidden" name="redirect" th:value="${redirect}">
+      <input type="hidden" name="checkIn" th:value="${checkIn}">
+      <input type="hidden" name="checkOut" th:value="${checkOut}">
+      <input type="hidden" name="guests" th:value="${guests}">
+      <input type="hidden" name="roomId" th:value="${roomId}">
+
+  <input type="hidden" th:field="*{id}" />
+
+  <label for="firstName">Förnamn</label>
+  <input type="text" id="firstName" name="firstName" th:field="*{firstName}">
+  <div class="field-error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></div>
+
+  <label for="lastName">Efternamn</label>
+  <input type="text" id="lastName" name="lastName" th:field="*{lastName}">
+  <div class="field-error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+
+  <label for="email">E-post</label>
+  <input type="email" id="email" name="email" th:field="*{email}">
+  <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+
+  <label for="phoneNumber">Telefonnummer</label>
+  <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}">
+  <div class="field-error" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></div>
+
+  <label for="address">Adress</label>
+  <input type="text" id="address" name="address" th:field="*{address}">
+  <div class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+
+  <button type="submit" th:text="${edit} ? 'Uppdatera' : 'Skapa'"></button>
+
+
+</form>
+  </div>
+</div>
+</body>
+</html>

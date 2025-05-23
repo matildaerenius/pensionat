@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${edit} ? 'Redigera bokning' : 'Skapa bokning'">Bokningsformulär</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+</head>
+<body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
+<div class="form-wrapper">
+    <h1 class="page-title" th:text="${edit} ? 'Redigera bokning' : 'Skapa ny bokning'"></h1>
+    <div th:if="${errorMessage}" class="error" th:text="${errorMessage}"></div>
+
+
+
+    <div class="form-center">
+    <form th:action="@{${formAction}}" th:object="${bookingDto}" method="post">
+
+        <input type="hidden" th:field="*{id}" />
+
+        <!-- Incheckning -->
+        <label th:for="*{checkIn}">Incheckning:</label>
+        <input type="text" th:field="*{checkIn}" class="date-picker"/><br/>
+        <div th:if="${#fields.hasErrors('checkIn')}" th:errors="*{checkIn}" class="field-error"></div>
+
+        <!-- Utcheckning -->
+        <label th:for="*{checkOut}">Utcheckning:</label>
+        <input type="text" th:field="*{checkOut}" class="date-picker"/><br/>
+        <div th:if="${#fields.hasErrors('checkOut')}" th:errors="*{checkOut}" class="field-error"></div>
+
+        <!-- Antal gäster -->
+        <label th:for="*{numberOfGuests}">Antal gäster:</label>
+        <input type="number" th:field="*{numberOfGuests}" min="1" class="input"/><br/>
+        <div th:if="${#fields.hasErrors('numberOfGuests')}" th:errors="*{numberOfGuests}" class="field-error"></div>
+
+        <!-- Kund -->
+        <label th:for="*{customerId}">Kund:</label>
+        <div class="customer-select-wrapper" th:with="
+    redirectUrl='/customers/create?redirect=bookings/create'
+                 + (${bookingDto.checkIn} != null ? '&checkIn=' + ${bookingDto.checkIn} : '')
+                 + (${bookingDto.checkOut} != null ? '&checkOut=' + ${bookingDto.checkOut} : '')
+                 + (${bookingDto.numberOfGuests} != null ? '&guests=' + ${bookingDto.numberOfGuests} : '')
+                 + (${bookingDto.roomId} != null ? '&roomId=' + ${bookingDto.roomId} : '')">
+
+            <select name="customerId" th:field="*{customerId}">
+                <option value="">-- Välj kund --</option>
+                <option th:each="customer : ${customers}"
+                        th:value="${customer.id}"
+                        th:text="${customer.firstName + ' ' + customer.lastName}">
+                </option>
+            </select>
+
+            <a th:href="@{${redirectUrl}}" class="small-button">➕ Ny kund</a>
+        </div>
+        <div th:if="${#fields.hasErrors('customerId')}" th:errors="*{customerId}" class="field-error"></div>
+
+
+
+        <!-- Rum -->
+        <label th:for="*{roomId}">Rum:</label>
+        <select th:field="*{roomId}">
+            <option value="" th:text="'-- Välj rum --'"></option>
+            <option th:each="room : ${rooms}"
+                    th:value="${room.id}"
+                    th:selected="${room.id == bookingDto.roomId}"
+                    th:text="${room.roomNumber + ' (' + room.roomType + ')'}">
+            </option>
+        </select><br/>
+        <div th:if="${#lists.isEmpty(rooms)}" class="error">Inga lediga rum för vald period och antal gäster</div>
+        <div th:if="${#fields.hasErrors('roomId')}" th:errors="*{roomId}" class="field-error"></div>
+
+        <br/>
+        <button type="submit" th:text="${edit} ? 'Uppdatera bokning' : 'Skapa bokning'"></button>
+    </form>
+</div>
+</div>
+<script th:inline="javascript">
+    const today = new Date();
+
+    const checkInInput = document.querySelector('input[name="checkIn"]');
+    const checkOutInput = document.querySelector('input[name="checkOut"]');
+
+    const checkOutPicker = flatpickr(checkOutInput, {
+        dateFormat: "Y-m-d",
+        minDate: today
+    });
+
+    const checkInPicker = flatpickr(checkInInput, {
+        dateFormat: "Y-m-d",
+        minDate: today,
+        onChange: function (selectedDates) {
+            if (selectedDates.length > 0) {
+                checkOutPicker.set('minDate', selectedDates[0]);
+            }
+        }
+    });
+
+    const isEdit = /*[[${edit}]]*/ false;
+
+    function fetchAvailableRooms() {
+        const checkIn = checkInInput.value;
+        const checkOut = checkOutInput.value;
+        const guests = document.querySelector('input[name="numberOfGuests"]').value;
+        const roomId = document.querySelector('select[name="roomId"]').value;
+
+        if (checkIn && checkOut && guests) {
+            const params = new URLSearchParams({
+                checkIn,
+                checkOut,
+                guests,
+                roomId
+            });
+
+            const baseUrl = isEdit ? window.location.pathname : '/bookings/create';
+            window.location.href = `${baseUrl}?${params.toString()}`;
+        }
+    }
+
+    checkInInput.addEventListener('change', fetchAvailableRooms);
+    checkOutInput.addEventListener('change', fetchAvailableRooms);
+    document.querySelector('input[name="numberOfGuests"]').addEventListener('change', fetchAvailableRooms);
+</script>
+
+</body>
+</html>
