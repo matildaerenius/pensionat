@@ -12,8 +12,8 @@ import se.backend1.pensionat.mapper.CustomerMapper;
 import se.backend1.pensionat.repository.CustomerRepository;
 import se.backend1.pensionat.service.CustomerService;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,15 +34,13 @@ public class CustomerServiceImpl implements CustomerService {
         Customer existing = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID" + id));
 
-        // Uppdatera bara det som kommer in i DTO:n
         existing.setFirstName(customerDto.getFirstName());
         existing.setLastName(customerDto.getLastName());
         existing.setEmail(customerDto.getEmail());
         existing.setPhoneNumber(customerDto.getPhoneNumber());
         existing.setAddress(customerDto.getAddress());
 
-        Customer saved = customerRepository.save(existing);
-        return customerMapper.toDto(saved);
+        return customerMapper.toDto(customerRepository.save(existing));
     }
 
     @Override
@@ -66,35 +64,23 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDto> getAllCustomers() {
-        List<Customer> customers =customerRepository.findAll();
-        List<CustomerDto> dtos = new ArrayList<>();
-        for (Customer c : customers) {
-            CustomerDto dto = customerMapper.toDto(c);
-            dtos.add(dto);
-        }
-        return dtos;
+        return customerRepository.findAll().stream()
+                .map(customerMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean hasBookings(Long id) {
-        Customer existing = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID: " + id));
-        //om kund har bokning
+        Customer existing = customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID: " + id));
         return existing.getBookings() != null && !existing.getBookings().isEmpty();
-
     }
 
     @Override
     public DetailedCustomerDto getCustomerDetails(Long id) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID: " + id));
-
         return customerMapper.detailedCustomer(customer);
-    }
-
-    @Override
-    public void save(CustomerDto customerDto) {
-        Customer customer = customerMapper.toEntity(customerDto);
-        customerRepository.save(customer);
     }
 
 }

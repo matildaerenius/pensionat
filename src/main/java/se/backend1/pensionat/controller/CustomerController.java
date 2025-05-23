@@ -57,7 +57,6 @@ public class CustomerController {
     }
 
 
-
     @PostMapping("/edit/{id}")
     public String updateCustomer(@PathVariable Long id,
                                  @ModelAttribute("customerDto") @Valid CustomerDto customerDto,
@@ -74,8 +73,6 @@ public class CustomerController {
     }
 
 
-
-
     @PostMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -89,12 +86,14 @@ public class CustomerController {
         return "redirect:/customers";
     }
 
+
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("customerDto", customerService.getCustomerById(id));
         model.addAttribute("edit", true);
         return "customers/form";
     }
+
 
     @GetMapping("/create")
     public String showCreateForm(@RequestParam(required = false) String redirect,
@@ -113,23 +112,6 @@ public class CustomerController {
         model.addAttribute("roomId", roomId);
 
         return "customers/form";
-    }
-
-    @PostMapping("/save")
-    public String saveCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result, RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) return "customers/form";
-
-        if (customerDto.getId() != null) {
-            // ID finns = det är en uppdatering
-            customerService.updateCustomer(customerDto.getId(), customerDto);
-            redirectAttributes.addFlashAttribute("success", "Kund uppdaterad!");
-        } else {
-            // Ny kund
-            customerService.createCustomer(customerDto);
-            redirectAttributes.addFlashAttribute("success", "Kund skapad!");
-        }
-
-        return "redirect:/customers";
     }
 
 }

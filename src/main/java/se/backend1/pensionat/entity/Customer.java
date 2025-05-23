@@ -27,7 +27,7 @@ public class Customer {
     private String firstName;
 
     @NotBlank(message = "Namn krävs")
-    @Size(max = 30, message = "Namn får max vara 100 tecken")
+    @Size(max = 100, message = "Namn får max vara 100 tecken")
     private String lastName;
 
     @NotBlank(message = "E-post krävs")

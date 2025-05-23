@@ -14,9 +14,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b FROM Booking b WHERE :date BETWEEN b.checkIn AND b.checkOut")
     List<Booking> findBookingsByDate(@Param("date") LocalDate date);
 
-    //Oklart om dessa ska vara med
-    List<Booking> findByCustomerId(Long customerId); // Alla bokningar för kund
-    //GÖR DENNA
+    List<Booking> findByCustomerId(Long customerId);
 
     //Query för att se om bokningar krockar.
     @Query("""
@@ -30,5 +28,4 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("endDate") LocalDate endDate
     );
 
-    List<Booking> findByRoom(Room room);
 }

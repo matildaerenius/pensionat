@@ -10,15 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import se.backend1.pensionat.dto.BookingDto;
 import se.backend1.pensionat.dto.DetailedBookingDto;
 import se.backend1.pensionat.dto.RoomDto;
-import se.backend1.pensionat.entity.Booking;
-import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.exception.ActiveBookingDeletionException;
-import se.backend1.pensionat.exception.BookingNotFoundException;
-import se.backend1.pensionat.exception.CustomerHasBookingsException;
-import se.backend1.pensionat.exception.RoomNotFoundException;
-import se.backend1.pensionat.mapper.BookingMapper;
-import se.backend1.pensionat.repository.BookingRepository;
-import se.backend1.pensionat.repository.RoomRepository;
 import se.backend1.pensionat.service.BookingService;
 import se.backend1.pensionat.service.CustomerService;
 import se.backend1.pensionat.service.RoomService;
@@ -34,9 +26,6 @@ public class BookingController {
     private final BookingService bookingService;
     private final CustomerService customerService;
     private final RoomService roomService;
-    private final BookingMapper bookingMapper;
-    private final BookingRepository bookingRepository;
-    private final RoomRepository roomRepository;
 
 
     @GetMapping
@@ -72,13 +61,7 @@ public class BookingController {
         }
 
         model.addAttribute("bookingDto", bookingDto);
-        model.addAttribute("customers", customerService.getAllCustomers());
-
-        List<RoomDto> rooms = (bookingDto.getCheckIn() != null && bookingDto.getCheckOut() != null && guests != null)
-                ? roomService.findAvailableRoomFromQuery(bookingDto.getCheckIn(), bookingDto.getCheckOut(), guests)
-                : roomService.getAllRooms();
-
-        model.addAttribute("rooms", rooms);
+        populateFormDependencies(model, bookingDto, guests);
         model.addAttribute("edit", false);
         model.addAttribute("formAction", "/bookings/create");
 
@@ -99,33 +82,28 @@ public class BookingController {
         }
 
 
-        Room room = roomRepository.findById(bookingDto.getRoomId())
-                .orElseThrow(() -> new RoomNotFoundException("Rum finns inte"));
-
+        RoomDto room = roomService.getRoomById(bookingDto.getRoomId());
         int maxGuests = room.getCapacity() + (room.isAllowExtraBeds() ? room.getMaxExtraBeds() : 0);
+
         if (bookingDto.getNumberOfGuests() > maxGuests) {
             result.rejectValue("numberOfGuests", "invalid", "För många gäster för detta rum. Max: " + maxGuests);
         }
 
-
         if (result.hasErrors()) {
-            model.addAttribute("customers", customerService.getAllCustomers());
-            model.addAttribute("rooms", roomService.getAllRooms());
+            model.addAttribute("bookingDto", bookingDto);
+            populateFormDependencies(model, bookingDto, bookingDto.getNumberOfGuests());
             model.addAttribute("edit", false);
             model.addAttribute("formAction", "/bookings/create");
             return "bookings/form";
         }
 
         try {
-
             bookingService.save(bookingDto);
             redirectAttributes.addFlashAttribute("success", "Bokning skapad!");
             return "redirect:/bookings";
         } catch (RuntimeException e) {
-
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("customers", customerService.getAllCustomers());
-            model.addAttribute("rooms", roomService.getAllRooms());
+            populateFormDependencies(model, bookingDto, bookingDto.getNumberOfGuests());
             model.addAttribute("edit", false);
             model.addAttribute("formAction", "/bookings/create");
             return "bookings/form";
@@ -133,12 +111,11 @@ public class BookingController {
     }
 
 
-
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("bookingDto", bookingService.getBookingById(id));
-        model.addAttribute("customers", customerService.getAllCustomers());
-        model.addAttribute("rooms", roomService.getAllRooms());
+        BookingDto bookingDto = bookingService.getBookingById(id);
+        model.addAttribute("bookingDto", bookingDto);
+        populateFormDependencies(model, bookingDto, bookingDto.getNumberOfGuests());
         model.addAttribute("edit", true);
         model.addAttribute("formAction", "/bookings/edit/" + id);
         return "bookings/form";
@@ -150,11 +127,13 @@ public class BookingController {
                                 BindingResult result,
                                 Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("customers", customerService.getAllCustomers());
-            model.addAttribute("rooms", roomService.getAllRooms());
+            model.addAttribute("bookingDto", bookingDto);
+            populateFormDependencies(model, bookingDto, bookingDto.getNumberOfGuests());
             model.addAttribute("edit", true);
+            model.addAttribute("formAction", "/bookings/edit/" + id);
             return "bookings/form";
         }
+
         bookingService.updateBooking(id, bookingDto);
         return "redirect:/bookings";
     }
@@ -177,12 +156,16 @@ public class BookingController {
         return "bookings/search";
     }
 
-//    @GetMapping("/edit/{id}")
-//    public String editBooking(@PathVariable Long id, Model model) {
-//        model.addAttribute("bookingDto", bookingService.getBookingById(id));
-//        return "bookings/form";
-//    }
+    // Hjälpmetod :)
+    private void populateFormDependencies(Model model, BookingDto bookingDto, Integer guests) {
+        model.addAttribute("customers", customerService.getAllCustomers());
 
+        List<RoomDto> rooms = (bookingDto.getCheckIn() != null && bookingDto.getCheckOut() != null && guests != null)
+                ? roomService.findAvailableRoomFromQuery(bookingDto.getCheckIn(), bookingDto.getCheckOut(), guests)
+                : roomService.getAllRooms();
+
+        model.addAttribute("rooms", rooms);
+    }
 
 }
 

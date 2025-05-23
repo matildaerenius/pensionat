@@ -29,21 +29,14 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public BookingDto createBooking(BookingDto dto) {
-        Booking entity = bookingMapper.toEntity(dto);
-        Booking saved = bookingRepository.save(entity);
-        return bookingMapper.toDto(saved);
-    }
-
-    @Override
     public BookingDto updateBooking(Long id, BookingDto dto) {
         Booking existing = bookingRepository.findById(id)
                 .orElseThrow(() -> new BookingNotFoundException("Booking not found with ID " + id));
 
-        if (!existing.getRoom().getId().equals(dto.getRoomId()) ||
-                !existing.getCheckIn().equals(dto.getCheckIn()) ||
-                !existing.getCheckOut().equals(dto.getCheckOut())) {
+        boolean roomChanged = !existing.getRoom().getId().equals(dto.getRoomId());
+        boolean dateChanged = !existing.getCheckIn().equals(dto.getCheckIn()) || !existing.getCheckOut().equals(dto.getCheckOut());
 
+        if (roomChanged || dateChanged) {
             if (!isRoomAvailable(dto.getRoomId(), dto.getCheckIn(), dto.getCheckOut())) {
                 throw new RoomUnavailableException("Rummet är upptaget under vald period.");
             }
@@ -61,8 +54,7 @@ public class BookingServiceImpl implements BookingService {
         existing.setCustomer(customer);
         existing.setRoom(room);
 
-        Booking saved = bookingRepository.save(existing);
-        return bookingMapper.toDto(saved);
+        return bookingMapper.toDto(bookingRepository.save(existing));
     }
 
     @Override
@@ -72,7 +64,7 @@ public class BookingServiceImpl implements BookingService {
 
         LocalDate today = LocalDate.now();
         // Om checkOut är idag eller senare → pågående eller framtida bokning
-        if ((!existing.getCheckIn().isAfter(today) && !existing.getCheckOut().isBefore(today))) {
+        if (!today.isBefore(existing.getCheckIn()) && !today.isAfter(existing.getCheckOut())) {
             throw new ActiveBookingDeletionException("Pågående bokning kan inte raderas.");
         }
         bookingRepository.delete(existing);
@@ -113,12 +105,6 @@ public class BookingServiceImpl implements BookingService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<Booking> getBookingsForDate(LocalDate date) {
-        return bookingRepository.findBookingsByDate(date);
-    }
-
-
 
     @Override
     public void save(BookingDto bookingDto) {
@@ -139,14 +125,11 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public void validateNoDoubleBooking(Room room, LocalDate checkIn, LocalDate checkOut) {
-        List<Booking> existingBookings = bookingRepository.findByRoom(room);
-
-        for (Booking booking : existingBookings) {
-            boolean overlap = !(checkOut.isBefore(booking.getCheckIn()) || checkIn.isAfter(booking.getCheckOut()));
-            if (overlap) {
-                throw new RoomUnavailableException("Rummet är redan bokat under vald period.");
-            }
+        List<Booking> conflicts = bookingRepository.findConflictingBookings(room.getId(), checkIn, checkOut);
+        if (!conflicts.isEmpty()) {
+            throw new RoomUnavailableException("Rummet är redan bokat under vald period.");
         }
     }
-
 }
+
+

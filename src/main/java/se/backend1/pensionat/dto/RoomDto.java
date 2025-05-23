@@ -26,6 +26,8 @@ public class RoomDto {
     @NotNull(message = "Rumstyp krävs")
     private RoomType roomType;
 
+    private boolean allowExtraBeds;
+
     @Min(value = 1, message = "Kapacitet måste vara minst 1")
     @Max(value = 4, message = "Kapacitet får max vara 4")
     private Integer capacity;
@@ -34,4 +36,3 @@ public class RoomDto {
     private int maxExtraBeds;
 
 }
-//
