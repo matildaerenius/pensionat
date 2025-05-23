@@ -149,6 +149,7 @@ public class BookingController {
     @PostMapping("/edit/{id}")
     public String updateBooking(@PathVariable Long id,
                                 @ModelAttribute("bookingDto") @Valid BookingDto bookingDto,
+                                RedirectAttributes redirectAttributes,
                                 BindingResult result,
                                 Model model) {
         RoomDto room = roomService.getRoomById(bookingDto.getRoomId());
@@ -179,7 +180,9 @@ public class BookingController {
 
 
         bookingService.updateBooking(id, bookingDto);
+        redirectAttributes.addFlashAttribute("success", "Bokning uppdaterad!");
         return "redirect:/bookings";
+
     }
 
     @PostMapping("/delete/{id}")

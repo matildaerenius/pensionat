@@ -38,7 +38,13 @@
 
         <!-- Kund -->
         <label th:for="*{customerId}">Kund:</label>
-        <div class="customer-select-wrapper">
+        <div class="customer-select-wrapper" th:with="
+    redirectUrl='/customers/create?redirect=bookings/create'
+                 + (${bookingDto.checkIn} != null ? '&checkIn=' + ${bookingDto.checkIn} : '')
+                 + (${bookingDto.checkOut} != null ? '&checkOut=' + ${bookingDto.checkOut} : '')
+                 + (${bookingDto.numberOfGuests} != null ? '&guests=' + ${bookingDto.numberOfGuests} : '')
+                 + (${bookingDto.roomId} != null ? '&roomId=' + ${bookingDto.roomId} : '')">
+
             <select name="customerId" th:field="*{customerId}">
                 <option value="">-- Välj kund --</option>
                 <option th:each="customer : ${customers}"
@@ -47,15 +53,9 @@
                 </option>
             </select>
 
-            <a th:href="@{'/customers/create?redirect=bookings/create'
-               + '&checkIn=' + ${bookingDto.checkIn}
-               + '&checkOut=' + ${bookingDto.checkOut}
-               + '&guests=' + ${bookingDto.numberOfGuests}
-               + '&roomId=' + ${bookingDto.roomId}}"
-               class="small-button">
-                ➕ Ny kund
-            </a>
+            <a th:href="@{${redirectUrl}}" class="small-button">➕ Ny kund</a>
         </div>
+
 
         <!-- Rum -->
         <label th:for="*{roomId}">Rum:</label>

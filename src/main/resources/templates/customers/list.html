@@ -8,9 +8,9 @@
 <div th:insert="~{fragments/navigation :: buttonGrid}"></div>
 <div class="container">
     <h1 class="page-title">Alla kunder</h1>
-    <div th:if="${error}" class="error" th:text="${error}"></div>
     <div th:if="${success}" class="success" th:text="${success}"></div>
     <div th:if="${cancel}" class="cancel" th:text="${cancel}"></div>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
 
     <div class="button-wrapper">
         <a href="/customers/create" class="btn">➕ Skapa ny kund</a>

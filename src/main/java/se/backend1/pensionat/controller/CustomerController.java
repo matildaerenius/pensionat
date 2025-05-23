@@ -33,6 +33,7 @@ public class CustomerController {
                                  @RequestParam(required = false) String checkOut,
                                  @RequestParam(required = false) Integer guests,
                                  @RequestParam(required = false) Long roomId,
+                                 RedirectAttributes redirectAttributes,
                                  Model model) {
 
         if (result.hasErrors()) {
@@ -52,7 +53,7 @@ public class CustomerController {
                     "&guests=" + guests +
                     (roomId != null ? "&roomId=" + roomId : "");
         }
-
+        redirectAttributes.addFlashAttribute("success", "Kund skapad!");
         return "redirect:/customers";
     }
 
@@ -89,8 +90,10 @@ public class CustomerController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
+        CustomerDto customerDto = customerService.getCustomerById(id);
         model.addAttribute("customerDto", customerService.getCustomerById(id));
         model.addAttribute("edit", true);
+        model.addAttribute("formAction", "/customers/edit/" + customerDto.getId());
         return "customers/form";
     }
 
@@ -110,6 +113,8 @@ public class CustomerController {
         model.addAttribute("checkOut", checkOut);
         model.addAttribute("guests", guests);
         model.addAttribute("roomId", roomId);
+
+        model.addAttribute("formAction", "/customers/create");
 
         return "customers/form";
     }
