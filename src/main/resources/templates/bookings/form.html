@@ -24,17 +24,17 @@
         <!-- Incheckning -->
         <label th:for="*{checkIn}">Incheckning:</label>
         <input type="text" th:field="*{checkIn}" class="date-picker"/><br/>
-        <div th:if="${#fields.hasErrors('checkIn')}" th:errors="*{checkIn}" class="error"></div>
+        <div th:if="${#fields.hasErrors('checkIn')}" th:errors="*{checkIn}" class="field-error"></div>
 
         <!-- Utcheckning -->
         <label th:for="*{checkOut}">Utcheckning:</label>
         <input type="text" th:field="*{checkOut}" class="date-picker"/><br/>
-        <div th:if="${#fields.hasErrors('checkOut')}" th:errors="*{checkOut}" class="error"></div>
+        <div th:if="${#fields.hasErrors('checkOut')}" th:errors="*{checkOut}" class="field-error"></div>
 
         <!-- Antal gäster -->
         <label th:for="*{numberOfGuests}">Antal gäster:</label>
         <input type="number" th:field="*{numberOfGuests}" min="1" class="input"/><br/>
-        <div th:if="${#fields.hasErrors('numberOfGuests')}" th:errors="*{numberOfGuests}" class="error"></div>
+        <div th:if="${#fields.hasErrors('numberOfGuests')}" th:errors="*{numberOfGuests}" class="field-error"></div>
 
         <!-- Kund -->
         <label th:for="*{customerId}">Kund:</label>
@@ -55,6 +55,8 @@
 
             <a th:href="@{${redirectUrl}}" class="small-button">➕ Ny kund</a>
         </div>
+        <div th:if="${#fields.hasErrors('customerId')}" th:errors="*{customerId}" class="field-error"></div>
+
 
 
         <!-- Rum -->
@@ -68,7 +70,7 @@
             </option>
         </select><br/>
         <div th:if="${#lists.isEmpty(rooms)}" class="error">Inga lediga rum för vald period och antal gäster</div>
-        <div th:if="${#fields.hasErrors('roomId')}" th:errors="*{roomId}" class="error"></div>
+        <div th:if="${#fields.hasErrors('roomId')}" th:errors="*{roomId}" class="field-error"></div>
 
         <br/>
         <button type="submit" th:text="${edit} ? 'Uppdatera bokning' : 'Skapa bokning'"></button>

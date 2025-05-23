@@ -76,11 +76,17 @@ public class BookingController {
                                 RedirectAttributes redirectAttributes,
                                 Model model) {
 
+        if (result.hasErrors()) {
+            model.addAttribute("bookingDto", bookingDto);
+            populateFormDependencies(model, bookingDto, bookingDto.getNumberOfGuests());
+            model.addAttribute("edit", false);
+            model.addAttribute("formAction", "/bookings/create");
+            return "bookings/form";
+        }
 
         if (bookingDto.getCheckIn().isAfter(bookingDto.getCheckOut())) {
             result.rejectValue("checkIn", "invalid", "Incheckning kan inte vara efter utcheckning.");
         }
-
 
         RoomDto room = roomService.getRoomById(bookingDto.getRoomId());
         int maxGuests = room.getCapacity() + (room.isAllowExtraBeds() ? room.getMaxExtraBeds() : 0);
@@ -88,7 +94,6 @@ public class BookingController {
         if (bookingDto.getNumberOfGuests() > maxGuests) {
             result.rejectValue("numberOfGuests", "invalid", "För många gäster för detta rum. Max: " + maxGuests);
         }
-
         if (result.hasErrors()) {
             model.addAttribute("bookingDto", bookingDto);
             populateFormDependencies(model, bookingDto, bookingDto.getNumberOfGuests());

@@ -3,6 +3,7 @@ package se.backend1.pensionat.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,11 +23,11 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Namn krävs")
+    @NotBlank(message = "Förnamn krävs")
     @Size(max = 30, message = "Namn får max vara 100 tecken")
     private String firstName;
 
-    @NotBlank(message = "Namn krävs")
+    @NotBlank(message = "Efternamn krävs")
     @Size(max = 100, message = "Namn får max vara 100 tecken")
     private String lastName;
 
@@ -39,6 +40,7 @@ public class Customer {
     @Size(max = 20)
     private String phoneNumber;
 
+    @NotBlank(message = "Adress måste anges")
     @Size(max = 200)
     private String address;
 

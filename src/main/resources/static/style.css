@@ -50,7 +50,8 @@ body {
 }
 .field-error {
     color: #d8000c;
-    background-color: #ffd2d2;
+    background-color: #ffe6e6;
+    border-left: 3px solid #d8000c;
     padding: 0.3rem 0.5rem;
     border-radius: 5px;
     margin-top: 5px;
