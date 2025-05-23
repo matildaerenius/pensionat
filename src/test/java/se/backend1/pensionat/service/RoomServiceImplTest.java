@@ -163,64 +163,88 @@ public class RoomServiceImplTest {
 
     @Test
     public void findAvailableRoomsTest_NoBookings() {
-        List<Room> rooms = List.of(room);
-        when(roomRepository.findAll()).thenReturn(rooms);
-        when(roomMapper.toDto(any(Room.class))).thenReturn(roomDto);
-
         LocalDate start = LocalDate.of(2025, 5, 1);
         LocalDate end = LocalDate.of(2025, 5, 5);
+        int guests = 2;
 
-        List<RoomDto> available = roomServiceImpl.findAvailableRooms(start, end, 2);
+        when(roomRepository.findByTotalCapacityGreaterThanEqual(guests))
+                .thenReturn(List.of(room));
+
+        when(bookingRepository.findConflictingBookings(room.getId(), start, end))
+                .thenReturn(Collections.emptyList());
+
+        when(roomMapper.toDto(room)).thenReturn(roomDto);
+
+        List<RoomDto> available = roomServiceImpl.findAvailableRoomFromQuery(start, end, guests);
 
         assertEquals(1, available.size());
         assertEquals("101", available.get(0).getRoomNumber());
     }
+
 
     @Test
     public void findAvailableRoomsTest_WithOverlappingBooking() {
         Booking booking = new Booking();
         booking.setCheckIn(LocalDate.of(2025, 5, 2));
         booking.setCheckOut(LocalDate.of(2025, 5, 6));
-        room.getBookings().add(booking);
 
-        when(roomRepository.findAll()).thenReturn(List.of(room));
+        when(roomRepository.findByTotalCapacityGreaterThanEqual(2))
+                .thenReturn(List.of(room));
 
-        LocalDate start = LocalDate.of(2025, 5, 1);
-        LocalDate end = LocalDate.of(2025, 5, 5);
+        when(bookingRepository.findConflictingBookings(room.getId(),
+                LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 5)))
+                .thenReturn(List.of(booking));
 
-        List<RoomDto> available = roomServiceImpl.findAvailableRooms(start, end, 2);
+        List<RoomDto> available = roomServiceImpl.findAvailableRoomFromQuery(
+                LocalDate.of(2025, 5, 1),
+                LocalDate.of(2025, 5, 5),
+                2
+        );
 
         assertTrue(available.isEmpty());
+        verify(bookingRepository).findConflictingBookings(room.getId(),
+                LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 5));
     }
+
 
     @Test
     public void findAvailableRoomsTest_CapacityTooLow() {
-        when(roomRepository.findAll()).thenReturn(List.of(room));
-
+        int guests = 10;
         LocalDate start = LocalDate.of(2025, 6, 1);
         LocalDate end = LocalDate.of(2025, 6, 3);
 
-        // Kräver fler platser än rum + extrabäddar
-        List<RoomDto> available = roomServiceImpl.findAvailableRooms(start, end, 10);
+        when(roomRepository.findByTotalCapacityGreaterThanEqual(guests))
+                .thenReturn(Collections.emptyList());
 
-        assertTrue(available.isEmpty());
+        List<RoomDto> result = roomServiceImpl.findAvailableRoomFromQuery(start, end, guests);
+
+        assertTrue(result.isEmpty());
     }
+
 
     @Test
     public void findAvailableRoomsTest_EnoughExtraBeds() {
         room.setCapacity(2);
         room.setMaxExtraBeds(2);
-        when(roomRepository.findAll()).thenReturn(List.of(room));
-        when(roomMapper.toDto(room)).thenReturn(roomDto);
 
+        int guests = 4;
         LocalDate start = LocalDate.of(2025, 7, 1);
         LocalDate end = LocalDate.of(2025, 7, 5);
 
-        List<RoomDto> available = roomServiceImpl.findAvailableRooms(start, end, 4); // kräver exakt 4 sängplatser
+        when(roomRepository.findByTotalCapacityGreaterThanEqual(guests))
+                .thenReturn(List.of(room));
+
+        when(bookingRepository.findConflictingBookings(room.getId(), start, end))
+                .thenReturn(Collections.emptyList());
+
+        when(roomMapper.toDto(room)).thenReturn(roomDto);
+
+        List<RoomDto> available = roomServiceImpl.findAvailableRoomFromQuery(start, end, guests);
 
         assertEquals(1, available.size());
         assertEquals("101", available.get(0).getRoomNumber());
     }
+
 
     @Test
     void findAvailableRoomFromQueryTest() {

@@ -44,7 +44,7 @@ public class CustomerController {
             return "customers/form";
         }
 
-        customerService.save(customerDto);
+        customerService.createCustomer(customerDto);
 
         if ("bookings/create".equals(redirect)) {
             return "redirect:/bookings/create?checkIn=" + checkIn +

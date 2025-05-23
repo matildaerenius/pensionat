@@ -208,7 +208,7 @@ public class CustomerServiceImplTest {
     void save() {
         when(customerMapper.toEntity(customerDto)).thenReturn(customer);
 
-        customerServiceimpl.save(customerDto);
+        customerServiceimpl.createCustomer(customerDto);
 
         verify(customerMapper).toEntity(customerDto);
         verify(customerRepository).save(customer);
