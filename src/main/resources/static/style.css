@@ -454,6 +454,30 @@ input[type="text"].date-picker {
         opacity: 1;
     }
 }
+.customer-select-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.small-button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.small-button:hover {
+    background-color: #0056b3;
+}
+
+
 
 
 

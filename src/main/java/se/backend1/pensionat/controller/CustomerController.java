@@ -28,19 +28,53 @@ public class CustomerController {
     @PostMapping("/create")
     public String createCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto,
                                  BindingResult result,
-                                 RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) return "customers/form";
-        customerService.createCustomer(customerDto);
-        redirectAttributes.addFlashAttribute("success", "Kund skapad!");
+                                 @RequestParam(required = false) String redirect,
+                                 @RequestParam(required = false) String checkIn,
+                                 @RequestParam(required = false) String checkOut,
+                                 @RequestParam(required = false) Integer guests,
+                                 @RequestParam(required = false) Long roomId,
+                                 Model model) {
+
+        if (result.hasErrors()) {
+            model.addAttribute("redirect", redirect);
+            model.addAttribute("checkIn", checkIn);
+            model.addAttribute("checkOut", checkOut);
+            model.addAttribute("guests", guests);
+            model.addAttribute("roomId", roomId);
+            return "customers/form";
+        }
+
+        customerService.save(customerDto);
+
+        if ("bookings/create".equals(redirect)) {
+            return "redirect:/bookings/create?checkIn=" + checkIn +
+                    "&checkOut=" + checkOut +
+                    "&guests=" + guests +
+                    (roomId != null ? "&roomId=" + roomId : "");
+        }
+
         return "redirect:/customers";
     }
 
+
+
     @PostMapping("/edit/{id}")
-    public String updateCustomer(@PathVariable Long id, @ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result) {
-        if (result.hasErrors()) return "customers/edit";
+    public String updateCustomer(@PathVariable Long id,
+                                 @ModelAttribute("customerDto") @Valid CustomerDto customerDto,
+                                 BindingResult result,
+                                 RedirectAttributes redirectAttributes,
+                                 Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("edit", true);
+            return "customers/form";
+        }
         customerService.updateCustomer(id, customerDto);
+        redirectAttributes.addFlashAttribute("success", "Kund uppdaterad!");
         return "redirect:/customers";
     }
+
+
+
 
     @PostMapping("/delete/{id}")
     public String deleteCustomer(@PathVariable Long id, RedirectAttributes redirectAttributes) {
@@ -63,14 +97,33 @@ public class CustomerController {
     }
 
     @GetMapping("/create")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(@RequestParam(required = false) String redirect,
+                                 @RequestParam(required = false) String checkIn,
+                                 @RequestParam(required = false) String checkOut,
+                                 @RequestParam(required = false) Integer guests,
+                                 @RequestParam(required = false) Long roomId,
+                                 Model model) {
+
         model.addAttribute("customerDto", new CustomerDto());
-        model.addAttribute("edit", false);
+
+        model.addAttribute("redirect", redirect);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
+        model.addAttribute("guests", guests);
+        model.addAttribute("roomId", roomId);
+
         return "customers/form";
     }
+
     @PostMapping("/save")
-    public String saveCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result, RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) return "customers/form";
+    public String saveCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto,
+                               BindingResult result,
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("edit", customerDto.getId() != null);
+            return "customers/form";
+        }
 
         if (customerDto.getId() != null) {
             // ID finns = det är en uppdatering

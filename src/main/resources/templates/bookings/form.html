@@ -38,14 +38,27 @@
 
         <!-- Kund -->
         <label th:for="*{customerId}">Kund:</label>
-        <select th:field="*{customerId}">
-            <option value="" th:text="'-- Välj kund --'"></option>
-            <option th:each="cust : ${customers}"
-                    th:value="${cust.id}"
-                    th:text="${cust.firstName + ' ' + cust.lastName}">
-            </option>
-        </select><br/>
-        <div th:if="${#fields.hasErrors('customerId')}" th:errors="*{customerId}" class="error"></div>
+        <div class="customer-select-wrapper">
+            <select name="customerId" th:field="*{customerId}">
+                <option value="">-- Välj kund --</option>
+                <option th:each="customer : ${customers}"
+                        th:value="${customer.id}"
+                        th:text="${customer.firstName + ' ' + customer.lastName}">
+                </option>
+            </select>
+
+            <a th:href="@{'/customers/create?redirect=bookings/create'
+               + '&checkIn=' + ${bookingDto.checkIn}
+               + '&checkOut=' + ${bookingDto.checkOut}
+               + '&guests=' + ${bookingDto.numberOfGuests}
+               + '&roomId=' + ${bookingDto.roomId}}"
+               class="small-button">
+                ➕ Ny kund
+            </a>
+
+        </div>
+
+
 
         <!-- Rum -->
         <label th:for="*{roomId}">Rum:</label>

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import se.backend1.pensionat.dto.CustomerDto;
 import se.backend1.pensionat.dto.RoomDto;
 import se.backend1.pensionat.service.RoomService;
 
@@ -42,12 +43,12 @@ public class RoomController {
         return "rooms/list";
     }
 
-    // TODO : Denna behövs inte om vi inte ska kunna skapa nya rum?
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("roomDto", new RoomDto());
-        return "rooms/create";
-    }
+//    // TODO : Denna behövs inte om vi inte ska kunna skapa nya rum?
+//    @GetMapping("/create")
+//    public String showCreateForm(Model model) {
+//        model.addAttribute("roomDto", new RoomDto());
+//        return "rooms/create";
+//    }
 
     @GetMapping("/occupied")
     public String showOccupiedRooms(Model model) {
@@ -114,5 +115,24 @@ public class RoomController {
         model.addAttribute("guests", guests);
         return "rooms/available-rooms";
     }
+    @GetMapping("/create")
+    public String showCreateCustomerForm(@RequestParam(required = false) String redirect,
+                                         @RequestParam(required = false) String checkIn,
+                                         @RequestParam(required = false) String checkOut,
+                                         @RequestParam(required = false) Integer guests,
+                                         @RequestParam(required = false) Long roomId,
+                                         Model model) {
+        model.addAttribute("customerDto", new CustomerDto());
+
+        // Skickar redirect-info vidare till formuläret
+        model.addAttribute("redirect", redirect);
+        model.addAttribute("checkIn", checkIn);
+        model.addAttribute("checkOut", checkOut);
+        model.addAttribute("guests", guests);
+        model.addAttribute("roomId", roomId);
+
+        return "customers/form";
+    }
+
 
 }
