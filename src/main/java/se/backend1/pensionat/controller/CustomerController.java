@@ -116,14 +116,8 @@ public class CustomerController {
     }
 
     @PostMapping("/save")
-    public String saveCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto,
-                               BindingResult result,
-                               RedirectAttributes redirectAttributes,
-                               Model model) {
-        if (result.hasErrors()) {
-            model.addAttribute("edit", customerDto.getId() != null);
-            return "customers/form";
-        }
+    public String saveCustomer(@ModelAttribute("customerDto") @Valid CustomerDto customerDto, BindingResult result, RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) return "customers/form";
 
         if (customerDto.getId() != null) {
             // ID finns = det är en uppdatering
