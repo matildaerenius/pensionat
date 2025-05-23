@@ -37,7 +37,12 @@ public class BookingServiceImpl implements BookingService {
         boolean dateChanged = !existing.getCheckIn().equals(dto.getCheckIn()) || !existing.getCheckOut().equals(dto.getCheckOut());
 
         if (roomChanged || dateChanged) {
-            if (!isRoomAvailable(dto.getRoomId(), dto.getCheckIn(), dto.getCheckOut())) {
+            List<Booking> conflicts = bookingRepository.findConflictingBookings(
+                    dto.getRoomId(), dto.getCheckIn(), dto.getCheckOut());
+
+            conflicts.removeIf(b -> b.getId().equals(existing.getId()));
+
+            if (!conflicts.isEmpty()) {
                 throw new RoomUnavailableException("Rummet är upptaget under vald period.");
             }
         }

@@ -55,10 +55,7 @@
                class="small-button">
                 ➕ Ny kund
             </a>
-
         </div>
-
-
 
         <!-- Rum -->
         <label th:for="*{roomId}">Rum:</label>
@@ -66,6 +63,7 @@
             <option value="" th:text="'-- Välj rum --'"></option>
             <option th:each="room : ${rooms}"
                     th:value="${room.id}"
+                    th:selected="${room.id == bookingDto.roomId}"
                     th:text="${room.roomNumber + ' (' + room.roomType + ')'}">
             </option>
         </select><br/>
@@ -77,14 +75,16 @@
     </form>
 </div>
 </div>
-<script>
-    flatpickr(".date-picker", {
-        dateFormat: "Y-m-d"
-    });
+<script th:inline="javascript">
     const today = new Date();
 
     const checkInInput = document.querySelector('input[name="checkIn"]');
     const checkOutInput = document.querySelector('input[name="checkOut"]');
+
+    const checkOutPicker = flatpickr(checkOutInput, {
+        dateFormat: "Y-m-d",
+        minDate: today
+    });
 
     const checkInPicker = flatpickr(checkInInput, {
         dateFormat: "Y-m-d",
@@ -96,29 +96,31 @@
         }
     });
 
-    const checkOutPicker = flatpickr(checkOutInput, {
-        dateFormat: "Y-m-d",
-        minDate: today
-    });
+    const isEdit = /*[[${edit}]]*/ false;
+
     function fetchAvailableRooms() {
-        const checkIn = document.querySelector('input[name="checkIn"]').value;
-        const checkOut = document.querySelector('input[name="checkOut"]').value;
+        const checkIn = checkInInput.value;
+        const checkOut = checkOutInput.value;
         const guests = document.querySelector('input[name="numberOfGuests"]').value;
+        const roomId = document.querySelector('select[name="roomId"]').value;
 
         if (checkIn && checkOut && guests) {
             const params = new URLSearchParams({
-                checkIn: checkIn,
-                checkOut: checkOut,
-                guests: guests
+                checkIn,
+                checkOut,
+                guests,
+                roomId
             });
 
-            window.location.href = `/bookings/create?${params.toString()}`;
+            const baseUrl = isEdit ? window.location.pathname : '/bookings/create';
+            window.location.href = `${baseUrl}?${params.toString()}`;
         }
     }
 
-    document.querySelector('input[name="checkIn"]').addEventListener('change', fetchAvailableRooms);
-    document.querySelector('input[name="checkOut"]').addEventListener('change', fetchAvailableRooms);
+    checkInInput.addEventListener('change', fetchAvailableRooms);
+    checkOutInput.addEventListener('change', fetchAvailableRooms);
     document.querySelector('input[name="numberOfGuests"]').addEventListener('change', fetchAvailableRooms);
 </script>
+
 </body>
 </html>

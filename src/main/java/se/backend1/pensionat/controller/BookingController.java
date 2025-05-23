@@ -112,27 +112,71 @@ public class BookingController {
 
 
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
+    public String showEditForm(@PathVariable Long id,
+                               @RequestParam(required = false) String checkIn,
+                               @RequestParam(required = false) String checkOut,
+                               @RequestParam(required = false) Integer guests,
+                               @RequestParam(required = false) Long roomId,
+                               Model model) {
+
         BookingDto bookingDto = bookingService.getBookingById(id);
+
+        if (checkIn != null && !checkIn.isBlank()) {
+            bookingDto.setCheckIn(LocalDate.parse(checkIn));
+        }
+
+        if (checkOut != null && !checkOut.isBlank()) {
+            bookingDto.setCheckOut(LocalDate.parse(checkOut));
+        }
+
+        if (guests != null) {
+            bookingDto.setNumberOfGuests(guests);
+        }
+
+        if (roomId != null) {
+            bookingDto.setRoomId(roomId);
+        }
+
         model.addAttribute("bookingDto", bookingDto);
         populateFormDependencies(model, bookingDto, bookingDto.getNumberOfGuests());
         model.addAttribute("edit", true);
         model.addAttribute("formAction", "/bookings/edit/" + id);
+
         return "bookings/form";
     }
+
 
     @PostMapping("/edit/{id}")
     public String updateBooking(@PathVariable Long id,
                                 @ModelAttribute("bookingDto") @Valid BookingDto bookingDto,
                                 BindingResult result,
                                 Model model) {
+        RoomDto room = roomService.getRoomById(bookingDto.getRoomId());
+        int maxGuests = room.getCapacity() + (room.isAllowExtraBeds() ? room.getMaxExtraBeds() : 0);
+
+        if (bookingDto.getNumberOfGuests() > maxGuests) {
+            result.rejectValue("numberOfGuests", "invalid", "För många gäster för detta rum. Max: " + maxGuests);
+        }
+
         if (result.hasErrors()) {
             model.addAttribute("bookingDto", bookingDto);
-            populateFormDependencies(model, bookingDto, bookingDto.getNumberOfGuests());
+            model.addAttribute("customers", customerService.getAllCustomers());
+
+            List<RoomDto> rooms = roomService.findAvailableRoomFromQuery(
+                    bookingDto.getCheckIn(), bookingDto.getCheckOut(), bookingDto.getNumberOfGuests());
+
+            if (bookingDto.getRoomId() != null &&
+                    rooms.stream().noneMatch(r -> r.getId().equals(bookingDto.getRoomId()))) {
+                RoomDto currentRoom = roomService.getRoomById(bookingDto.getRoomId());
+                rooms.add(0, currentRoom);
+            }
+
+            model.addAttribute("rooms", rooms);
             model.addAttribute("edit", true);
             model.addAttribute("formAction", "/bookings/edit/" + id);
             return "bookings/form";
         }
+
 
         bookingService.updateBooking(id, bookingDto);
         return "redirect:/bookings";
@@ -160,12 +204,23 @@ public class BookingController {
     private void populateFormDependencies(Model model, BookingDto bookingDto, Integer guests) {
         model.addAttribute("customers", customerService.getAllCustomers());
 
-        List<RoomDto> rooms = (bookingDto.getCheckIn() != null && bookingDto.getCheckOut() != null && guests != null)
-                ? roomService.findAvailableRoomFromQuery(bookingDto.getCheckIn(), bookingDto.getCheckOut(), guests)
-                : roomService.getAllRooms();
+        List<RoomDto> rooms;
+
+        if (bookingDto.getCheckIn() != null && bookingDto.getCheckOut() != null && guests != null) {
+            rooms = roomService.findAvailableRoomFromQuery(bookingDto.getCheckIn(), bookingDto.getCheckOut(), guests);
+
+            if (bookingDto.getRoomId() != null &&
+                    rooms.stream().noneMatch(r -> r.getId().equals(bookingDto.getRoomId()))) {
+                RoomDto currentRoom = roomService.getRoomById(bookingDto.getRoomId());
+                rooms.add(0, currentRoom);
+            }
+        } else {
+            rooms = roomService.getAllRooms();
+        }
 
         model.addAttribute("rooms", rooms);
     }
+
 
 }
 
