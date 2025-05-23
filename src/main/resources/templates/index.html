@@ -17,19 +17,22 @@
 
     <div class="search-box">
         <h3 class="search-title">Sök lediga rum</h3>
-        <form method="get" th:action="@{/rooms/available}">
-
-        <label for="checkIn">Från:</label>
-            <input type="text" id="checkIn" name="checkIn" class="date-picker" required />
+        <form th:action="@{/rooms/search}" th:object="${roomSearchDto}" method="post">
+            <label for="checkIn">Från:</label>
+            <input type="text" id="checkIn" th:field="*{checkIn}" class="date-picker"/>
+            <div th:if="${#fields.hasErrors('checkIn')}" th:errors="*{checkIn}" class="field-error"></div>
 
             <label for="checkOut">Till:</label>
-            <input type="text" id="checkOut" name="checkOut" class="date-picker" required />
+            <input type="text" id="checkOut" th:field="*{checkOut}" class="date-picker"/>
+            <div th:if="${#fields.hasErrors('checkOut')}" th:errors="*{checkOut}" class="field-error"></div>
 
-            <label for="guests">Antal gäster:</label>
-            <input type="number" id="guests" name="guests" min="1" required />
+            <label for="numberOfGuests">Antal gäster:</label>
+            <input type="number" id="numberOfGuests" min="1" th:field="*{numberOfGuests}"/>
+            <div th:if="${#fields.hasErrors('numberOfGuests')}" th:errors="*{numberOfGuests}" class="field-error"></div>
 
             <button type="submit" class="btn">🔍 Sök</button>
         </form>
+
     </div>
 </div>
 <script>
