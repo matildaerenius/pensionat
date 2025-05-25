@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title th:text="${edit} ? 'Redigera kund' : 'Skapa kund'">Kundformulär</title>
+  <title th:text="${edit} ? 'Redigera kund' : 'Skapa ny kund'">Kundformulär</title>
   <link rel="stylesheet" th:href="@{/style.css}" />
 
 </head>
 <body>
 <div th:insert="~{fragments/navigation :: buttonGrid}"></div>
 <div class="form-wrapper">
-  <h1 class="page-title" th:text="${edit} ? 'Redigera kund' : 'Skapa kund'"></h1>
+  <h1 class="page-title" th:text="${edit} ? 'Redigera kund' : 'Skapa ny kund'"></h1>
 
   <div class="form-center">
     <form th:action="@{${formAction}}" th:object="${customerDto}" method="post">
@@ -42,7 +42,7 @@
   <input type="text" id="address" name="address" th:field="*{address}">
   <div class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
 
-  <button type="submit" th:text="${edit} ? 'Uppdatera' : 'Skapa'"></button>
+  <button type="submit" class="button" th:text="${edit} ? 'Uppdatera' : 'Skapa'"></button>
 
 
 </form>

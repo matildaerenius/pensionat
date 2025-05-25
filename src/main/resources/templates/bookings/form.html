@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${edit} ? 'Redigera bokning' : 'Skapa bokning'">Bokningsformulär</title>
+    <title th:text="${edit} ? 'Redigera bokning' : 'Skapa ny bokning'">Bokningsformulär</title>
     <link rel="stylesheet" th:href="@{/style.css}">
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -73,7 +73,7 @@
         <div th:if="${#fields.hasErrors('roomId')}" th:errors="*{roomId}" class="field-error"></div>
 
         <br/>
-        <button type="submit" th:text="${edit} ? 'Uppdatera bokning' : 'Skapa bokning'"></button>
+        <button type="submit" class="button" th:text="${edit} ? 'Uppdatera' : 'Boka'"></button>
     </form>
 </div>
 </div>
