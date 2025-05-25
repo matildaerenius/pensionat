@@ -22,7 +22,6 @@ public class GlobalExceptionHandler {
             BookingNotFoundException.class,
             RoomUnavailableException.class,
             CustomerHasBookingsException.class,
-            InvalidBookingDatesException.class,
             ActiveBookingDeletionException.class
     })
 

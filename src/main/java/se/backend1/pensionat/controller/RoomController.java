@@ -42,20 +42,6 @@ public class RoomController {
         return "rooms/list";
     }
 
-
-//    @GetMapping("/available")
-//    public String getAvailableRooms(@RequestParam("checkIn") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkIn,
-//                                    @RequestParam("checkOut") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate checkOut,
-//                                    @RequestParam("guests") int guests,
-//                                    Model model) {
-//        List<RoomDto> availableRooms = roomService.findAvailableRoomFromQuery(checkIn, checkOut, guests);
-//        model.addAttribute("availableRooms", availableRooms);
-//        model.addAttribute("checkIn", checkIn);
-//        model.addAttribute("checkOut", checkOut);
-//        model.addAttribute("guests", guests);
-//        return "rooms/available-rooms";
-//    }
-
     @GetMapping("/search")
     public String showSearchForm(Model model) {
         model.addAttribute("roomSearchDto", new RoomSearchDto());

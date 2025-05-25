@@ -71,41 +71,9 @@ public class RoomServiceImplTest {
         roomDto.setMaxExtraBeds(1);
     }
 
-    @Test
-    public void createRoomTest() {
-        when(roomMapper.toEntity(roomDto)).thenReturn(room);
-        when(roomRepository.save(room)).thenReturn(room);
-        when(roomMapper.toDto(room)).thenReturn(roomDto);
 
-        RoomDto result = roomServiceImpl.createRoom(roomDto);
 
-        assertNotNull(result);
-        assertEquals("101", result.getRoomNumber());
-        assertEquals(RoomType.DOUBLE, result.getRoomType());
-        assertEquals(1, result.getMaxExtraBeds());
-        verify(roomRepository).save(room);
-    }
 
-    @Test
-    public void updateRoomTest() {
-        when(roomRepository.findById(1L)).thenReturn(Optional.of(room));
-        when(roomRepository.save(any(Room.class))).thenReturn(room);
-        when(roomMapper.toDto(any(Room.class))).thenReturn(roomDto);
-
-        RoomDto updatedDto = new RoomDto();
-        updatedDto.setRoomNumber("102");
-        updatedDto.setRoomType(RoomType.DOUBLE);
-        updatedDto.setCapacity(3);
-        updatedDto.setMaxExtraBeds(1);
-
-        RoomDto result = roomServiceImpl.updateRoom(1L, updatedDto);
-
-        assertNotNull(result);
-        assertEquals("101", result.getRoomNumber()); // Obs: du kan ändra denna om din mapper returnerar ny info
-        assertEquals(RoomType.DOUBLE, result.getRoomType());
-        assertTrue(result.getCapacity() >= 2);
-        verify(roomRepository).save(any(Room.class));
-    }
 
     @Test
     public void getRoomByIdTest() {
@@ -144,22 +112,6 @@ public class RoomServiceImplTest {
         verify(roomRepository).findAll();
     }
 
-    @Test
-    public void deleteRoomTest_Success() {
-        when(roomRepository.findById(1L)).thenReturn(Optional.of(room));
-
-        roomServiceImpl.deleteRoom(1L);
-
-        verify(roomRepository).delete(room);
-    }
-
-    @Test
-    public void deleteRoomTest_error() {
-        room.getBookings().add(new se.backend1.pensionat.entity.Booking());
-        when(roomRepository.findById(1L)).thenReturn(Optional.of(room));
-
-        assertThrows(IllegalStateException.class, () -> roomServiceImpl.deleteRoom(1L));
-    }
 
     @Test
     public void findAvailableRoomsTest_NoBookings() {

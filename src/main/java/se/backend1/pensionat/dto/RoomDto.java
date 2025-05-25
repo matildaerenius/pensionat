@@ -28,11 +28,13 @@ public class RoomDto {
 
     private boolean allowExtraBeds;
 
+    @NotNull
     @Min(value = 1, message = "Kapacitet måste vara minst 1")
     @Max(value = 4, message = "Kapacitet får max vara 4")
     private Integer capacity;
 
     @Min(value = 0, message = "Extrasängar kan inte vara negativt")
+    @Max(2)
     private int maxExtraBeds;
 
 }

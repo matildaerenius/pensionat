@@ -7,7 +7,6 @@ import se.backend1.pensionat.entity.Booking;
 import se.backend1.pensionat.entity.Room;
 import se.backend1.pensionat.exception.RoomNotFoundException;
 import se.backend1.pensionat.mapper.RoomMapper;
-import se.backend1.pensionat.model.RoomType;
 import se.backend1.pensionat.repository.BookingRepository;
 import se.backend1.pensionat.repository.RoomRepository;
 import se.backend1.pensionat.service.RoomService;
@@ -25,39 +24,6 @@ public class RoomServiceImpl implements RoomService {
     private final RoomMapper roomMapper;
     private final BookingRepository bookingRepository;
 
-    @Override
-    public RoomDto createRoom(RoomDto dto) {
-        Room room = roomMapper.toEntity(dto);
-        validateExtraBeds(room);
-        Room saved = roomRepository.save(room);
-        return roomMapper.toDto(saved);
-    }
-
-    @Override
-    public RoomDto updateRoom(Long id, RoomDto dto) {
-        Room updatingRoom= roomRepository.findById(id)
-                .orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + id));
-
-        updatingRoom.setRoomNumber(dto.getRoomNumber());
-        updatingRoom.setRoomType(dto.getRoomType());
-        updatingRoom.setMaxExtraBeds(dto.getMaxExtraBeds());
-        updatingRoom.setCapacity(dto.getCapacity());
-
-        validateExtraBeds(updatingRoom);
-
-        Room saved = roomRepository.save(updatingRoom);
-        return roomMapper.toDto(saved);
-    }
-
-    @Override
-    public void deleteRoom(Long id) {
-        Room room = roomRepository.findById(id).orElseThrow(() -> new RoomNotFoundException("Room not found with id: " + id));
-
-        if(!room.getBookings().isEmpty()) {
-            throw new IllegalStateException("Room has booking and cannot be deleted");
-        }
-        roomRepository.delete(room);
-    }
 
     @Override
     public RoomDto getRoomById(Long id) {
@@ -91,13 +57,4 @@ public class RoomServiceImpl implements RoomService {
                 .collect(Collectors.toList());
     }
 
-    private void validateExtraBeds(Room room) {
-        if (room.getRoomType() != RoomType.DOUBLE && room.getMaxExtraBeds() > 0) {
-            throw new IllegalArgumentException("Extrasängar är endast tillåtna för dubbelrum");
-        }
-
-        if (room.getRoomType() == RoomType.SINGLE && room.getMaxExtraBeds() != 0) {
-            throw new IllegalArgumentException("Enkelrum får inte ha extrasängar");
-        }
-    }
 }
