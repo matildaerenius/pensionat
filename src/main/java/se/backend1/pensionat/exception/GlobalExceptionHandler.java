@@ -22,7 +22,10 @@ public class GlobalExceptionHandler {
             BookingNotFoundException.class,
             RoomUnavailableException.class,
             CustomerHasBookingsException.class,
-            ActiveBookingDeletionException.class
+            ActiveBookingDeletionException.class,
+            InvalidRoomConfigurationException.class,
+            RoomHasBookingsException.class,
+            RoomNumberAlreadyExistsException.class
     })
 
     public String handleBusinessExceptions(RuntimeException ex, Model model) {

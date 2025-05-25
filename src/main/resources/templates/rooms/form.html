@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title th:text="${edit} ? 'Redigera rum' : 'Skapa nytt rum'">Rumformulär</title>
+  <link rel="stylesheet" th:href="@{/style.css}" />
+</head>
+<body>
+<div th:insert="~{fragments/navigation :: buttonGrid}"></div>
+
+<div class="form-wrapper">
+  <h1 class="page-title" th:text="${edit} ? 'Redigera rum' : 'Skapa nytt rum'"></h1>
+  <div th:if="${error}" class="error" th:text="${error}"></div>
+
+  <div class="form-center">
+    <form th:action="@{${formAction}}" th:object="${roomDto}" method="post">
+      <input type="hidden" th:field="*{id}" />
+
+      <!-- Rumsnummer -->
+      <label th:for="*{roomNumber}">Rumsnummer:</label>
+      <input type="number" th:field="*{roomNumber}" min="1"/>
+      <div th:if="${#fields.hasErrors('roomNumber')}" th:errors="*{roomNumber}" class="field-error"></div>
+
+      <!-- Rumstyp -->
+      <label th:for="*{roomType}">Rumstyp:</label>
+      <select th:field="*{roomType}">
+        <option th:each="type : ${roomTypes}"
+                th:value="${type}"
+                th:text="${type}">Rumstyp</option>
+      </select>
+      <div th:if="${#fields.hasErrors('roomType')}" th:errors="*{roomType}" class="field-error"></div>
+
+      <!-- Kapacitet -->
+      <label th:for="*{capacity}">Kapacitet (antal gäster):</label>
+      <input type="number" th:field="*{capacity}" min="1"/>
+      <div th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}" class="field-error"></div>
+
+      <!-- Max extrasängar -->
+      <label th:for="*{maxExtraBeds}">Extrasängar:</label>
+      <input type="number" th:field="*{maxExtraBeds}" min="0" max="2"/>
+      <div th:if="${#fields.hasErrors('maxExtraBeds')}" th:errors="*{maxExtraBeds}" class="field-error"></div>
+
+
+
+
+      <button type="submit" class="button" th:text="${edit} ? 'Uppdatera' : 'Skapa'"></button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

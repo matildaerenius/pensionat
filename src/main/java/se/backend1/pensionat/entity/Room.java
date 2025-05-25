@@ -1,8 +1,7 @@
 package se.backend1.pensionat.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,10 +24,14 @@ public class Room {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Rumstyp krävs")
     private RoomType roomType;
 
+    @NotBlank(message = "Rumsnummer krävs")
+    @Size(max = 20, message = "Rumsnummer får max vara 20 tecken")
     private String roomNumber;
 
+    @NotNull(message = "Kapacitet krävs")
     @Min(value = 1, message = "Minst en gäst krävs")
     @Max(value = 4, message = "Max 4 gäst")
     private Integer capacity;

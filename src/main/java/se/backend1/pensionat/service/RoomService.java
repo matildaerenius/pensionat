@@ -1,5 +1,6 @@
 package se.backend1.pensionat.service;
 
+import jakarta.validation.Valid;
 import se.backend1.pensionat.dto.RoomDto;
 
 import java.time.LocalDate;
@@ -13,4 +14,9 @@ public interface RoomService {
 
         List<RoomDto> findAvailableRoomFromQuery(LocalDate checkIn, LocalDate checkOut, int guests);
 
+        RoomDto createRoom(@Valid RoomDto dto);
+
+        void updateRoom(Long id, @Valid RoomDto dto);
+
+        void deleteRoom(Long id);
 }

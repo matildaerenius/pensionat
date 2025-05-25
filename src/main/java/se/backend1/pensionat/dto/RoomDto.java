@@ -1,5 +1,7 @@
 package se.backend1.pensionat.dto;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
@@ -23,12 +25,13 @@ public class RoomDto {
     @Size(max = 20, message = "Rumsnummer får max vara 20 tecken")
     private String roomNumber;
 
+    @Enumerated(EnumType.STRING)
     @NotNull(message = "Rumstyp krävs")
     private RoomType roomType;
 
     private boolean allowExtraBeds;
 
-    @NotNull
+    @NotNull(message = "Kapacitet krävs")
     @Min(value = 1, message = "Kapacitet måste vara minst 1")
     @Max(value = 4, message = "Kapacitet får max vara 4")
     private Integer capacity;
