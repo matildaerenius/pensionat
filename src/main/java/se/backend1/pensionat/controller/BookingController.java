@@ -69,7 +69,7 @@ public class BookingController {
     }
 
 
-
+    // TODO : Mycket av nedan hör hemma i Service och inte här, så flytta till serviceklass
     @PostMapping("/create")
     public String createBooking(@ModelAttribute("bookingDto") @Valid BookingDto bookingDto,
                                 BindingResult result,
@@ -150,7 +150,7 @@ public class BookingController {
         return "bookings/form";
     }
 
-
+    // TODO : Delar av nedan ska vara i Service klass, så flytta dit :)
     @PostMapping("/edit/{id}")
     public String updateBooking(@PathVariable Long id,
                                 @ModelAttribute("bookingDto") @Valid BookingDto bookingDto,

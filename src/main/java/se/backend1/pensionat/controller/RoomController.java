@@ -82,6 +82,7 @@ public class RoomController {
         return "rooms/form";
     }
 
+    // TODO : Nedan kan lite flyttas till service lagret
     @PostMapping("/create")
     public String createRoom(@ModelAttribute("roomDto") @Valid RoomDto roomDto,
                              BindingResult result,

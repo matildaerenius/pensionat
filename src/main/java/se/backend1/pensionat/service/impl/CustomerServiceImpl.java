@@ -34,6 +34,7 @@ public class CustomerServiceImpl implements CustomerService {
         Customer existing = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Customer not found with ID" + id));
 
+        // TODO: Nedan kan flyttas till mapper btw
         existing.setFirstName(customerDto.getFirstName());
         existing.setLastName(customerDto.getLastName());
         existing.setEmail(customerDto.getEmail());
@@ -69,6 +70,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .collect(Collectors.toList());
     }
 
+    // TODO: Ta bort? den används inte mer än i testerna då
     @Override
     public boolean hasBookings(Long id) {
         Customer existing = customerRepository.findById(id)
@@ -76,6 +78,7 @@ public class CustomerServiceImpl implements CustomerService {
         return existing.getBookings() != null && !existing.getBookings().isEmpty();
     }
 
+    // TODO: Ta bort? den används väl inte, samma med DetailedCustomerDto och delen i mappern
     @Override
     public DetailedCustomerDto getCustomerDetails(Long id) {
         Customer customer = customerRepository.findById(id)

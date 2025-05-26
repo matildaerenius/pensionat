@@ -82,6 +82,7 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toDto(existing);
     }
 
+    // TODO : Ta bort? används inte
     @Override
     public List<BookingDto> getBookingsByCustomer(Long customerId) {
         return bookingRepository.findByCustomerId(customerId).stream()
@@ -128,6 +129,7 @@ public class BookingServiceImpl implements BookingService {
         bookingRepository.save(booking);
     }
 
+    // Ta bort? används inte
     @Override
     public void validateNoDoubleBooking(Room room, LocalDate checkIn, LocalDate checkOut) {
         List<Booking> conflicts = bookingRepository.findConflictingBookings(room.getId(), checkIn, checkOut);
