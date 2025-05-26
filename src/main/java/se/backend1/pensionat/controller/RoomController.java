@@ -150,7 +150,7 @@ public class RoomController {
             roomService.deleteRoom(id);
             redirectAttributes.addFlashAttribute("cancel", "Rum borttaget!");
         } catch (RoomHasBookingsException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Rum har bokningar och kan inte tas bort");
         } catch (RoomNotFoundException e) {
             redirectAttributes.addFlashAttribute("error", "Rummet kunde inte hittas.");
         }
