@@ -132,7 +132,7 @@ public class BookingServiceImpl implements BookingService {
     public void validateNoDoubleBooking(Room room, LocalDate checkIn, LocalDate checkOut) {
         List<Booking> conflicts = bookingRepository.findConflictingBookings(room.getId(), checkIn, checkOut);
         if (!conflicts.isEmpty()) {
-            throw new RoomUnavailableException("Rummet är redan bokat under vald period.");
+            throw new RoomUnavailableException("Rummet är redan bokat under vald period");
         }
     }
 }

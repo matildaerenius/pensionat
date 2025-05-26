@@ -515,6 +515,16 @@ input[type="text"].date-picker {
     align-items: center;
     gap: 12px;
 }
+.info-message {
+    background-color: #e0f3ff;
+    color: #064663;
+    border-left: 5px solid #00aaff;
+    padding: 10px 15px;
+    margin: 15px 0;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+
 
 
 

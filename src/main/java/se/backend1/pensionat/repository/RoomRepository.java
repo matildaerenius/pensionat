@@ -12,8 +12,9 @@ import java.util.Optional;
 public interface RoomRepository extends JpaRepository<Room, Long> {
     List<Room> findByRoomType(RoomType roomType);
 
-    @Query("SELECT r FROM Room r WHERE (r.capacity + r.maxExtraBeds) >= :minCapacity")
+    @Query("SELECT r FROM Room r WHERE (r.capacity + COALESCE(r.maxExtraBeds, 0)) >= :minCapacity")
     List<Room> findByTotalCapacityGreaterThanEqual(@Param("minCapacity") int minCapacity);
+
 
     Optional<Room> findByRoomNumber(String roomNumber);
 

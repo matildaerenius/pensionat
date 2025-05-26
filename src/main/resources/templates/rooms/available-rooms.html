@@ -17,12 +17,17 @@
 
     <div th:if="${#lists.isEmpty(availableRooms)}" class="error">Inga rum tillgängliga för vald period.</div>
 
+    <p class="info-message">
+        Visar rum för minst <strong th:text="${guests}"></strong> gäst(er) – total kapaciteten kan vara större
+    </p>
+
+
     <table class="styled-table" th:if="${!#lists.isEmpty(availableRooms)}">
         <thead>
         <tr>
             <th>Rumsnummer</th>
             <th>Typ</th>
-            <th>Gästkapacitet</th>
+            <th>Total gästkapacitet</th>
             <th>Max extrasängar</th>
             <th>Boka</th>
         </tr>

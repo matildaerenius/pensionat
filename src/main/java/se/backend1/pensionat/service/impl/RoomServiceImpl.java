@@ -45,28 +45,23 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDto> findAvailableRoomFromQuery(LocalDate checkIn, LocalDate checkOut, int guests) {
-        // Steg 1: Hitta rum med tillräcklig kapacitet
-        List<Room> roomsWithCapacity = roomRepository.findByTotalCapacityGreaterThanEqual(guests);
-
-        // Steg 2: Filtrera bort rum med konflikter
-        List<Room> availableRooms = roomsWithCapacity.stream()
+        return roomRepository.findAll().stream()
+                .filter(room -> room.getCapacity() >= guests)
                 .filter(room -> {
                     List<Booking> conflicts = bookingRepository.findConflictingBookings(
                             room.getId(), checkIn, checkOut);
                     return conflicts.isEmpty();
                 })
-                .collect(Collectors.toList());
-
-        return availableRooms.stream()
                 .map(roomMapper::toDto)
                 .collect(Collectors.toList());
     }
+
 
     @Override
     public RoomDto createRoom(RoomDto roomDto) {
         Optional<Room> existingRoom = roomRepository.findByRoomNumber(roomDto.getRoomNumber());
         if (existingRoom.isPresent()) {
-            throw new RoomNumberAlreadyExistsException("Rumsnumret är redan taget");
+            throw new RoomNumberAlreadyExistsException("Rumsnumret finns redan");
         }
 
         validateRoomConfiguration(roomDto);
@@ -112,23 +107,28 @@ public class RoomServiceImpl implements RoomService {
             switch (dto.getRoomType()) {
                 case SINGLE -> {
                     if (dto.getMaxExtraBeds() > 0) {
-                        throw new InvalidRoomConfigurationException("Enkelrum får inte ha extrasängar");
+                        throw new InvalidRoomConfigurationException("Enkelrum får inte ha extrasängar.");
                     }
                     if (dto.getCapacity() != 1) {
-                        throw new InvalidRoomConfigurationException("Enkelrum måste ha kapacitet 1");
+                        throw new InvalidRoomConfigurationException("Enkelrum måste ha exakt 1 gästkapacitet.");
                     }
                 }
+
                 case DOUBLE -> {
                     if (dto.getMaxExtraBeds() > 2) {
                         throw new InvalidRoomConfigurationException("Dubbelrum får ha max 2 extrasängar.");
                     }
+
                     int expectedCapacity = 2 + dto.getMaxExtraBeds();
+
                     if (dto.getCapacity() != expectedCapacity) {
                         throw new InvalidRoomConfigurationException(
-                                "Kapacitet för dubbelrum med " + dto.getMaxExtraBeds() + " extrasängar, måste vara " + expectedCapacity);
+                                "Kapacitet för dubbelrum med " + dto.getMaxExtraBeds() +
+                                        " extrasäng(ar) måste vara " + expectedCapacity + " gäster");
                     }
                 }
             }
         }
     }
+
 }
