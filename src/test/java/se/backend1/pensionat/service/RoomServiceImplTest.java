@@ -119,12 +119,9 @@ public class RoomServiceImplTest {
         LocalDate end = LocalDate.of(2025, 5, 5);
         int guests = 2;
 
-        when(roomRepository.findByTotalCapacityGreaterThanEqual(guests))
-                .thenReturn(List.of(room));
-
+        when(roomRepository.findAll()).thenReturn(List.of(room));
         when(bookingRepository.findConflictingBookings(room.getId(), start, end))
                 .thenReturn(Collections.emptyList());
-
         when(roomMapper.toDto(room)).thenReturn(roomDto);
 
         List<RoomDto> available = roomServiceImpl.findAvailableRoomFromQuery(start, end, guests);
@@ -140,9 +137,7 @@ public class RoomServiceImplTest {
         booking.setCheckIn(LocalDate.of(2025, 5, 2));
         booking.setCheckOut(LocalDate.of(2025, 5, 6));
 
-        when(roomRepository.findByTotalCapacityGreaterThanEqual(2))
-                .thenReturn(List.of(room));
-
+        when(roomRepository.findAll()).thenReturn(List.of(room));
         when(bookingRepository.findConflictingBookings(room.getId(),
                 LocalDate.of(2025, 5, 1), LocalDate.of(2025, 5, 5)))
                 .thenReturn(List.of(booking));
@@ -165,8 +160,7 @@ public class RoomServiceImplTest {
         LocalDate start = LocalDate.of(2025, 6, 1);
         LocalDate end = LocalDate.of(2025, 6, 3);
 
-        when(roomRepository.findByTotalCapacityGreaterThanEqual(guests))
-                .thenReturn(Collections.emptyList());
+        when(roomRepository.findAll()).thenReturn(List.of(room));
 
         List<RoomDto> result = roomServiceImpl.findAvailableRoomFromQuery(start, end, guests);
 
@@ -174,21 +168,21 @@ public class RoomServiceImplTest {
     }
 
 
+
     @Test
     public void findAvailableRoomsTest_EnoughExtraBeds() {
-        room.setCapacity(2);
         room.setMaxExtraBeds(2);
+        room.setCapacity(4); // 2 + 2
+        roomDto.setMaxExtraBeds(2);
+        roomDto.setCapacity(4);
 
         int guests = 4;
         LocalDate start = LocalDate.of(2025, 7, 1);
         LocalDate end = LocalDate.of(2025, 7, 5);
 
-        when(roomRepository.findByTotalCapacityGreaterThanEqual(guests))
-                .thenReturn(List.of(room));
-
+        when(roomRepository.findAll()).thenReturn(List.of(room));
         when(bookingRepository.findConflictingBookings(room.getId(), start, end))
                 .thenReturn(Collections.emptyList());
-
         when(roomMapper.toDto(room)).thenReturn(roomDto);
 
         List<RoomDto> available = roomServiceImpl.findAvailableRoomFromQuery(start, end, guests);
@@ -200,31 +194,21 @@ public class RoomServiceImplTest {
 
     @Test
     void findAvailableRoomFromQueryTest() {
-        // Arrange
         LocalDate checkIn = LocalDate.now().plusDays(5);
         LocalDate checkOut = LocalDate.now().plusDays(7);
         int guests = 2;
 
-        List<Room> roomsWithCapacity = List.of(room);
-
-        // Simulera att rummet inte har några bokningskonflikter
-        when(roomRepository.findByTotalCapacityGreaterThanEqual(guests))
-                .thenReturn(roomsWithCapacity);
-
+        when(roomRepository.findAll()).thenReturn(List.of(room));
         when(bookingRepository.findConflictingBookings(room.getId(), checkIn, checkOut))
                 .thenReturn(Collections.emptyList());
-
         when(roomMapper.toDto(room)).thenReturn(roomDto);
 
-        // Act
         List<RoomDto> result = roomServiceImpl.findAvailableRoomFromQuery(checkIn, checkOut, guests);
 
-        // Assert
         assertEquals(1, result.size());
         assertEquals(roomDto, result.get(0));
 
-        // Verify
-        verify(roomRepository).findByTotalCapacityGreaterThanEqual(guests);
+        verify(roomRepository).findAll();
         verify(bookingRepository).findConflictingBookings(room.getId(), checkIn, checkOut);
         verify(roomMapper).toDto(room);
     }
